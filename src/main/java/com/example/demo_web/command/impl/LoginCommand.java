@@ -16,6 +16,7 @@ public class LoginCommand implements ActionCommand {
         String login = request.getParameter(PARAM_NAME_LOGIN);
         String password = request.getParameter(PARAM_NAME_PASSWORD);
         LoginService loginService = new LoginService();
+
         if (loginService.isValidData(login, password)) {
             if (loginService.isRegistered(login, password)) {
                 request.setAttribute("user", login);

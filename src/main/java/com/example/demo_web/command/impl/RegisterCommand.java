@@ -25,19 +25,11 @@ public class RegisterCommand implements ActionCommand {
         String login = request.getParameter(PARAM_NAME_LOGIN);
         String password = request.getParameter(PARAM_NAME_PASSWORD);
         RegisterService registerService = new RegisterService();
-        UserDao userDao = new UserDaoImpl();
-        Connection connection = MySqlDataSourceFactory.getConnection();
-        userDao.setConnection(connection);
 
         if (registerService.isValidData(login, email, password)) {
            if (registerService.isNotRegistered(login)) {
                request.setAttribute("user", login);
-               // определение пути к main.jsp
-               try {
-                   userDao.create(new User(login, email, password));
-               } catch (DaoException e) {
-                   e.printStackTrace();
-               }
+               registerService.registerUser(new User(login, email, password));
                page = ConfigurationManager.getProperty("path.page.main");
            } else {
                request.setAttribute("errorUserRegistered",

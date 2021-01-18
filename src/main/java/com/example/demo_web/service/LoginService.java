@@ -11,7 +11,7 @@ import java.sql.Connection;
 import java.util.List;
 
 public class LoginService {
-    private final UserDao userDao = new UserDaoImpl();
+    private UserDao userDao = UserDaoImpl.getInstance();
 
     public  LoginService() {
         Connection connection = MySqlDataSourceFactory.getConnection();

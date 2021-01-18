@@ -2,14 +2,18 @@ package com.example.demo_web.service;
 
 import com.example.demo_web.dao.UserDao;
 import com.example.demo_web.dao.impl.UserDaoImpl;
+import com.example.demo_web.entity.User;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.pool.MySqlDataSourceFactory;
 import com.example.demo_web.validator.UserValidator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 
 public class RegisterService {
-    private final UserDao userDao = new UserDaoImpl();
+    private static final Logger logger = LogManager.getLogger(RegisterService.class);
+    private UserDao userDao = UserDaoImpl.getInstance();
 
     public  RegisterService() {
         Connection connection = MySqlDataSourceFactory.getConnection();
@@ -30,5 +34,15 @@ public class RegisterService {
         UserValidator userValidator = new UserValidator();
         return userValidator.isValidLogin(login) && userValidator.isValidEmail(email)
                 && userValidator.isValidPassword(password);
+    }
+
+    public boolean registerUser(User user) {
+        try {
+            userDao.create(user);
+            return true;
+        } catch (DaoException e) {
+            logger.info("error: " + e);
+            return false;
+        }
     }
 }

@@ -5,6 +5,8 @@ import com.example.demo_web.dao.UserDao;
 import com.example.demo_web.entity.Entity;
 import com.example.demo_web.entity.User;
 import com.example.demo_web.exception.DaoException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,8 +19,15 @@ public class UserDaoImpl implements UserDao {
     private static final String SQL_CREATE = "INSERT INTO users (login, email, password) VALUES (?, ?, ?)";
     private final static String SQL_CHECK_USER_LOGIN = "SELECT users.login FROM users WHERE users.login LIKE ?";
     private final static String SQL_CHECK_USER_REGISTERED = "SELECT users.login, users.password FROM users WHERE users.login LIKE ? AND users.password LIKE ?";
-    private Connection connection;
 
+    private Connection connection;
+    private static UserDao instance = new UserDaoImpl();
+
+    private UserDaoImpl(){}
+
+    public static UserDao getInstance() {
+        return instance;
+    }
 
     @Override
     public List<User> findAll()  throws DaoException {
