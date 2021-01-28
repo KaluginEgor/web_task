@@ -1,4 +1,4 @@
-package com.example.demo_web.filter;
+package com.example.demo_web.controller.filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

@@ -1,20 +1,20 @@
 package com.example.demo_web.command.impl;
 
 import com.example.demo_web.command.ActionCommand;
+import com.example.demo_web.command.RequestParameter;
 import com.example.demo_web.service.LoginService;
-import com.example.demo_web.resource.ConfigurationManager;
-import com.example.demo_web.resource.MessageManager;
+import com.example.demo_web.manager.ConfigurationManager;
+import com.example.demo_web.manager.MessageManager;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class LoginCommand implements ActionCommand {
-    private static final String PARAM_NAME_LOGIN = "login";
-    private static final String PARAM_NAME_PASSWORD = "password";
+
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
-        String login = request.getParameter(PARAM_NAME_LOGIN);
-        String password = request.getParameter(PARAM_NAME_PASSWORD);
+        String login = request.getParameter(RequestParameter.LOGIN);
+        String password = request.getParameter(RequestParameter.PASSWORD);
         LoginService loginService = new LoginService();
 
         if (loginService.isValidData(login, password)) {

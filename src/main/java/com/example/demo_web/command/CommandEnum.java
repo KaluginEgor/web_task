@@ -1,10 +1,7 @@
-package com.example.demo_web.client;
+package com.example.demo_web.command;
 
 import com.example.demo_web.command.ActionCommand;
-import com.example.demo_web.command.impl.LoginCommand;
-import com.example.demo_web.command.impl.LogoutCommand;
-import com.example.demo_web.command.impl.RegisterCommand;
-import com.example.demo_web.command.impl.RegistrationPageCommand;
+import com.example.demo_web.command.impl.*;
 
 public enum CommandEnum {
     LOGIN {
@@ -25,6 +22,11 @@ public enum CommandEnum {
     REGISTRATION_PAGE {
         {
             this.command = new RegistrationPageCommand();
+        }
+    },
+    CHANGE_LANGUAGE {
+        {
+            this.command = new ChangeLanguageCommand();
         }
     };
     ActionCommand command;

@@ -1,7 +1,7 @@
 package com.example.demo_web.command.impl;
 
 import com.example.demo_web.command.ActionCommand;
-import com.example.demo_web.resource.ConfigurationManager;
+import com.example.demo_web.manager.ConfigurationManager;
 
 import javax.servlet.http.HttpServletRequest;
 

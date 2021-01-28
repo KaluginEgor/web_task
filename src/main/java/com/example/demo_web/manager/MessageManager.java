@@ -1,4 +1,4 @@
-package com.example.demo_web.resource;
+package com.example.demo_web.manager;
 
 import java.util.ResourceBundle;
 

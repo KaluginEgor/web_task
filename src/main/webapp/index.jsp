@@ -7,8 +7,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<head><title>Index</title></head>
+<head>
+    <title>Index</title>
+</head>
 <body>
-    <jsp:forward page="/jsp/login.jsp"/>
+    <jsp:forward page="/pages/login.jsp"/>
 </body>
 </html>

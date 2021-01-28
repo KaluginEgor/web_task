@@ -5,10 +5,13 @@ import com.example.demo_web.dao.impl.UserDaoImpl;
 import com.example.demo_web.entity.User;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.pool.MySqlDataSourceFactory;
+import com.example.demo_web.util.PasswordHash;
 import com.example.demo_web.validator.UserValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 
 public class RegisterService {
@@ -36,11 +39,18 @@ public class RegisterService {
                 && userValidator.isValidPassword(password);
     }
 
-    public boolean registerUser(User user) {
+    public boolean registerUser(String login, String email, String password) {
         try {
-            userDao.create(user);
+            String passwordHash = PasswordHash.generatePasswordHash(password);
+            userDao.create(new User(login, email, passwordHash));
             return true;
         } catch (DaoException e) {
+            logger.info("error: " + e);
+            return false;
+        } catch (NoSuchAlgorithmException e) {
+            logger.info("error: " + e);
+            return false;
+        } catch (InvalidKeySpecException e) {
             logger.info("error: " + e);
             return false;
         }

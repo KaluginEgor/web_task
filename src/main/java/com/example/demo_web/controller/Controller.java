@@ -1,9 +1,9 @@
-package com.example.demo_web.servlet;
+package com.example.demo_web.controller;
 
 import com.example.demo_web.command.ActionCommand;
 import com.example.demo_web.factory.ActionFactory;
-import com.example.demo_web.resource.ConfigurationManager;
-import com.example.demo_web.resource.MessageManager;
+import com.example.demo_web.manager.ConfigurationManager;
+import com.example.demo_web.manager.MessageManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

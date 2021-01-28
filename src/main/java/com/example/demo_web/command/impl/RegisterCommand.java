@@ -1,35 +1,28 @@
 package com.example.demo_web.command.impl;
 
 import com.example.demo_web.command.ActionCommand;
-import com.example.demo_web.dao.UserDao;
-import com.example.demo_web.dao.impl.UserDaoImpl;
+import com.example.demo_web.command.RequestParameter;
 import com.example.demo_web.entity.User;
-import com.example.demo_web.exception.DaoException;
-import com.example.demo_web.pool.MySqlDataSourceFactory;
-import com.example.demo_web.resource.ConfigurationManager;
-import com.example.demo_web.resource.MessageManager;
-import com.example.demo_web.service.LoginService;
+import com.example.demo_web.manager.ConfigurationManager;
+import com.example.demo_web.manager.MessageManager;
 import com.example.demo_web.service.RegisterService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Connection;
 
 public class RegisterCommand implements ActionCommand {
-    private static final String PARAM_NAME_EMAIL = "email";
-    private static final String PARAM_NAME_LOGIN = "login";
-    private static final String PARAM_NAME_PASSWORD = "password";
+
     @Override
     public String execute(HttpServletRequest request) {
         String page = null;
-        String email = request.getParameter(PARAM_NAME_EMAIL);
-        String login = request.getParameter(PARAM_NAME_LOGIN);
-        String password = request.getParameter(PARAM_NAME_PASSWORD);
+        String email = request.getParameter(RequestParameter.EMAIL);
+        String login = request.getParameter(RequestParameter.LOGIN);
+        String password = request.getParameter(RequestParameter.PASSWORD);
         RegisterService registerService = new RegisterService();
 
         if (registerService.isValidData(login, email, password)) {
            if (registerService.isNotRegistered(login)) {
                request.setAttribute("user", login);
-               registerService.registerUser(new User(login, email, password));
+               registerService.registerUser(login, email, password);
                page = ConfigurationManager.getProperty("path.page.main");
            } else {
                request.setAttribute("errorUserRegistered",
