@@ -1,9 +1,10 @@
 package com.example.demo_web.controller;
 
 import com.example.demo_web.command.ActionCommand;
-import com.example.demo_web.factory.ActionFactory;
+import com.example.demo_web.command.ActionFactory;
 import com.example.demo_web.manager.ConfigurationManager;
 import com.example.demo_web.manager.MessageManager;
+import com.example.demo_web.connection.ConnectionPool;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -38,5 +39,11 @@ public class Controller extends HttpServlet {
                     MessageManager.getProperty("message.nullpage"));
             response.sendRedirect(request.getContextPath() + page);
         }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        ConnectionPool.getInstance().destroyPool();
     }
 }

@@ -3,8 +3,9 @@ package com.example.demo_web.service;
 import com.example.demo_web.dao.UserDao;
 import com.example.demo_web.dao.impl.UserDaoImpl;
 import com.example.demo_web.entity.User;
+import com.example.demo_web.exception.ConnectionException;
 import com.example.demo_web.exception.DaoException;
-import com.example.demo_web.pool.MySqlDataSourceFactory;
+import com.example.demo_web.connection.ConnectionPool;
 import com.example.demo_web.util.PasswordHash;
 import com.example.demo_web.validator.UserValidator;
 import org.apache.logging.log4j.LogManager;
@@ -19,7 +20,12 @@ public class RegisterService {
     private UserDao userDao = UserDaoImpl.getInstance();
 
     public  RegisterService() {
-        Connection connection = MySqlDataSourceFactory.getConnection();
+        Connection connection = null;
+        try {
+            connection = ConnectionPool.getInstance().getConnection();
+        } catch (ConnectionException e) {
+            logger.error(e);
+        }
         userDao.setConnection(connection);
     }
 

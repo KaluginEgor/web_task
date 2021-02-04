@@ -1,4 +1,4 @@
-package com.example.demo_web.factory;
+package com.example.demo_web.command;
 
 import com.example.demo_web.command.ActionCommand;
 import com.example.demo_web.command.impl.EmptyCommand;

@@ -2,6 +2,8 @@ package com.example.demo_web.dao;
 
 import com.example.demo_web.entity.Entity;
 import com.example.demo_web.exception.DaoException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,21 +19,23 @@ public interface BaseDao <K, T extends Entity> {
     T update(T t)  throws DaoException;
     boolean setConnection(Connection connection);
     default void close(Statement statement) {
+        final Logger logger = LogManager.getLogger(BaseDao.class.getName());
         try {
             if (statement != null) {
                 statement.close();
             }
         } catch (SQLException e) {
-            //log
+            logger.error("Cannot close statement.");
         }
     }
     default void close(Connection connection) {
+        final Logger logger = LogManager.getLogger(BaseDao.class.getName());
         try {
             if (connection != null) {
                 connection.close();
             }
         } catch (SQLException e) {
-            //log
+            logger.error("Cannot close connection.");
         }
     }
 }

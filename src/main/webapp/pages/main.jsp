@@ -16,6 +16,10 @@
     <h1>Welcome</h1>
     <hr>
     <h1>${user}, hello!</h1>
+    <FORM action="upload" enctype="multipart/form-data" method="POST">
+        Upload File: <INPUT type="file" name="content" height="130">
+        <INPUT type="submit" value="Upload File">
+    </FORM>
     <a href="controller?command=logout" class="user__title">Logout</a>
 </div>
 </body>

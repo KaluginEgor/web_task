@@ -1,6 +1,5 @@
 package com.example.demo_web.command;
 
-import com.example.demo_web.command.ActionCommand;
 import com.example.demo_web.command.impl.*;
 
 public enum CommandEnum {
@@ -26,7 +25,7 @@ public enum CommandEnum {
     },
     CHANGE_LANGUAGE {
         {
-            this.command = new ChangeLanguageCommand();
+            this.command = new ChangeLocaleCommand();
         }
     };
     ActionCommand command;

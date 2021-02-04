@@ -1,6 +1,5 @@
 package com.example.demo_web.dao.impl;
 
-import com.example.demo_web.dao.BaseDao;
 import com.example.demo_web.dao.UserDao;
 import com.example.demo_web.entity.Entity;
 import com.example.demo_web.entity.User;
