@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class UserDaoImpl implements UserDao {
     private static final String SQL_CREATE = "INSERT INTO users (login, email, password) VALUES (?, ?, ?)";
-    private static final String SQL_CHECK_USER_LOGIN = "SELECT users.login FROM users WHERE users.login LIKE ?";
+    private static final String SQL_FIND_USER_BY_LOGIN = "SELECT login, email, password FROM users WHERE users.login LIKE ?";
     private static final String SQL_CHECK_USER_REGISTERED = "SELECT users.login, users.password FROM users WHERE users.login LIKE ? AND users.password LIKE ?";
     private static final String SQL_FIND_USER_BY_EMAIL_AND_PASSWORD = "SELECT login, email, password FROM users WHERE login = ? AND password = ?";
 
@@ -50,7 +50,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean create(User user) throws DaoException{
+    public Optional create(User user) throws DaoException{
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(SQL_CREATE);
@@ -58,10 +58,10 @@ public class UserDaoImpl implements UserDao {
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getPassword());
             statement.executeUpdate();
+            return Optional.of(user);
         } catch (SQLException e) {
             throw new DaoException("SQl exception " + e);
         }
-        return true;
     }
 
     @Override
@@ -70,15 +70,20 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean containsLogin(String login) throws DaoException {
+    public Optional<User> findByLogin(String login) throws DaoException {
         PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(SQL_CHECK_USER_LOGIN);
-            statement.setString(1, login);
-            ResultSet resultSet = statement.executeQuery();
-            return !resultSet.next();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_USER_BY_LOGIN)) {
+            preparedStatement.setString(1, login);
+            try (ResultSet resultSet = preparedStatement.executeQuery()){
+                if (resultSet.next()) {
+                    Builder<User> builder = new UserBuilder();
+                    return Optional.of(builder.build(resultSet));
+                }
+            }
+            return Optional.empty();
         } catch (SQLException e) {
-            throw new DaoException("SQl exception: " + e);
+            throw new DaoException(e);
         }
     }
 

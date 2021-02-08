@@ -31,17 +31,14 @@
             <div class="form__group">
                 <input type="password" class="form__input" name="password" placeholder=<fmt:message key="label.password" bundle="${ rb }" /> value="" pattern=".{8,}" title="Eight or more characters"/>
             </div>
+            <div class="form__group">
+                <input type="password" class="form__input" name="passwordRepeat" placeholder=<fmt:message key="label.password" bundle="${ rb }" /> value="" pattern=".{8,}" title="Eight or more characters"/>
+            </div>
             <input type="submit" class="btn" value=<fmt:message key="label.submit" bundle="${ rb }" />>
         </form>
         <a href="controller?command=logout" class="user__title"><fmt:message key="label.login" bundle="${ rb }" /></a>
         <br/>
-        ${errorRegisterMessage}
-        <br/>
-        ${errorUserRegistered}
-        <br/>
-        ${wrongAction}
-        <br/>
-        ${nullPage}
+        ${error}
     </div>
 </body>
 </html>

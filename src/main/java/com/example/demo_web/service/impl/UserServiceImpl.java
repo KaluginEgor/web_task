@@ -7,7 +7,6 @@ import com.example.demo_web.entity.User;
 import com.example.demo_web.exception.ConnectionException;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.exception.ServiceException;
-import com.example.demo_web.service.RegisterService;
 import com.example.demo_web.service.UserService;
 import com.example.demo_web.validator.UserValidator;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -49,14 +48,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean registerUser(String login, String email, String password) throws ServiceException {
-        try {
-            String passwordHash = DigestUtils.md5Hex(password);
-            userDao.create(new User(login, email, passwordHash));
-            return true;
-        } catch (DaoException e) {
-            logger.info("error: " + e);
-            return false;
+    public Optional<User> register(String login, String email, String password) throws ServiceException {
+        Optional<User> user = Optional.empty();
+        if (isValid(login, email, password)) {
+            try {
+                String encryptedPassword = DigestUtils.md5Hex(password);
+                Optional<User> userFromBd = userDao.findByLogin(login);
+                if (userFromBd.isPresent()) {
+                    logger.info("This login already exists: ", login);
+                    throw new ServiceException("Login already exists.");
+                } else {
+                    user = userDao.create(new User(login, email, encryptedPassword));
+                    logger.info("User {} created.", user);
+                }
+            } catch (DaoException e) {
+                throw new ServiceException(e.getMessage(), e);
+            }
+        } else {
+            logger.error("Entered data is not valid.");
+            throw new ServiceException("Entered data is not valid.");
         }
+        return user;
+    }
+
+    @Override
+    public boolean isValid(String login, String email, String password) throws ServiceException {
+        return UserValidator.isValidLogin(login) && UserValidator.isValidEmail(email) && UserValidator.isValidPassword(password);
     }
 }
