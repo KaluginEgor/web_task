@@ -1,4 +1,4 @@
-package com.example.demo_web.dao;
+package com.example.demo_web.dao.api;
 
 import com.example.demo_web.entity.Entity;
 import com.example.demo_web.exception.DaoException;

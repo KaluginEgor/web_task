@@ -31,14 +31,7 @@
     </form>
     <a href="controller?command=registration_page" class="user__title"><fmt:message key="label.register" bundle="${ rb }" /></a>
     <br/>
-    ${errorLoginPassMessage}
-    <br/>
-    ${errorLoginDataMessage}
-    <br/>
-    ${wrongAction}
-    <br/>
-    ${nullPage}
-    <br/>
+    ${error}
 </div>
 </body>
 </html>

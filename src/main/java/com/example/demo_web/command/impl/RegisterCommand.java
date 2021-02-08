@@ -2,6 +2,7 @@ package com.example.demo_web.command.impl;
 
 import com.example.demo_web.command.ActionCommand;
 import com.example.demo_web.command.RequestParameter;
+import com.example.demo_web.command.SessionRequestContent;
 import com.example.demo_web.entity.User;
 import com.example.demo_web.manager.ConfigurationManager;
 import com.example.demo_web.manager.MessageManager;
@@ -12,25 +13,25 @@ import javax.servlet.http.HttpServletRequest;
 public class RegisterCommand implements ActionCommand {
 
     @Override
-    public String execute(HttpServletRequest request) {
+    public String execute(SessionRequestContent sessionRequestContent) {
         String page = null;
-        String email = request.getParameter(RequestParameter.EMAIL);
-        String login = request.getParameter(RequestParameter.LOGIN);
-        String password = request.getParameter(RequestParameter.PASSWORD);
+        String email = sessionRequestContent.getRequestParameter(RequestParameter.EMAIL);
+        String login = sessionRequestContent.getRequestParameter(RequestParameter.LOGIN);
+        String password = sessionRequestContent.getRequestParameter(RequestParameter.PASSWORD);
         RegisterService registerService = new RegisterService();
 
         if (registerService.isValidData(login, email, password)) {
            if (registerService.isNotRegistered(login)) {
-               request.setAttribute("user", login);
+               sessionRequestContent.setRequestAttribute("user", login);
                registerService.registerUser(login, email, password);
                page = ConfigurationManager.getProperty("path.page.main");
            } else {
-               request.setAttribute("errorUserRegistered",
+               sessionRequestContent.setRequestAttribute("errorUserRegistered",
                        MessageManager.getProperty("message.userregistered"));
                page = ConfigurationManager.getProperty("path.page.registration");
            }
         } else {
-            request.setAttribute("errorRegisterMessage",
+            sessionRequestContent.setRequestAttribute("errorRegisterMessage",
                     MessageManager.getProperty("message.registererror"));
             page = ConfigurationManager.getProperty("path.page.registration");
         }

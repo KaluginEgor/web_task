@@ -2,34 +2,43 @@ package com.example.demo_web.command.impl;
 
 import com.example.demo_web.command.ActionCommand;
 import com.example.demo_web.command.RequestParameter;
-import com.example.demo_web.service.LoginService;
+import com.example.demo_web.command.SessionRequestContent;
+import com.example.demo_web.entity.User;
+import com.example.demo_web.exception.DaoException;
+import com.example.demo_web.exception.ServiceException;
 import com.example.demo_web.manager.ConfigurationManager;
-import com.example.demo_web.manager.MessageManager;
+import com.example.demo_web.service.UserService;
+import com.example.demo_web.service.impl.UserServiceImpl;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 public class LoginCommand implements ActionCommand {
+    private final UserService userService = new UserServiceImpl();
+
 
     @Override
-    public String execute(HttpServletRequest request) {
+    public String execute(SessionRequestContent sessionRequestContent) {
         String page = null;
-        String login = request.getParameter(RequestParameter.LOGIN);
-        String password = request.getParameter(RequestParameter.PASSWORD);
-        LoginService loginService = new LoginService();
+        String login = sessionRequestContent.getRequestParameter(RequestParameter.LOGIN);
+        String password = sessionRequestContent.getRequestParameter(RequestParameter.PASSWORD);
+        UserService userService = new UserServiceImpl();
+        Optional<User> user = Optional.empty();
 
-        if (loginService.isValidData(login, password)) {
-            if (loginService.isRegistered(login, password)) {
-                request.setAttribute("user", login);
+        try {
+            user = userService.login(login, password);
+            if (user.isPresent()) {
                 page = ConfigurationManager.getProperty("path.page.main");
             } else {
-                request.setAttribute("errorLoginPassMessage",
-                        MessageManager.getProperty("message.loginerror"));
+                sessionRequestContent.setRequestAttribute("error", "wrong login or password");
                 page = ConfigurationManager.getProperty("path.page.login");
             }
-        } else {
-            request.setAttribute("errorLoginDataMessage",
-                    MessageManager.getProperty("message.logindataerror"));
-            page = ConfigurationManager.getProperty("path.page.login");
+        } catch (ServiceException e) {
+            if (e.getCause() instanceof DaoException) {
+                page = ConfigurationManager.getProperty("path.page.error");
+            } else {
+                sessionRequestContent.setRequestAttribute("error", "not valid data provided");
+                page = ConfigurationManager.getProperty("path.page.login");
+            }
         }
         return page;
     }

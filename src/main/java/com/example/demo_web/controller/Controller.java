@@ -2,6 +2,7 @@ package com.example.demo_web.controller;
 
 import com.example.demo_web.command.ActionCommand;
 import com.example.demo_web.command.ActionFactory;
+import com.example.demo_web.command.SessionRequestContent;
 import com.example.demo_web.manager.ConfigurationManager;
 import com.example.demo_web.manager.MessageManager;
 import com.example.demo_web.connection.ConnectionPool;
@@ -16,19 +17,28 @@ import java.io.IOException;
 
 @WebServlet(name = "controller", urlPatterns = {"/controller"})
 public class Controller extends HttpServlet {
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
+
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page = null;
+        String page;
+
+        SessionRequestContent sessionRequestContent = new SessionRequestContent();
+        sessionRequestContent.extractValues(request);
 
         ActionFactory client = new ActionFactory();
-        ActionCommand command = client.defineCommand(request);
+        ActionCommand command = client.defineCommand(sessionRequestContent);
 
-        page = command.execute(request);
+        page = command.execute(sessionRequestContent);
+        sessionRequestContent.insertAttributes(request);
 
         if (page != null) {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);

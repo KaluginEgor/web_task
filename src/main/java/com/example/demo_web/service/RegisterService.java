@@ -1,18 +1,16 @@
 package com.example.demo_web.service;
 
-import com.example.demo_web.dao.UserDao;
-import com.example.demo_web.dao.impl.UserDaoImpl;
+import com.example.demo_web.dao.api.UserDao;
+import com.example.demo_web.dao.api.impl.UserDaoImpl;
 import com.example.demo_web.entity.User;
 import com.example.demo_web.exception.ConnectionException;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.connection.ConnectionPool;
-import com.example.demo_web.util.PasswordHash;
 import com.example.demo_web.validator.UserValidator;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 
 public class RegisterService {
@@ -40,23 +38,16 @@ public class RegisterService {
     }
 
     public boolean isValidData(String login, String email, String password) {
-        UserValidator userValidator = new UserValidator();
-        return userValidator.isValidLogin(login) && userValidator.isValidEmail(email)
-                && userValidator.isValidPassword(password);
+        return UserValidator.isValidLogin(login) && UserValidator.isValidEmail(email)
+                && UserValidator.isValidPassword(password);
     }
 
     public boolean registerUser(String login, String email, String password) {
         try {
-            String passwordHash = PasswordHash.generatePasswordHash(password);
+            String passwordHash = DigestUtils.md5Hex(password);
             userDao.create(new User(login, email, passwordHash));
             return true;
         } catch (DaoException e) {
-            logger.info("error: " + e);
-            return false;
-        } catch (NoSuchAlgorithmException e) {
-            logger.info("error: " + e);
-            return false;
-        } catch (InvalidKeySpecException e) {
             logger.info("error: " + e);
             return false;
         }

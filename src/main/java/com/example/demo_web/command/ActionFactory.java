@@ -8,10 +8,10 @@ import com.example.demo_web.manager.MessageManager;
 import javax.servlet.http.HttpServletRequest;
 
 public class ActionFactory {
-    public ActionCommand defineCommand(HttpServletRequest request) {
+    public ActionCommand defineCommand(SessionRequestContent sessionRequestContent) {
         ActionCommand current = new EmptyCommand();
 
-        String action = request.getParameter("command");
+        String action = sessionRequestContent.getRequestParameter("command");
         if (action == null || action.isEmpty()) {
             return current;
         }
@@ -20,7 +20,7 @@ public class ActionFactory {
             CommandEnum currentEnum = CommandEnum.valueOf(action.toUpperCase());
             current = currentEnum.getCurrentCommand();
         } catch (IllegalArgumentException e) {
-            request.setAttribute("wrongAction", action
+            sessionRequestContent.setSessionAttribute("wrongAction", action
                     + MessageManager.getProperty("message.wrongaction"));
         }
         return current;
