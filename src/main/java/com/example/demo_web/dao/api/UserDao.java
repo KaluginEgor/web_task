@@ -7,7 +7,13 @@ import com.example.demo_web.exception.DaoException;
 import java.util.Optional;
 
 public interface UserDao extends BaseDao<Integer, User> {
-    Optional<User> findByLogin(String login) throws DaoException;
+    Optional<User> findUserByLogin(String login) throws DaoException;
+
     boolean isRegistered(String login, String password) throws DaoException;
-    Optional<User> findByLoginAndPassword(String email, String password) throws DaoException;
+
+    Optional<String> findPasswordByLogin(String login) throws DaoException;
+
+    int create(User user, String encryptedPassword) throws DaoException;
+
+    boolean loginExists(String login) throws DaoException;
 }

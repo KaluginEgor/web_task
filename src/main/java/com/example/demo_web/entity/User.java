@@ -1,14 +1,48 @@
 package com.example.demo_web.entity;
 
 public class User extends Entity {
+    private int id;
+    private String activationKey;
     private String login;
     private String email;
-    private String password;
+    private String firstName;
+    private String secondName;
+    private UserRole userRole;
+    private UserState userState;
 
-    public User(String login, String email, String password) {
+    public User() {}
+
+    public User(String login, String email, String firstName, String secondName) {
         this.login = login;
         this.email = email;
-        this.password = password;
+        this.firstName = firstName;
+        this.secondName = secondName;
+    }
+
+    public User(int id, String login, String email, String firstName, String secondName, UserRole userRole, UserState userState) {
+        this.id = id;
+        this.login = login;
+        this.email = email;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.userRole = userRole;
+        this.userState = userState;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getActivationKey() {
+        return activationKey;
+    }
+
+    public void setActivationKey(String activationKey) {
+        this.activationKey = activationKey;
     }
 
     public String getLogin() {
@@ -27,12 +61,36 @@ public class User extends Entity {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
+    public UserState getUserState() {
+        return userState;
+    }
+
+    public void setUserState(UserState userState) {
+        this.userState = userState;
     }
 
     @Override
@@ -40,7 +98,10 @@ public class User extends Entity {
         final StringBuilder sb = new StringBuilder("User{");
         sb.append("login='").append(login).append('\'');
         sb.append(", email='").append(email).append('\'');
-        sb.append(", password='").append(password).append('\'');
+        sb.append(", firstName='").append(firstName).append('\'');
+        sb.append(", secondName='").append(secondName).append('\'');
+        sb.append(", userRole=").append(userRole);
+        sb.append(", userState=").append(userState);
         sb.append('}');
         return sb.toString();
     }

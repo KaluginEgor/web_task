@@ -16,7 +16,7 @@ public interface BaseDao <K, T extends Entity> {
     T findEntityById(K id) throws DaoException;
     boolean delete(K id) throws DaoException;
     boolean delete(T t) throws DaoException;
-    Optional<T> create(T t) throws DaoException;
+    boolean create(T t) throws DaoException;
     T update(T t)  throws DaoException;
     boolean setConnection(Connection connection);
     default void close(Statement statement) {

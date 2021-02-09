@@ -20,14 +20,16 @@ public class RegisterCommand implements ActionCommand {
         String page = null;
         String email = sessionRequestContent.getRequestParameter(RequestParameter.EMAIL);
         String login = sessionRequestContent.getRequestParameter(RequestParameter.LOGIN);
+        String firstName = sessionRequestContent.getRequestParameter(RequestParameter.FIRST_NAME);
+        String secondName = sessionRequestContent.getRequestParameter(RequestParameter.SECOND_NAME);
         String password = sessionRequestContent.getRequestParameter(RequestParameter.PASSWORD);
         String passwordRepeat = sessionRequestContent.getRequestParameter(RequestParameter.PASSWORD_REPEAT);
         UserService userService = new UserServiceImpl();
-        Optional<User> user = Optional.empty();
+        Optional<User> registeredUser = Optional.empty();
 
         if (password.equals(passwordRepeat)) {
             try {
-                user = userService.register(login, email, password);
+                registeredUser = userService.register(login, email, firstName, secondName, password);
                 page = ConfigurationManager.getProperty("path.page.login");
             } catch (ServiceException e) {
                 if (e.getCause() instanceof DaoException) {
@@ -36,7 +38,7 @@ public class RegisterCommand implements ActionCommand {
                     sessionRequestContent.setRequestAttribute("error", "not valid data provided");
                     page = ConfigurationManager.getProperty("path.page.registration");
                 } else {
-                    sessionRequestContent.setRequestAttribute("error", "user with such login already exists");
+                    sessionRequestContent.setRequestAttribute("error", "registeredUser with such login already exists");
                     page = ConfigurationManager.getProperty("path.page.registration");
                 }
             }
