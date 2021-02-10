@@ -1,7 +1,7 @@
 package com.example.demo_web.dao.api.impl;
 
-import com.example.demo_web.builder.BaseBuilder;
-import com.example.demo_web.builder.impl.UserBuilder;
+import com.example.demo_web.builder.UserBuilder;
+import com.example.demo_web.builder.impl.UserBuilderImpl;
 import com.example.demo_web.dao.api.UserDao;
 import com.example.demo_web.entity.User;
 import com.example.demo_web.exception.DaoException;
@@ -24,6 +24,8 @@ public class UserDaoImpl implements UserDao {
     private static final String SQL_SELECT_PASSWORD_BY_LOGIN = "SELECT user_password FROM users WHERE user_login = ?;";
 
     private static final String SQL_LOGIN_EXISTS = "SELECT EXISTS(SELECT user_login FROM users WHERE user_login = ?) AS user_existence;";
+
+    private static final String SQL_ACTIVATE_USER = "UPDATE users SET user_state_id = 1 WHERE user_id = ?;";
 
     private Connection connection;
     private static UserDao instance = new UserDaoImpl();
@@ -89,8 +91,8 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, login);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    BaseBuilder<User> baseBuilder = new UserBuilder();
-                    return Optional.of(baseBuilder.build(resultSet));
+                    UserBuilder<User> userBuilder = new UserBuilderImpl();
+                    return Optional.of(userBuilder.build(resultSet));
                 }
             }
             return Optional.empty();
@@ -141,6 +143,16 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException(e);
         }
         return result;
+    }
+
+    @Override
+    public boolean activateUser(int id) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_ACTIVATE_USER)) {
+            statement.setInt(1, id);
+            return (statement.executeUpdate() == 1);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override

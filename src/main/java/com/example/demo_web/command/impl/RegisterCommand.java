@@ -1,8 +1,6 @@
 package com.example.demo_web.command.impl;
 
-import com.example.demo_web.command.ActionCommand;
-import com.example.demo_web.command.RequestParameter;
-import com.example.demo_web.command.SessionRequestContent;
+import com.example.demo_web.command.*;
 import com.example.demo_web.entity.User;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.exception.ServiceException;
@@ -16,7 +14,7 @@ public class RegisterCommand implements ActionCommand {
     private static final String DATA_NOT_VALID = "Entered data is not valid.";
 
     @Override
-    public String execute(SessionRequestContent sessionRequestContent) {
+    public CommandResult execute(SessionRequestContent sessionRequestContent) {
         String page = null;
         String email = sessionRequestContent.getRequestParameter(RequestParameter.EMAIL);
         String login = sessionRequestContent.getRequestParameter(RequestParameter.LOGIN);
@@ -26,11 +24,17 @@ public class RegisterCommand implements ActionCommand {
         String passwordRepeat = sessionRequestContent.getRequestParameter(RequestParameter.PASSWORD_REPEAT);
         UserService userService = new UserServiceImpl();
         Optional<User> registeredUser = Optional.empty();
+        CommandResult commandResult = new CommandResult();
+        commandResult.setTransitionType(TransitionType.FORWARD);
 
         if (password.equals(passwordRepeat)) {
             try {
                 registeredUser = userService.register(login, email, firstName, secondName, password);
+                sessionRequestContent.setSessionAttribute(Attribute.ACTIVATION_USERS_ID, registeredUser.get().getId());
+                String locale = (String) sessionRequestContent.getSessionAttribute(Attribute.LANG);
+                userService.constructAndSendConfirmEmail(locale, registeredUser.get());
                 page = ConfigurationManager.getProperty("path.page.login");
+                sessionRequestContent.setRequestAttribute("error", "confirmation message sent to your email");
             } catch (ServiceException e) {
                 if (e.getCause() instanceof DaoException) {
                     page = ConfigurationManager.getProperty("path.page.error");
@@ -47,6 +51,7 @@ public class RegisterCommand implements ActionCommand {
             page = ConfigurationManager.getProperty("path.page.registration");
         }
 
-        return page;
+        commandResult.setPage(page);
+        return commandResult;
     }
 }

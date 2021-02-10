@@ -1,8 +1,6 @@
 package com.example.demo_web.command.impl;
 
-import com.example.demo_web.command.ActionCommand;
-import com.example.demo_web.command.RequestParameter;
-import com.example.demo_web.command.SessionRequestContent;
+import com.example.demo_web.command.*;
 import com.example.demo_web.entity.User;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.exception.ServiceException;
@@ -17,12 +15,14 @@ public class LoginCommand implements ActionCommand {
 
 
     @Override
-    public String execute(SessionRequestContent sessionRequestContent) {
+    public CommandResult execute(SessionRequestContent sessionRequestContent) {
         String page = null;
         String login = sessionRequestContent.getRequestParameter(RequestParameter.LOGIN);
         String password = sessionRequestContent.getRequestParameter(RequestParameter.PASSWORD);
         UserService userService = new UserServiceImpl();
         Optional<User> user = Optional.empty();
+        CommandResult commandResult = new CommandResult();
+        commandResult.setTransitionType(TransitionType.FORWARD);
 
         try {
             user = userService.login(login, password);
@@ -40,6 +40,7 @@ public class LoginCommand implements ActionCommand {
                 page = ConfigurationManager.getProperty("path.page.login");
             }
         }
-        return page;
+        commandResult.setPage(page);
+        return commandResult;
     }
 }

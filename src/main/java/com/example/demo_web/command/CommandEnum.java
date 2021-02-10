@@ -27,6 +27,11 @@ public enum CommandEnum {
         {
             this.command = new ChangeLocaleCommand();
         }
+    },
+    CONFIRM_REGISTRATION {
+        {
+            this.command = new ConfirmRegistrationCommand();
+        }
     };
     ActionCommand command;
     public ActionCommand getCurrentCommand() {

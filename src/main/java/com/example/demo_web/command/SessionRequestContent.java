@@ -10,6 +10,8 @@ public class SessionRequestContent {
     private Map<String, Object> requestAttributes;
     private Map<String, String[]> requestParameters;
     private Map<String, Object> sessionAttributes;
+    private String contextPath;
+    private String servletPath;
 
     public SessionRequestContent() {
         requestAttributes = new HashMap<>();
@@ -22,12 +24,14 @@ public class SessionRequestContent {
         requestParameters = extractRequestParameters(request);
         requestAttributes = extractRequestAttributes(request);
         sessionAttributes = extractSessionAttributes(request);
+        contextPath = request.getContextPath();
+        servletPath = request.getServletPath();
     }
 
     public void insertAttributes(HttpServletRequest request) {
         requestAttributes.forEach(request::setAttribute);
         HttpSession session = request.getSession();
-        sessionAttributes.forEach(request::setAttribute);
+        sessionAttributes.forEach(session::setAttribute);
     }
 
     public Object getRequestAttribute(String key) {

@@ -1,6 +1,7 @@
 package com.example.demo_web.mail;
 
 import java.util.Properties;
+import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
@@ -9,7 +10,8 @@ public class SessionFactory {
         String userName = configProperties.getProperty("mail.user.name");
         String userPassword = configProperties.getProperty("mail.user.password");
         return Session.getDefaultInstance(configProperties,
-                new javax.mail.Authenticator() {
+                new Authenticator() {
+                    @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(userName, userPassword);
                     }

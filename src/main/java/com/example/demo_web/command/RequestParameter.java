@@ -10,6 +10,7 @@ public class RequestParameter {
     public static final String SECOND_NAME = "secondName";
     public static final String LANG = "lang";
     public static final String CURRENT_PAGE = "page";
+    public static final String PARAM_ID = "id";
 
     private RequestParameter() {}
 }

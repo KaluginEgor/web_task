@@ -11,4 +11,8 @@ public interface UserService {
     Optional<User> register(String login, String email, String firstName, String secondName, String password) throws ServiceException;
 
     boolean isValid(String login, String email, String firstName, String secondName, String password) throws ServiceException;
+
+    boolean activateUser(int id) throws ServiceException;
+
+    void constructAndSendConfirmEmail(String locale, User user);
 }

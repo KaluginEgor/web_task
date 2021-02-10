@@ -15,5 +15,7 @@ public interface UserDao extends BaseDao<Integer, User> {
 
     int create(User user, String encryptedPassword) throws DaoException;
 
+    boolean activateUser(int id) throws DaoException;
+
     boolean loginExists(String login) throws DaoException;
 }

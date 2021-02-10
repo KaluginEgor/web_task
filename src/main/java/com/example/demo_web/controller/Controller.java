@@ -1,8 +1,6 @@
 package com.example.demo_web.controller;
 
-import com.example.demo_web.command.ActionCommand;
-import com.example.demo_web.command.ActionFactory;
-import com.example.demo_web.command.SessionRequestContent;
+import com.example.demo_web.command.*;
 import com.example.demo_web.manager.ConfigurationManager;
 import com.example.demo_web.manager.MessageManager;
 import com.example.demo_web.connection.ConnectionPool;
@@ -30,6 +28,7 @@ public class Controller extends HttpServlet {
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String page;
+        CommandResult commandResult;
 
         SessionRequestContent sessionRequestContent = new SessionRequestContent();
         sessionRequestContent.extractValues(request);
@@ -37,12 +36,16 @@ public class Controller extends HttpServlet {
         ActionFactory client = new ActionFactory();
         ActionCommand command = client.defineCommand(sessionRequestContent);
 
-        page = command.execute(sessionRequestContent);
+        commandResult = command.execute(sessionRequestContent);
         sessionRequestContent.insertAttributes(request);
 
-        if (page != null) {
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-            dispatcher.forward(request, response);
+        if (commandResult.getPage() != null) {
+            if (commandResult.getTransitionType() == TransitionType.FORWARD) {
+                RequestDispatcher dispatcher = request.getRequestDispatcher(commandResult.getPage());
+                dispatcher.forward(request, response);
+            } else {
+                response.sendRedirect(request.getContextPath() + commandResult.getPage());
+            }
         } else {
             page = ConfigurationManager.getProperty("path.page.index");
             request.getSession().setAttribute("nullPage",

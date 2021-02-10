@@ -1,5 +1,10 @@
 package com.example.demo_web.mail;
 
+import com.example.demo_web.service.impl.UserServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -15,23 +20,41 @@ public class MailSender {
     private String mailSubject;
     private String mailText;
     private Properties properties;
+    private static final String MAIL_PROPERTIES = "/mail.properties";
+    private static final Logger logger = LogManager.getLogger(MailSender.class);
 
-    public MailSender(String sendToEmail, String mailSubject, String mailText, Properties properties) {
+    public MailSender() {
+        properties = new Properties();
+        try {
+            properties.load(this.getClass().getClassLoader().getResourceAsStream(MAIL_PROPERTIES));
+        } catch (IOException e) {
+            logger.error("Loading properties for mail sending error",e);
+        }
+    }
+
+    public MailSender(String mailSubject, String mailText, String sendToEmail) {
         this.sendToEmail = sendToEmail;
         this.mailSubject = mailSubject;
         this.mailText = mailText;
-        this.properties = properties;
+        properties = new Properties();
+        try {
+            properties.load(this.getClass().getClassLoader().getResourceAsStream(MAIL_PROPERTIES));
+        } catch (IOException e) {
+            logger.error("Loading properties for mail sending error",e);
+        }
     }
+
     public void send() {
         try {
             initMessage();
             Transport.send(message); // sending mail
         } catch (AddressException e) {
-            System.err.println("Invalid address: " + sendToEmail + " " + e); // in log
+            logger.error("Invalid address: " + sendToEmail + " " + e); // in log
         } catch (MessagingException e) {
-            System.err.println("Error generating or sending message: " + e); // in log
+            logger.error("Error generating or sending message: " + e); // in log
         }
     }
+
     private void initMessage() throws MessagingException {
         // mail session object
         Session mailSession = SessionFactory.createSession(properties);

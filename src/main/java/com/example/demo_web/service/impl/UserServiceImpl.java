@@ -1,7 +1,7 @@
 package com.example.demo_web.service.impl;
 
-import com.example.demo_web.builder.BaseBuilder;
-import com.example.demo_web.builder.impl.UserBuilder;
+import com.example.demo_web.builder.UserBuilder;
+import com.example.demo_web.builder.impl.UserBuilderImpl;
 import com.example.demo_web.connection.ConnectionPool;
 import com.example.demo_web.dao.api.UserDao;
 import com.example.demo_web.dao.api.impl.UserDaoImpl;
@@ -9,6 +9,8 @@ import com.example.demo_web.entity.User;
 import com.example.demo_web.exception.ConnectionException;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.exception.ServiceException;
+import com.example.demo_web.mail.MailBuilder;
+import com.example.demo_web.mail.MailSender;
 import com.example.demo_web.service.UserService;
 import com.example.demo_web.validator.UserValidator;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -45,8 +47,6 @@ public class UserServiceImpl implements UserService {
                             foundUser = userDao.findUserByLogin(login);
                         }
                     }
-                } else {
-                    throw new ServiceException("No such login");
                 }
             } catch (DaoException e) {
                 throw new ServiceException(e.getMessage(), e);
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
                     logger.info("This login already exists: ", login);
                     throw new ServiceException("Login already exists.");
                 } else {
-                    BaseBuilder<User> builder = new UserBuilder();
+                    UserBuilder<User> builder = new UserBuilderImpl();
                     builder.setDefaultFields(user);
                     int userId = userDao.create(user, encryptedPassword);
                     user.setId(userId);
@@ -85,6 +85,23 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Entered data is not valid.");
         }
         return registeredUser;
+    }
+
+    @Override
+    public boolean activateUser(int id) throws ServiceException {
+        try {
+            return userDao.activateUser(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void constructAndSendConfirmEmail(String locale, User user) {
+        String emailSubject = MailBuilder.buildEmailSubject(locale);
+        String emailBody = MailBuilder.buildEmailBody(user,locale);
+        MailSender mailSender = new MailSender(emailSubject, emailBody, user.getEmail());
+        mailSender.send();
     }
 
     @Override
