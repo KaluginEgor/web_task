@@ -27,6 +27,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
     private static final String LOGIN_IS_UNIQUE = "loginIsUnique";
+    private static final String LOGIN_EXISTS = "loginExists";
     private static final String LOGIN = "login";
     private static final String EMAIL = "email";
     private static final String FIRST_NAME = "firstName";
@@ -47,24 +48,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> login(String login, String password) throws ServiceException {
         Optional<User> foundUser = Optional.empty();
-        if (UserValidator.isValidLogin(login) && UserValidator.isValidPassword(password)) {
-            try {
-                String encryptedPassword = DigestUtils.md5Hex(password);
-                if (userDao.loginExists(login)) {
-                    Optional<String> passwordFromDB = userDao.findPasswordByLogin(login);
-                    if (passwordFromDB.isPresent()) {
-                        if (passwordFromDB.get().equals(encryptedPassword)) {
-                            foundUser = userDao.findUserByLogin(login);
-                        }
+        try {
+            String encryptedPassword = DigestUtils.md5Hex(password);
+            if (userDao.loginExists(login)) {
+                Optional<String> passwordFromDB = userDao.findPasswordByLogin(login);
+                if (passwordFromDB.isPresent()) {
+                    if (passwordFromDB.get().equals(encryptedPassword)) {
+                        foundUser = userDao.findUserByLogin(login);
                     }
                 }
-            } catch (DaoException e) {
-                throw new ServiceException(e.getMessage(), e);
             }
-        } else {
-            logger.error("Login or password is not valid.");
-            throw new ServiceException("Login or password is not valid.");
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
+
         return foundUser;
     }
 
@@ -112,8 +109,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Boolean> defineIncorrectData(String login, String email, String firstName, String secondName, String password) throws ServiceException {
-        Map<String, Boolean> validatedUsersData = UserValidator.validateDataForSignUp(login, email, firstName, secondName, password);
+    public Map<String, Boolean> defineIncorrectLoginData(String login, String password) throws ServiceException {
+        Map<String, Boolean> validatedUsersData = UserValidator.validateData(login, password);
+        try {
+            validatedUsersData.put(LOGIN_EXISTS, userDao.loginExists(login));
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return validatedUsersData;
+    }
+
+    @Override
+    public Map<String, Boolean> defineIncorrectRegistrationData(String login, String email, String firstName, String secondName, String password) throws ServiceException {
+        Map<String, Boolean> validatedUsersData = UserValidator.validateData(login, email, firstName, secondName, password);
         try {
             validatedUsersData.put(LOGIN_IS_UNIQUE, userDao.findUserByLogin(login).isEmpty());
         } catch (DaoException e) {
@@ -122,7 +130,7 @@ public class UserServiceImpl implements UserService {
         return validatedUsersData;
     }
 
-    public void defineErrorMessageFromUsersDataValidations(SessionRequestContent sessionRequestContent,
+    public void defineErrorMessageFromRegistrationDataValidations(SessionRequestContent sessionRequestContent,
                                                                   Map<String, Boolean> usersDataValidations) {
         String falseKey = defineFalseKey(usersDataValidations);
         switch (falseKey) {
@@ -149,6 +157,10 @@ public class UserServiceImpl implements UserService {
             case LOGIN_IS_UNIQUE:
             sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
                         ErrorMessage.LOGIN_IS_NOT_UNIQUE_ERROR_MESSAGE);
+                break;
+            case LOGIN_EXISTS:
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                        ErrorMessage.LOGIN_DOESNT_EXIST_ERROR_MESSAGE);
                 break;
         }
     }

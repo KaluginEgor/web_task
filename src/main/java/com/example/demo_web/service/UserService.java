@@ -18,8 +18,10 @@ public interface UserService {
 
     void constructAndSendConfirmEmail(String locale, User user);
 
-    Map<String, Boolean> defineIncorrectData(String login, String email, String firstName, String secondName, String password) throws ServiceException;
+    Map<String, Boolean> defineIncorrectLoginData(String login, String password) throws ServiceException;
 
-    void defineErrorMessageFromUsersDataValidations(SessionRequestContent sessionRequestContent,
-                                                                  Map<String, Boolean> usersDataValidations);
+    Map<String, Boolean> defineIncorrectRegistrationData(String login, String email, String firstName, String secondName, String password) throws ServiceException;
+
+    void defineErrorMessageFromRegistrationDataValidations(SessionRequestContent sessionRequestContent,
+                                                           Map<String, Boolean> usersDataValidations);
 }

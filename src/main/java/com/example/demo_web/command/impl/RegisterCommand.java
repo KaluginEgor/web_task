@@ -26,9 +26,9 @@ public class RegisterCommand implements ActionCommand {
 
         if (password.equals(passwordRepeat)) {
             try {
-                Map<String,Boolean> usersDataValidations = userService.defineIncorrectData(login, email, firstName, secondName, password);
+                Map<String,Boolean> usersDataValidations = userService.defineIncorrectRegistrationData(login, email, firstName, secondName, password);
                 if (usersDataValidations.containsValue(Boolean.FALSE)) {
-                    userService.defineErrorMessageFromUsersDataValidations(sessionRequestContent, usersDataValidations);
+                    userService.defineErrorMessageFromRegistrationDataValidations(sessionRequestContent, usersDataValidations);
                     commandResult.setPage(PagePath.REGISTRATION);
                 } else {
                     registeredUser = userService.register(login, email, firstName, secondName, password);

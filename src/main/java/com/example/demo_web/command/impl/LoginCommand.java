@@ -7,6 +7,7 @@ import com.example.demo_web.exception.ServiceException;
 import com.example.demo_web.service.UserService;
 import com.example.demo_web.service.impl.UserServiceImpl;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class LoginCommand implements ActionCommand {
@@ -22,20 +23,22 @@ public class LoginCommand implements ActionCommand {
         commandResult.setTransitionType(TransitionType.FORWARD);
 
         try {
-            user = userService.login(login, password);
-            if (user.isPresent()) {
-                commandResult.setPage(PagePath.MAIN);
-            } else {
-                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE, ErrorMessage.LOGIN_OR_PASSWORD_INCORRECT_ERROR_MESSAGE);
+            Map<String,Boolean> usersDataValidations = userService.defineIncorrectLoginData(login, password);
+            if (usersDataValidations.containsValue(Boolean.FALSE)) {
+                userService.defineErrorMessageFromRegistrationDataValidations(sessionRequestContent, usersDataValidations);
                 commandResult.setPage(PagePath.LOGIN);
+            } else {
+                user = userService.login(login, password);
+                if (user.isPresent()) {
+                    commandResult.setPage(PagePath.MAIN);
+                } else {
+                    sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                            ErrorMessage.ENTERED_PASSWORD_INCORRECT_ERROR_MESSAGE);
+                    commandResult.setPage(PagePath.LOGIN);
+                }
             }
         } catch (ServiceException e) {
-            if (e.getCause() instanceof DaoException) {
-                commandResult.setPage(PagePath.ERROR);
-            } else {
-                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE, "not valid data provided");
-                commandResult.setPage(PagePath.LOGIN);
-            }
+            commandResult.setPage(PagePath.ERROR);
         }
         return commandResult;
     }

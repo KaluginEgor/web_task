@@ -1,6 +1,7 @@
 package com.example.demo_web.validator;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class UserValidator {
@@ -30,12 +31,19 @@ public class UserValidator {
         return password.matches(PASSWORD_PATTERN);
     }
 
-    public static Map<String, Boolean> validateDataForSignUp(String login, String email, String firstName, String secondName, String password) {
-        Map<String, Boolean> validations = new HashMap<>();
+    public static Map<String, Boolean> validateData(String login, String email, String firstName, String secondName, String password) {
+        Map<String, Boolean> validations = new LinkedHashMap<>();
         validations.put(LOGIN, isValidLogin(login));
         validations.put(EMAIL, isValidEmail(email));
         validations.put(FIRST_NAME, isValidName(firstName));
         validations.put(SECOND_NAME, isValidName(secondName));
+        validations.put(PASSWORD, isValidPassword(password));
+        return validations;
+    }
+
+    public static Map<String, Boolean> validateData(String login, String password) {
+        Map<String, Boolean> validations = new LinkedHashMap<>();
+        validations.put(LOGIN, isValidLogin(login));
         validations.put(PASSWORD, isValidPassword(password));
         return validations;
     }

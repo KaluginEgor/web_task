@@ -9,7 +9,8 @@ public class ErrorMessage {
     public static final String LOGIN_IS_NOT_UNIQUE_ERROR_MESSAGE = "login is already taken";
     public static final String REPEAT_PASSWORD_INCORRECT_MESSAGE = "enter correct repeat password";
     public static final String CONFIRM_MESSAGE_SENT = "confirmation message sent to your email";
-    public static final String LOGIN_OR_PASSWORD_INCORRECT_ERROR_MESSAGE = "wrong login or password";
+    public static final String ENTERED_PASSWORD_INCORRECT_ERROR_MESSAGE = "wrong password";
+    public static final String LOGIN_DOESNT_EXIST_ERROR_MESSAGE = "no user with such login";
 
     private ErrorMessage() {}
 }
