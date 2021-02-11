@@ -4,7 +4,6 @@ import com.example.demo_web.command.*;
 import com.example.demo_web.entity.User;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.exception.ServiceException;
-import com.example.demo_web.manager.ConfigurationManager;
 import com.example.demo_web.service.UserService;
 import com.example.demo_web.service.impl.UserServiceImpl;
 
@@ -16,10 +15,8 @@ public class LoginCommand implements ActionCommand {
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
-        String page = null;
         String login = sessionRequestContent.getRequestParameter(RequestParameter.LOGIN);
         String password = sessionRequestContent.getRequestParameter(RequestParameter.PASSWORD);
-        UserService userService = new UserServiceImpl();
         Optional<User> user = Optional.empty();
         CommandResult commandResult = new CommandResult();
         commandResult.setTransitionType(TransitionType.FORWARD);
@@ -27,20 +24,19 @@ public class LoginCommand implements ActionCommand {
         try {
             user = userService.login(login, password);
             if (user.isPresent()) {
-                page = ConfigurationManager.getProperty("path.page.main");
+                commandResult.setPage(PagePath.MAIN);
             } else {
-                sessionRequestContent.setRequestAttribute("error", "wrong login or password");
-                page = ConfigurationManager.getProperty("path.page.login");
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE, ErrorMessage.LOGIN_OR_PASSWORD_INCORRECT_ERROR_MESSAGE);
+                commandResult.setPage(PagePath.LOGIN);
             }
         } catch (ServiceException e) {
             if (e.getCause() instanceof DaoException) {
-                page = ConfigurationManager.getProperty("path.page.error");
+                commandResult.setPage(PagePath.ERROR);
             } else {
-                sessionRequestContent.setRequestAttribute("error", "not valid data provided");
-                page = ConfigurationManager.getProperty("path.page.login");
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE, "not valid data provided");
+                commandResult.setPage(PagePath.LOGIN);
             }
         }
-        commandResult.setPage(page);
         return commandResult;
     }
 }

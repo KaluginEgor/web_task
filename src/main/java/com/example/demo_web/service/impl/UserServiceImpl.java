@@ -2,6 +2,9 @@ package com.example.demo_web.service.impl;
 
 import com.example.demo_web.builder.UserBuilder;
 import com.example.demo_web.builder.impl.UserBuilderImpl;
+import com.example.demo_web.command.ErrorMessage;
+import com.example.demo_web.command.RequestParameter;
+import com.example.demo_web.command.SessionRequestContent;
 import com.example.demo_web.connection.ConnectionPool;
 import com.example.demo_web.dao.api.UserDao;
 import com.example.demo_web.dao.api.impl.UserDaoImpl;
@@ -18,10 +21,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
+import java.util.Map;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
+    private static final String LOGIN_IS_UNIQUE = "loginIsUnique";
+    private static final String LOGIN = "login";
+    private static final String EMAIL = "email";
+    private static final String FIRST_NAME = "firstName";
+    private static final String SECOND_NAME = "secondName";
+    private static final String PASSWORD = "password";
     private final UserDao userDao = UserDaoImpl.getInstance();
 
     public UserServiceImpl() {
@@ -63,26 +73,16 @@ public class UserServiceImpl implements UserService {
         Optional<User> registeredUser = Optional.empty();
         User user = new User(login, email, firstName, secondName);
 
-        if (isValid(login, email, firstName, secondName, password)) {
-            try {
-                String encryptedPassword = DigestUtils.md5Hex(password);
-                if (userDao.loginExists(login)) {
-                    logger.info("This login already exists: ", login);
-                    throw new ServiceException("Login already exists.");
-                } else {
-                    UserBuilder<User> builder = new UserBuilderImpl();
-                    builder.setDefaultFields(user);
-                    int userId = userDao.create(user, encryptedPassword);
-                    user.setId(userId);
-                    registeredUser = Optional.of(user);
-                    logger.info("User {} created.", registeredUser);
-                }
-            } catch (DaoException e) {
-                throw new ServiceException(e.getMessage(), e);
-            }
-        } else {
-            logger.error("Entered data is not valid.");
-            throw new ServiceException("Entered data is not valid.");
+        try {
+            String encryptedPassword = DigestUtils.md5Hex(password);
+            UserBuilder<User> builder = new UserBuilderImpl();
+            builder.setDefaultFields(user);
+            int userId = userDao.create(user, encryptedPassword);
+            user.setId(userId);
+            registeredUser = Optional.of(user);
+            logger.info("User {} created.", registeredUser);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
         }
         return registeredUser;
     }
@@ -109,5 +109,56 @@ public class UserServiceImpl implements UserService {
         return UserValidator.isValidLogin(login) && UserValidator.isValidEmail(email)
                 && UserValidator.isValidName(firstName) && UserValidator.isValidName(secondName)
                 && UserValidator.isValidPassword(password);
+    }
+
+    @Override
+    public Map<String, Boolean> defineIncorrectData(String login, String email, String firstName, String secondName, String password) throws ServiceException {
+        Map<String, Boolean> validatedUsersData = UserValidator.validateDataForSignUp(login, email, firstName, secondName, password);
+        try {
+            validatedUsersData.put(LOGIN_IS_UNIQUE, userDao.findUserByLogin(login).isEmpty());
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return validatedUsersData;
+    }
+
+    public void defineErrorMessageFromUsersDataValidations(SessionRequestContent sessionRequestContent,
+                                                                  Map<String, Boolean> usersDataValidations) {
+        String falseKey = defineFalseKey(usersDataValidations);
+        switch (falseKey) {
+            case LOGIN:
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                        ErrorMessage.LOGIN_INCORRECT_ERROR_MESSAGE);
+                break;
+            case EMAIL:
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                        ErrorMessage.EMAIL_INCORRECT_ERROR_MESSAGE);
+                break;
+            case FIRST_NAME:
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                        ErrorMessage.FIRST_NAME_INCORRECT_ERROR_MESSAGE);
+                break;
+            case SECOND_NAME:
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                        ErrorMessage.SECOND_NAME_INCORRECT_ERROR_MESSAGE);
+                break;
+            case PASSWORD:
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                        ErrorMessage.PASSWORD_INCORRECT_ERROR_MESSAGE);
+                break;
+            case LOGIN_IS_UNIQUE:
+            sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                        ErrorMessage.LOGIN_IS_NOT_UNIQUE_ERROR_MESSAGE);
+                break;
+        }
+    }
+
+    private static String defineFalseKey(Map<String, Boolean> map) {
+        Optional<String> falseKey = map.entrySet()
+                .stream()
+                .filter(entry -> Boolean.FALSE.equals(entry.getValue()))
+                .map(Map.Entry::getKey)
+                .findFirst();
+        return falseKey.get();
     }
 }

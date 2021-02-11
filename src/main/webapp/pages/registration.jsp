@@ -29,10 +29,10 @@
                 <input type="email" class="form__input" name="email" value="" placeholder=<fmt:message key="label.email" bundle="${ rb }" /> pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
             </div>
             <div class="form__group">
-                <input type="text" class="form__input" name="firstName" value="" placeholder=<fmt:message key="label.fname" bundle="${ rb }" /> pattern="[A-Za-zА-Яа-яЁё]{4,}"/>
+                <input type="text" class="form__input" name="firstName" value="" placeholder="<fmt:message key="label.fname" bundle="${ rb }" />" pattern="[A-Za-zА-Яа-яЁё]{4,}"/>
             </div>
             <div class="form__group">
-                <input type="text" class="form__input" name="secondName" value="" placeholder=<fmt:message key="label.sname" bundle="${ rb }" /> pattern="[A-Za-zА-Яа-яЁё]{4,}"/>
+                <input type="text" class="form__input" name="secondName" value="" placeholder="<fmt:message key="label.sname" bundle="${ rb }" />" pattern="[A-Za-zА-Яа-яЁё]{4,}"/>
             </div>
             <div class="form__group">
                 <input type="password" class="form__input" name="password" placeholder=<fmt:message key="label.password" bundle="${ rb }" /> value="" pattern=".{8,}" title="Eight or more characters"/>
@@ -44,7 +44,7 @@
         </form>
         <a href="controller?command=logout" class="user__title"><fmt:message key="label.login" bundle="${ rb }" /></a>
         <br/>
-        ${error}
+        ${errorMessage}
     </div>
 </body>
 </html>

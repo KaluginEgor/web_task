@@ -1,7 +1,6 @@
 package com.example.demo_web.controller;
 
 import com.example.demo_web.command.*;
-import com.example.demo_web.manager.ConfigurationManager;
 import com.example.demo_web.manager.MessageManager;
 import com.example.demo_web.connection.ConnectionPool;
 
@@ -47,8 +46,8 @@ public class Controller extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + commandResult.getPage());
             }
         } else {
-            page = ConfigurationManager.getProperty("path.page.index");
-            request.getSession().setAttribute("nullPage",
+            page = PagePath.INDEX;
+            request.getSession().setAttribute(RequestParameter.ERROR_MESSAGE,
                     MessageManager.getProperty("message.nullpage"));
             response.sendRedirect(request.getContextPath() + page);
         }

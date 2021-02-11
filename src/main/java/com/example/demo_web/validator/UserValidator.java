@@ -1,10 +1,18 @@
 package com.example.demo_web.validator;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class UserValidator {
     private static final String LOGIN_PATTERN = "[A-Za-zА-Яа-яЁё0-9]{4,}";
     private static final String NAME_PATTERN = "[A-Za-zА-Яа-яЁё0]{4,}";
     private static final String EMAIL_PATTERN = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$";
     private static final String PASSWORD_PATTERN = ".{8,}";
+    private static final String LOGIN = "login";
+    private static final String EMAIL = "email";
+    private static final String FIRST_NAME = "firstName";
+    private static final String SECOND_NAME = "secondName";
+    private static final String PASSWORD = "password";
 
     private UserValidator() {}
 
@@ -20,5 +28,15 @@ public class UserValidator {
 
     public static boolean isValidPassword(String password) {
         return password.matches(PASSWORD_PATTERN);
+    }
+
+    public static Map<String, Boolean> validateDataForSignUp(String login, String email, String firstName, String secondName, String password) {
+        Map<String, Boolean> validations = new HashMap<>();
+        validations.put(LOGIN, isValidLogin(login));
+        validations.put(EMAIL, isValidEmail(email));
+        validations.put(FIRST_NAME, isValidName(firstName));
+        validations.put(SECOND_NAME, isValidName(secondName));
+        validations.put(PASSWORD, isValidPassword(password));
+        return validations;
     }
 }

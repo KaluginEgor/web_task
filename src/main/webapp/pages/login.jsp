@@ -31,7 +31,7 @@
     </form>
     <a href="controller?command=registration_page" class="user__title"><fmt:message key="label.register" bundle="${ rb }" /></a>
     <br/>
-    ${error}
+    ${errorMessage}
 </div>
 </body>
 </html>
