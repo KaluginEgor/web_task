@@ -108,7 +108,6 @@ public class ConnectionPool {
         try {
             connectionLock.lock();
             if (connection instanceof ProxyConnection) {
-                connectionLock.lock();
                 if (givenAwayConnections.contains(connection)) {
                     availableConnections.offer(connection);
                     givenAwayConnections.remove(connection);

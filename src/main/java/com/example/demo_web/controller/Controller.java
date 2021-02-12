@@ -1,6 +1,7 @@
 package com.example.demo_web.controller;
 
 import com.example.demo_web.command.*;
+import com.example.demo_web.exception.ConnectionException;
 import com.example.demo_web.manager.MessageManager;
 import com.example.demo_web.connection.ConnectionPool;
 
