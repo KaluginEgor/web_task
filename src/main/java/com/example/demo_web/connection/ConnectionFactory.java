@@ -34,7 +34,7 @@ class ConnectionFactory {
         }
     }
 
-    Connection create() throws ConnectionException {
+    Connection createConnection() throws ConnectionException {
         Connection connection;
         try {
             String databaseUrl = properties.getProperty(URL);

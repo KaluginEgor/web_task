@@ -1,4 +1,4 @@
-package com.example.demo_web.dao.api;
+package com.example.demo_web.dao;
 
 import com.example.demo_web.entity.Entity;
 import com.example.demo_web.exception.DaoException;
@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Optional;
 
 public interface BaseDao <K, T extends Entity> {
     List<T> findAll() throws DaoException;
@@ -18,7 +17,6 @@ public interface BaseDao <K, T extends Entity> {
     boolean delete(T t) throws DaoException;
     boolean create(T t) throws DaoException;
     T update(T t)  throws DaoException;
-    boolean setConnection(Connection connection);
     default void close(Statement statement) {
         final Logger logger = LogManager.getLogger(BaseDao.class.getName());
         try {

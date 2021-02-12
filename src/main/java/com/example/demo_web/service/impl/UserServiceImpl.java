@@ -6,8 +6,8 @@ import com.example.demo_web.command.ErrorMessage;
 import com.example.demo_web.command.RequestParameter;
 import com.example.demo_web.command.SessionRequestContent;
 import com.example.demo_web.connection.ConnectionPool;
-import com.example.demo_web.dao.api.UserDao;
-import com.example.demo_web.dao.api.impl.UserDaoImpl;
+import com.example.demo_web.dao.UserDao;
+import com.example.demo_web.dao.impl.UserDaoImpl;
 import com.example.demo_web.entity.User;
 import com.example.demo_web.exception.ConnectionException;
 import com.example.demo_web.exception.DaoException;
@@ -20,7 +20,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,13 +35,6 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao = UserDaoImpl.getInstance();
 
     public UserServiceImpl() {
-        Connection connection = null;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-        } catch (ConnectionException e) {
-            logger.error(e);
-        }
-        userDao.setConnection(connection);
     }
 
     @Override

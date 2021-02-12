@@ -2,7 +2,6 @@ package com.example.demo_web.entity;
 
 public class User extends Entity {
     private int id;
-    private String activationKey;
     private String login;
     private String email;
     private String firstName;
@@ -35,14 +34,6 @@ public class User extends Entity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getActivationKey() {
-        return activationKey;
-    }
-
-    public void setActivationKey(String activationKey) {
-        this.activationKey = activationKey;
     }
 
     public String getLogin() {

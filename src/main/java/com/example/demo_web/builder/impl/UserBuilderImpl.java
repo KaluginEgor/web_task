@@ -35,8 +35,6 @@ public class UserBuilderImpl implements com.example.demo_web.builder.UserBuilder
 
     @Override
     public void setDefaultFields(User user) {
-        String activationKey = UUID.randomUUID().toString();
-        user.setActivationKey(activationKey);
         user.setUserRole(UserRole.USER);
         user.setUserState(UserState.INACTIVE);
     }

@@ -1,9 +1,11 @@
-package com.example.demo_web.dao.api.impl;
+package com.example.demo_web.dao.impl;
 
 import com.example.demo_web.builder.UserBuilder;
 import com.example.demo_web.builder.impl.UserBuilderImpl;
-import com.example.demo_web.dao.api.UserDao;
+import com.example.demo_web.connection.ConnectionPool;
+import com.example.demo_web.dao.UserDao;
 import com.example.demo_web.entity.User;
+import com.example.demo_web.exception.ConnectionException;
 import com.example.demo_web.exception.DaoException;
 
 import java.sql.*;
@@ -27,7 +29,6 @@ public class UserDaoImpl implements UserDao {
 
     private static final String SQL_ACTIVATE_USER = "UPDATE users SET user_state_id = 1 WHERE user_id = ?;";
 
-    private Connection connection;
     private static UserDao instance = new UserDaoImpl();
 
     private UserDaoImpl(){}
@@ -63,7 +64,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public int create(User user, String encryptedPassword) throws DaoException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_USER, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_USER, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, encryptedPassword);
@@ -75,7 +77,7 @@ public class UserDaoImpl implements UserDao {
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
             return resultSet.getInt(1);
-        } catch (SQLException e) {
+        } catch (SQLException | ConnectionException e) {
             throw new DaoException(e);
         }
     }
@@ -87,7 +89,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findUserByLogin(String login) throws DaoException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_USER_BY_LOGIN)) {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_USER_BY_LOGIN)) {
             preparedStatement.setString(1, login);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -96,35 +99,22 @@ public class UserDaoImpl implements UserDao {
                 }
             }
             return Optional.empty();
-        } catch (SQLException e) {
+        } catch (SQLException | ConnectionException e) {
             throw new DaoException(e);
-        }
-    }
-
-    @Override
-    public boolean isRegistered(String login, String password) throws DaoException {
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(SQL_CHECK_USER_REGISTERED);
-            statement.setString(1, login);
-            statement.setString(2, password);
-            ResultSet resultSet = statement.executeQuery();
-            return resultSet.next();
-        } catch (SQLException e) {
-            throw new DaoException("SQl exception: " + e);
         }
     }
 
     @Override
     public Optional<String> findPasswordByLogin(String login) throws DaoException {
         Optional<String> foundPassword = Optional.empty();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_PASSWORD_BY_LOGIN)) {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_PASSWORD_BY_LOGIN)) {
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 foundPassword = Optional.ofNullable(resultSet.getString("user_password"));
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ConnectionException e) {
             throw new DaoException(e);
         }
         return foundPassword;
@@ -133,13 +123,14 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean loginExists(String login) throws DaoException {
         boolean result = false;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_LOGIN_EXISTS)) {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_LOGIN_EXISTS)) {
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 result = resultSet.getInt(1) != 0;
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ConnectionException e) {
             throw new DaoException(e);
         }
         return result;
@@ -147,17 +138,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean activateUser(int id) throws DaoException {
-        try (PreparedStatement statement = connection.prepareStatement(SQL_ACTIVATE_USER)) {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_ACTIVATE_USER)) {
             statement.setInt(1, id);
             return (statement.executeUpdate() == 1);
-        } catch (SQLException e) {
+        } catch (SQLException | ConnectionException e) {
             throw new DaoException(e);
         }
-    }
-
-    @Override
-    public boolean setConnection(Connection connection) {
-        this.connection = connection;
-        return true;
     }
 }

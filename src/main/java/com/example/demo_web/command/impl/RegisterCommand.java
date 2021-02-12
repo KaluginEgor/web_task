@@ -32,7 +32,7 @@ public class RegisterCommand implements ActionCommand {
                     commandResult.setPage(PagePath.REGISTRATION);
                 } else {
                     registeredUser = userService.register(login, email, firstName, secondName, password);
-                    sessionRequestContent.setSessionAttribute(Attribute.ACTIVATION_USERS_ID, registeredUser.get().getId());
+                    sessionRequestContent.setSessionAttribute(Attribute.ACTIVATION_USER_ID, registeredUser.get().getId());
                     String locale = (String) sessionRequestContent.getSessionAttribute(Attribute.LANG);
                     userService.constructAndSendConfirmEmail(locale, registeredUser.get());
                     commandResult.setPage(PagePath.LOGIN);
