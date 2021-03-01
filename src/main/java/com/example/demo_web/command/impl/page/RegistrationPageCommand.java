@@ -1,4 +1,4 @@
-package com.example.demo_web.command.impl;
+package com.example.demo_web.command.impl.page;
 
 import com.example.demo_web.command.*;
 

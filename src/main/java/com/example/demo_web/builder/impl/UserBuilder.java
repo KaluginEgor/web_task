@@ -1,5 +1,6 @@
 package com.example.demo_web.builder.impl;
 
+import com.example.demo_web.builder.BaseBuilder;
 import com.example.demo_web.entity.User;
 import com.example.demo_web.entity.UserRole;
 import com.example.demo_web.entity.UserState;
@@ -7,9 +8,8 @@ import com.example.demo_web.entity.UserState;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
-import java.util.UUID;
 
-public class UserBuilderImpl implements com.example.demo_web.builder.UserBuilder<User> {
+public class UserBuilder implements BaseBuilder<User> {
     private static final String DEFAULT_ID_COLUMN = "user_id";
     private static final String LOGIN_COLUMN = "user_login";
     private static final String EMAIL_COLUMN = "user_email";

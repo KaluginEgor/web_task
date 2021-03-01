@@ -1,3 +1,4 @@
+<%@ taglib prefix="ctg" uri="customtags" %>
 <%--
   Created by IntelliJ IDEA.
   User: egork
@@ -11,6 +12,6 @@
     <title>Index</title>
 </head>
 <body>
-    <jsp:forward page="/pages/login.jsp"/>
+    <jsp:forward page="controller?command=show_all_movies"/>
 </body>
 </html>

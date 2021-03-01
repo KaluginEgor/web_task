@@ -29,9 +29,22 @@ public class SessionRequestContent {
     }
 
     public void insertAttributes(HttpServletRequest request) {
-        requestAttributes.forEach(request::setAttribute);
         HttpSession session = request.getSession();
+        Enumeration<String> attributeNames = session.getAttributeNames();
+        while (attributeNames.hasMoreElements()) {
+            session.removeAttribute(attributeNames.nextElement());
+        }
+        attributeNames = request.getAttributeNames();
+        while (attributeNames.hasMoreElements()) {
+            request.removeAttribute(attributeNames.nextElement());
+        }
+        requestAttributes.forEach(request::setAttribute);
         sessionAttributes.forEach(session::setAttribute);
+    }
+
+    public void invalidate() {
+        sessionAttributes.clear();
+        requestAttributes.clear();
     }
 
     public Object getRequestAttribute(String key) {
@@ -42,8 +55,12 @@ public class SessionRequestContent {
         requestAttributes.put(key, value);
     }
 
+    public void removeRequestAttribute(String key) {
+        requestAttributes.remove(key);
+    }
+
     public String getRequestParameter(String key) {
-        if (requestParameters.isEmpty()){
+        if (requestParameters.get(key) == null){
             return null;
         }
         return requestParameters.get(key)[0];
@@ -59,6 +76,10 @@ public class SessionRequestContent {
 
     public void setSessionAttribute(String key, Object value) {
         sessionAttributes.put(key, value);
+    }
+
+    public void removeSessionAttribute(String key) {
+        sessionAttributes.remove(key);
     }
 
     private Map<String, String[]> extractRequestParameters(HttpServletRequest request) {

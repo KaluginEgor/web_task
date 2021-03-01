@@ -12,7 +12,7 @@ public interface UserService {
 
     Optional<User> register(String login, String email, String firstName, String secondName, String password) throws ServiceException;
 
-    boolean isValid(String login, String email, String firstName, String secondName, String password) throws ServiceException;
+    Optional<User> findById(int id);
 
     boolean activateUser(int id) throws ServiceException;
 
@@ -22,6 +22,6 @@ public interface UserService {
 
     Map<String, Boolean> defineIncorrectRegistrationData(String login, String email, String firstName, String secondName, String password) throws ServiceException;
 
-    void defineErrorMessageFromRegistrationDataValidations(SessionRequestContent sessionRequestContent,
-                                                           Map<String, Boolean> usersDataValidations);
+    void defineErrorMessageFromDataValidations(SessionRequestContent sessionRequestContent,
+                                               Map<String, Boolean> usersDataValidations);
 }

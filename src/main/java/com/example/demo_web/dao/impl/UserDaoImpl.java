@@ -1,7 +1,7 @@
 package com.example.demo_web.dao.impl;
 
-import com.example.demo_web.builder.UserBuilder;
-import com.example.demo_web.builder.impl.UserBuilderImpl;
+import com.example.demo_web.builder.BaseBuilder;
+import com.example.demo_web.builder.impl.UserBuilder;
 import com.example.demo_web.connection.ConnectionPool;
 import com.example.demo_web.dao.UserDao;
 import com.example.demo_web.entity.User;
@@ -14,14 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserDaoImpl implements UserDao {
-    private static final String SQL_CREATE_USER = "INSERT INTO users (user_login, user_email, user_password, user_first_name, user_second_name, user_role_id, user_state_id)" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?);";
+    private static final String SQL_CREATE_USER = "INSERT INTO users (user_login, user_email, user_password, user_first_name, user_second_name, user_role_id, user_state_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
 
-    private static final String SQL_FIND_USER_BY_LOGIN = "SELECT U.user_id, U.user_login, U.user_email, U.user_first_name, U.user_second_name, UR.user_role_name, " +
-            "US.user_state_name FROM users U INNER JOIN user_roles UR ON U.user_role_id = UR.user_role_id " +
-            "INNER JOIN user_states US ON U.user_state_id = US.user_state_id WHERE U.user_login = ?;";
+    private static final String SQL_SELECT_USER_BY_LOGIN = "SELECT U.user_id, U.user_login, U.user_email, U.user_first_name, U.user_second_name, UR.user_role_name, US.user_state_name FROM users U INNER JOIN user_roles UR ON U.user_role_id = UR.user_role_id INNER JOIN user_states US ON U.user_state_id = US.user_state_id WHERE U.user_login = ?;";
 
-    private static final String SQL_CHECK_USER_REGISTERED = "SELECT users.login, users.password FROM users WHERE users.login LIKE ? AND users.password LIKE ?";
+    private static final String SQL_SELECT_USER_BY_ID = "SELECT U.user_id, U.user_login, U.user_email, U.user_first_name, U.user_second_name, UR.user_role_name, US.user_state_name FROM users U INNER JOIN user_roles UR ON U.user_role_id = UR.user_role_id INNER JOIN user_states US ON U.user_state_id = US.user_state_id WHERE U.user_id = ?;";
 
     private static final String SQL_SELECT_PASSWORD_BY_LOGIN = "SELECT user_password FROM users WHERE user_login = ?;";
 
@@ -43,8 +40,20 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findEntityById(Integer id) {
-        return null;
+    public User findEntityById(Integer id) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_USER_BY_ID)) {
+            preparedStatement.setInt(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    BaseBuilder<User> baseBuilder = new UserBuilder();
+                    return baseBuilder.build(resultSet);
+                }
+            }
+            return null;
+        } catch (SQLException | ConnectionException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override
@@ -71,8 +80,8 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(3, encryptedPassword);
             preparedStatement.setString(4, user.getFirstName());
             preparedStatement.setString(5, user.getSecondName());
-            preparedStatement.setInt(6, user.getUserState().getValue());
-            preparedStatement.setInt(7, user.getUserRole().getValue());
+            preparedStatement.setInt(6, user.getUserState().ordinal());
+            preparedStatement.setInt(7, user.getUserRole().ordinal());
             preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
@@ -90,12 +99,12 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Optional<User> findUserByLogin(String login) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_USER_BY_LOGIN)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_USER_BY_LOGIN)) {
             preparedStatement.setString(1, login);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    UserBuilder<User> userBuilder = new UserBuilderImpl();
-                    return Optional.of(userBuilder.build(resultSet));
+                    BaseBuilder<User> baseBuilder = new UserBuilder();
+                    return Optional.of(baseBuilder.build(resultSet));
                 }
             }
             return Optional.empty();

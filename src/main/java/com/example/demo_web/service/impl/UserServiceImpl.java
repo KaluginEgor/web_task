@@ -1,15 +1,15 @@
 package com.example.demo_web.service.impl;
 
-import com.example.demo_web.builder.UserBuilder;
-import com.example.demo_web.builder.impl.UserBuilderImpl;
+import com.example.demo_web.builder.BaseBuilder;
+import com.example.demo_web.builder.impl.UserBuilder;
 import com.example.demo_web.command.ErrorMessage;
 import com.example.demo_web.command.RequestParameter;
 import com.example.demo_web.command.SessionRequestContent;
-import com.example.demo_web.connection.ConnectionPool;
 import com.example.demo_web.dao.UserDao;
 import com.example.demo_web.dao.impl.UserDaoImpl;
 import com.example.demo_web.entity.User;
-import com.example.demo_web.exception.ConnectionException;
+import com.example.demo_web.entity.UserRole;
+import com.example.demo_web.entity.UserState;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.exception.ServiceException;
 import com.example.demo_web.mail.MailBuilder;
@@ -32,6 +32,11 @@ public class UserServiceImpl implements UserService {
     private static final String FIRST_NAME = "firstName";
     private static final String SECOND_NAME = "secondName";
     private static final String PASSWORD = "password";
+    private static final String PASSWORD_IS_CORRECT = "passwordIsCorrect";
+    private static final String USER_NOT_INACTIVE = "userNotInactive";
+    private static final String USER_NOT_BLOCKED = "userNotBlocked";
+    private static final String USER_NOT_DELETED = "userNotDeleted";
+
     private final UserDao userDao = UserDaoImpl.getInstance();
 
     public UserServiceImpl() {
@@ -41,15 +46,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> login(String login, String password) throws ServiceException {
         Optional<User> foundUser = Optional.empty();
         try {
-            String encryptedPassword = DigestUtils.md5Hex(password);
-            if (userDao.loginExists(login)) {
-                Optional<String> passwordFromDB = userDao.findPasswordByLogin(login);
-                if (passwordFromDB.isPresent()) {
-                    if (passwordFromDB.get().equals(encryptedPassword)) {
-                        foundUser = userDao.findUserByLogin(login);
-                    }
-                }
-            }
+            foundUser = userDao.findUserByLogin(login);
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
         }
@@ -64,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             String encryptedPassword = DigestUtils.md5Hex(password);
-            UserBuilder<User> builder = new UserBuilderImpl();
+            BaseBuilder<User> builder = new UserBuilder();
             builder.setDefaultFields(user);
             int userId = userDao.create(user, encryptedPassword);
             user.setId(userId);
@@ -86,6 +83,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findById(int id) {
+        return Optional.empty();
+    }
+
+    @Override
     public void constructAndSendConfirmEmail(String locale, User user) {
         String emailSubject = MailBuilder.buildEmailSubject(locale);
         String emailBody = MailBuilder.buildEmailBody(user,locale);
@@ -94,17 +96,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isValid(String login, String email, String firstName, String secondName, String password) throws ServiceException {
-        return UserValidator.isValidLogin(login) && UserValidator.isValidEmail(email)
-                && UserValidator.isValidName(firstName) && UserValidator.isValidName(secondName)
-                && UserValidator.isValidPassword(password);
-    }
-
-    @Override
     public Map<String, Boolean> defineIncorrectLoginData(String login, String password) throws ServiceException {
         Map<String, Boolean> validatedUsersData = UserValidator.validateData(login, password);
         try {
             validatedUsersData.put(LOGIN_EXISTS, userDao.loginExists(login));
+
+            if (userDao.loginExists(login)) {
+                String encryptedPassword = DigestUtils.md5Hex(password);
+                Optional<String> passwordFromDB = userDao.findPasswordByLogin(login);
+                boolean correctPassword = passwordFromDB.get().equals(encryptedPassword);
+                validatedUsersData.put(PASSWORD_IS_CORRECT, correctPassword);
+
+                if (correctPassword) {
+                    Optional<User> user = userDao.findUserByLogin(login);
+                    UserState userState = user.get().getUserState();
+                    validatedUsersData.put(USER_NOT_INACTIVE, !UserState.INACTIVE.equals(userState));
+                    validatedUsersData.put(USER_NOT_BLOCKED, !UserState.BLOCKED.equals(userState));
+                    validatedUsersData.put(USER_NOT_DELETED, !UserState.DELETED.equals(userState));
+                }
+            }
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -122,13 +132,14 @@ public class UserServiceImpl implements UserService {
         return validatedUsersData;
     }
 
-    public void defineErrorMessageFromRegistrationDataValidations(SessionRequestContent sessionRequestContent,
-                                                                  Map<String, Boolean> usersDataValidations) {
+    public void defineErrorMessageFromDataValidations(SessionRequestContent sessionRequestContent,
+                                                      Map<String, Boolean> usersDataValidations) {
         String falseKey = defineFalseKey(usersDataValidations);
         switch (falseKey) {
             case LOGIN:
                 sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
                         ErrorMessage.LOGIN_INCORRECT_ERROR_MESSAGE);
+                sessionRequestContent.removeRequestAttribute(LOGIN);
                 break;
             case EMAIL:
                 sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
@@ -147,12 +158,30 @@ public class UserServiceImpl implements UserService {
                         ErrorMessage.PASSWORD_INCORRECT_ERROR_MESSAGE);
                 break;
             case LOGIN_IS_UNIQUE:
-            sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
-                        ErrorMessage.LOGIN_IS_NOT_UNIQUE_ERROR_MESSAGE);
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                            ErrorMessage.LOGIN_IS_NOT_UNIQUE_ERROR_MESSAGE);
+                sessionRequestContent.removeRequestAttribute(LOGIN);
                 break;
             case LOGIN_EXISTS:
                 sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
                         ErrorMessage.LOGIN_DOESNT_EXIST_ERROR_MESSAGE);
+                sessionRequestContent.removeRequestAttribute(LOGIN);
+                break;
+            case PASSWORD_IS_CORRECT:
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                        ErrorMessage.ENTERED_PASSWORD_INCORRECT_ERROR_MESSAGE);
+                break;
+            case USER_NOT_INACTIVE:
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                        ErrorMessage.USER_INACTIVE_ERROR_MESSAGE);
+                break;
+            case USER_NOT_BLOCKED:
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                        ErrorMessage.USER_BLOCKED_ERROR_MESSAGE);
+                break;
+            case USER_NOT_DELETED:
+                sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
+                        ErrorMessage.USER_DELETED_ERROR_MESSAGE);
                 break;
         }
     }

@@ -1,12 +1,11 @@
-package com.example.demo_web.command.impl;
+package com.example.demo_web.command.impl.page;
 
 import com.example.demo_web.command.*;
 
-public class LogoutCommand implements ActionCommand {
+public class LoginPageCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult(PagePath.LOGIN, TransitionType.FORWARD);
-        sessionRequestContent.invalidate();
         return commandResult;
     }
 }

@@ -14,15 +14,16 @@
 <html>
 <head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/core.css">
+    <link href='http://fonts.googleapis.com/css?family=Cookie' rel='stylesheet' type='text/css'>
     <title><fmt:message key="label.login" bundle="${ rb }" /></title>
 </head>
 <body>
+<jsp:include page="/pages/module/header.jsp"/>
 <div class="user">
-    <jsp:include page="/pages/module/header.jsp"/>
     <form class="form" name="loginForm" method="POST" action="controller">
         <input type="hidden" name="command" value="login" />
         <div class="form__group">
-            <input type="text" class="form__input" name="login" placeholder=<fmt:message key="label.login" bundle="${ rb }" /> pattern="[A-Za-zА-Яа-яЁё0-9]{4,}" value=""/>
+            <input type="text" class="form__input" name="login" value="<c:if test="${requestScope.login != null}">${requestScope.login}</c:if>" placeholder=<fmt:message key="label.login" bundle="${ rb }" /> pattern="[A-Za-zА-Яа-яЁё0-9]{4,}" value=""/>
         </div>
         <div class="form__group">
             <input type="password" class="form__input" name="password" value="" placeholder=<fmt:message key="label.password" bundle="${ rb }" /> pattern=".{8,}" title="Eight or more characters"/>
@@ -31,6 +32,7 @@
     </form>
     <a href="controller?command=registration_page" class="user__title"><fmt:message key="label.register" bundle="${ rb }" /></a>
     <br/>
+    <a href="controller?command=show_all_movies" class="user__title"><fmt:message key="label.register" bundle="${ rb }" /></a>
     ${errorMessage}
 </div>
 </body>

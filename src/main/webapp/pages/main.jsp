@@ -8,16 +8,17 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <html>
 <head>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/core.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <title>Welcome</title>
 </head>
 <body>
+<jsp:include page="/pages/module/header.jsp"/>
 <div class="user">
     <h1>Welcome</h1>
     <hr>
     <h1>${user}, hello!</h1>
     <FORM action="upload" enctype="multipart/form-data" method="POST">
-        Upload File: <INPUT type="file" name="content" height="130">
+        Upload File: <INPUT type="file" accept="image/*" name="content" height="130">
         <INPUT type="submit" value="Upload File">
     </FORM>
     <a href="controller?command=logout" class="user__title">Logout</a>

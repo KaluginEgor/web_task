@@ -28,12 +28,12 @@ public class RegisterCommand implements ActionCommand {
             try {
                 Map<String,Boolean> usersDataValidations = userService.defineIncorrectRegistrationData(login, email, firstName, secondName, password);
                 if (usersDataValidations.containsValue(Boolean.FALSE)) {
-                    userService.defineErrorMessageFromRegistrationDataValidations(sessionRequestContent, usersDataValidations);
+                    userService.defineErrorMessageFromDataValidations(sessionRequestContent, usersDataValidations);
                     commandResult.setPage(PagePath.REGISTRATION);
                 } else {
                     registeredUser = userService.register(login, email, firstName, secondName, password);
-                    sessionRequestContent.setSessionAttribute(Attribute.ACTIVATION_USER_ID, registeredUser.get().getId());
-                    String locale = (String) sessionRequestContent.getSessionAttribute(Attribute.LANG);
+                    sessionRequestContent.setSessionAttribute(SessionAttribute.ACTIVATION_USER_ID, registeredUser.get().getId());
+                    String locale = (String) sessionRequestContent.getSessionAttribute(SessionAttribute.LANG);
                     userService.constructAndSendConfirmEmail(locale, registeredUser.get());
                     commandResult.setPage(PagePath.LOGIN);
                     sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE, ErrorMessage.CONFIRM_MESSAGE_SENT);

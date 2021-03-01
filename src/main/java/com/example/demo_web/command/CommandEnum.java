@@ -1,6 +1,10 @@
 package com.example.demo_web.command;
 
 import com.example.demo_web.command.impl.*;
+import com.example.demo_web.command.impl.ShowAllMoviesCommand;
+import com.example.demo_web.command.impl.LoginCommand;
+import com.example.demo_web.command.impl.page.LoginPageCommand;
+import com.example.demo_web.command.impl.page.RegistrationPageCommand;
 
 public enum CommandEnum {
     LOGIN {
@@ -23,6 +27,11 @@ public enum CommandEnum {
             this.command = new RegistrationPageCommand();
         }
     },
+    LOGIN_PAGE {
+        {
+            this.command = new LoginPageCommand();
+        }
+    },
     CHANGE_LANGUAGE {
         {
             this.command = new ChangeLocaleCommand();
@@ -31,6 +40,16 @@ public enum CommandEnum {
     CONFIRM_REGISTRATION {
         {
             this.command = new ConfirmRegistrationCommand();
+        }
+    },
+    SHOW_ALL_MOVIES {
+        {
+            this.command = new ShowAllMoviesCommand();
+        }
+    },
+    SHOW_ALL_ACTORS {
+        {
+            this.command = new ShowAllActorsCommand();
         }
     };
     ActionCommand command;

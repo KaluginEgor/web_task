@@ -21,20 +21,19 @@ public class LoginCommand implements ActionCommand {
         CommandResult commandResult = new CommandResult();
         commandResult.setTransitionType(TransitionType.FORWARD);
 
+        sessionRequestContent.setRequestAttribute(RequestParameter.LOGIN, login);
+
         try {
             Map<String,Boolean> usersDataValidations = userService.defineIncorrectLoginData(login, password);
-            if (usersDataValidations.containsValue(Boolean.FALSE)) {
-                userService.defineErrorMessageFromRegistrationDataValidations(sessionRequestContent, usersDataValidations);
-                commandResult.setPage(PagePath.LOGIN);
-            } else {
+            if (!usersDataValidations.containsValue(Boolean.FALSE)) {
                 user = userService.login(login, password);
                 if (user.isPresent()) {
                     commandResult.setPage(PagePath.MAIN);
-                } else {
-                    sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
-                            ErrorMessage.ENTERED_PASSWORD_INCORRECT_ERROR_MESSAGE);
-                    commandResult.setPage(PagePath.LOGIN);
+                    sessionRequestContent.setSessionAttribute(SessionAttribute.USER, user.get());
                 }
+            } else {
+                userService.defineErrorMessageFromDataValidations(sessionRequestContent, usersDataValidations);
+                commandResult.setPage(PagePath.LOGIN);
             }
         } catch (ServiceException e) {
             commandResult.setPage(PagePath.ERROR);

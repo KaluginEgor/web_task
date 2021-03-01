@@ -18,8 +18,8 @@
     <title>Login</title>
 </head>
 <body>
+    <jsp:include page="/pages/module/header.jsp"/>
     <div class="user">
-        <jsp:include page="/pages/module/header.jsp"/>
         <form class="form" name="registerForm" method="POST" action="controller">
             <input type="hidden" name="command" value="register"/>
             <div class="form__group">

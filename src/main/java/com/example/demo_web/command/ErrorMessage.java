@@ -11,6 +11,9 @@ public class ErrorMessage {
     public static final String CONFIRM_MESSAGE_SENT = "confirmation message sent to your email";
     public static final String ENTERED_PASSWORD_INCORRECT_ERROR_MESSAGE = "wrong password";
     public static final String LOGIN_DOESNT_EXIST_ERROR_MESSAGE = "no user with such login";
+    public static final String USER_INACTIVE_ERROR_MESSAGE = "user has not activated account";
+    public static final String USER_BLOCKED_ERROR_MESSAGE = "user is blocked";
+    public static final String USER_DELETED_ERROR_MESSAGE = "user is deleted";
 
     private ErrorMessage() {}
 }
