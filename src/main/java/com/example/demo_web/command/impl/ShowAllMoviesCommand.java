@@ -13,6 +13,8 @@ import java.util.Optional;
 
 public class ShowAllMoviesCommand implements ActionCommand {
 
+    private MovieService movieService = new MovieServiceImpl();
+
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
@@ -29,7 +31,6 @@ public class ShowAllMoviesCommand implements ActionCommand {
         int moviesNumber = ViewAllMoviesTag.MOVIES_PER_PAGE_NUMBER;
         int start = (currentTablePage - 1) * moviesNumber;
         int end = moviesNumber + start;
-        MovieService movieService = new MovieServiceImpl();
         try {
             List<Movie> allCurrentMovies = movieService.findAll(start, end);
             sessionRequestContent.setSessionAttribute(SessionAttribute.ALL_MOVIES_LIST, allCurrentMovies);

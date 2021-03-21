@@ -3,10 +3,11 @@ package com.example.demo_web.entity;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Actor extends Entity {
+public class MediaPerson extends Entity {
     private int id;
     private String firstName;
     private String secondName;
+    private OccupationType occupationType;
     private String bio;
     private LocalDate birthday;
     private String picture;
@@ -34,6 +35,14 @@ public class Actor extends Entity {
 
     public void setSecondName(String secondName) {
         this.secondName = secondName;
+    }
+
+    public OccupationType getOccupationType() {
+        return occupationType;
+    }
+
+    public void setOccupationType(OccupationType occupationType) {
+        this.occupationType = occupationType;
     }
 
     public String getBio() {

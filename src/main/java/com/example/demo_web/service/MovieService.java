@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface MovieService {
     List<Movie> findAll(int begin, int end) throws ServiceException;
+
     int countMovies() throws ServiceException;
+
+    Movie findById(Integer id) throws ServiceException;
 }

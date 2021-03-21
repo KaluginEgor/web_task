@@ -1,0 +1,173 @@
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+
+fieldset,
+label {
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+/*body {*/
+/*margin: 20px;*/
+/*}*/
+
+/****** Style Star Rating Widget *****/
+
+.rating {
+    border: none;
+    float: left;
+}
+
+.rating > input {
+    display: none;
+}
+
+.rating > label:before {
+    margin: 5px;
+    font-size: 1em;
+    font-family: FontAwesome;
+    content: "\f005";
+    display: block;
+}
+
+.rating > label {
+    color: #ddd;
+    float: right;
+}
+
+/***** CSS Magic to Highlight Stars on Hover *****/
+
+.rating > input:checked ~ label,
+
+    /* show gold star when clicked */
+
+.rating:not(:checked) > label:hover,
+
+    /* hover current star */
+
+.rating:not(:checked) > label:hover ~ label {
+    color: #FFD700;
+}
+
+/* hover previous stars in list */
+
+.rating > input:checked + label:hover,
+
+    /* hover current star when changing rating */
+
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label,
+
+    /* lighten current selection */
+
+.rating > input:checked ~ label:hover ~ label {
+    color: #FFED85;
+}
+
+.review-title-input {
+    width: 600px;
+    height: 30px;
+    display: block;
+    margin-top: 15px;
+    border-radius: 5px;
+}
+
+.review-body-input {
+    width: 600px;
+    height: 200px;
+    margin-top: 15px;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.edit-by-admin-btn {
+    background-color: white;
+    color: #111;
+    padding: 5px;
+    border: none;
+    border-radius: 10px;
+    font-size: 52px;
+}
+
+.edit-by-admin-btn a {
+    text-decoration: none;
+    color: black;
+}
+
+.edit-btn {
+    background-color: #111;
+    color: white;
+    font-size: 20px;
+    padding: 3px;
+    border-radius: 5px;
+}
+
+.delete-btn,
+.delete-rating-btn {
+    background-color: #111;
+    color: white;
+    font-size: 20px;
+    padding: 3px 5px 3px 5px;
+    border-radius: 5px;
+}
+
+.save-btn {
+    background-color: #111;
+    color: white;
+    font-size: 20px;
+    padding: 3px 4px 3px 4px;
+    border-radius: 5px;
+}
+
+.section-title * {
+    display: inline-block;
+}
+
+.edit-btn:hover,
+.delete-btn:hover,
+.delete-rating-btn:hover,
+.save-btn:hover {
+    background-color: #5e5e5e;
+}
+
+.btn-row * {
+    display: inline-block;
+}
+
+.btn {
+    display: inline-block;
+}
+
+.leave-review-btn {
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.review {
+    background-color: #d0cecd
+}
+
+.save-btn {
+    display: none;
+}
+
+.section-title {
+    text-align: center;
+    padding-top: 30px;
+    margin: auto;
+    width: 70%;
+    font-size: 50px;
+}
+
+.section-movies {
+    margin: auto;
+    width: 60%;
+}
+
+.poster img {
+    width: 70%;
+    height: 70%;
+}

@@ -1,0 +1,36 @@
+@font-face {
+    font-family: "Raleway";
+    src: local("Raleway"),
+    url("../font/Raleway-Medium.ttf");
+}
+
+.edit-page {
+    font-family: 'Raleway', sans-serif;
+}
+
+.greeting, .block {
+    text-align: left;
+}
+
+.edit-form * {
+    margin: 5px;
+}
+
+.block {
+    margin: 10px;
+}
+
+.edit-form input[type=text],
+.edit-form input[type=date],
+.edit-form input[type=email],
+.edit-form textarea {
+    padding: 5px;
+    border-radius: 5px;
+    width: 300px;
+}
+
+.edit-form input[type=submit] {
+    padding: 5px;
+    border-radius: 5px;
+    width: 315px;
+}

@@ -1,20 +1,16 @@
 package com.example.demo_web.command.impl;
 
 import com.example.demo_web.command.*;
-import com.example.demo_web.entity.Actor;
-import com.example.demo_web.entity.Movie;
+import com.example.demo_web.entity.MediaPerson;
 import com.example.demo_web.exception.ServiceException;
-import com.example.demo_web.service.ActorService;
-import com.example.demo_web.service.MovieService;
-import com.example.demo_web.service.impl.ActorServiceImpl;
-import com.example.demo_web.service.impl.MovieServiceImpl;
-import com.example.demo_web.tag.ViewAllActorsTag;
-import com.example.demo_web.tag.ViewAllMoviesTag;
+import com.example.demo_web.service.MediaPersonService;
+import com.example.demo_web.service.impl.MediaPersonServiceImpl;
+import com.example.demo_web.tag.ViewAllMediaPersonsTag;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ShowAllActorsCommand implements ActionCommand {
+public class ShowAllMediaPersonsCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
@@ -28,16 +24,16 @@ public class ShowAllActorsCommand implements ActionCommand {
             currentTablePage = Integer.parseInt(currentPage.get());
         }
         sessionRequestContent.setSessionAttribute(SessionAttribute.ALL_ACTORS_CURRENT_PAGE, currentTablePage);
-        int actorsNumber = ViewAllActorsTag.ACTORS_PER_PAGE_NUMBER;
+        int actorsNumber = ViewAllMediaPersonsTag.ACTORS_PER_PAGE_NUMBER;
         int start = (currentTablePage - 1) * actorsNumber;
         int end = actorsNumber + start;
-        ActorService actorService = new ActorServiceImpl();
+        MediaPersonService mediaPersonService = new MediaPersonServiceImpl();
         try {
-            List<Actor> allCurrentActors = actorService.findAll(start, end);
-            sessionRequestContent.setSessionAttribute(SessionAttribute.ALL_ACTORS_LIST, allCurrentActors);
-            int actorsCount = actorService.countActors();
+            List<MediaPerson> allCurrentMediaPeople = mediaPersonService.findAll(start, end);
+            sessionRequestContent.setSessionAttribute(SessionAttribute.ALL_ACTORS_LIST, allCurrentMediaPeople);
+            int actorsCount = mediaPersonService.countMediaPersons();
             sessionRequestContent.setSessionAttribute(SessionAttribute.ACTORS_COUNT, actorsCount);
-            if (allCurrentActors.size() == 0) {
+            if (allCurrentMediaPeople.size() == 0) {
                 //sessionRequestContent.setRequestAttribute(RequestAttribute.CONFIRM_MESSAGE, FriendlyMessage.EMPTY_USER_LIST);
             }
             commandResult.setPage(PagePath.ALL_ACTORS);

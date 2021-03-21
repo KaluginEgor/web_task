@@ -144,18 +144,22 @@ public class UserServiceImpl implements UserService {
             case EMAIL:
                 sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
                         ErrorMessage.EMAIL_INCORRECT_ERROR_MESSAGE);
+                sessionRequestContent.removeRequestAttribute(EMAIL);
                 break;
             case FIRST_NAME:
                 sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
                         ErrorMessage.FIRST_NAME_INCORRECT_ERROR_MESSAGE);
+                sessionRequestContent.removeRequestAttribute(FIRST_NAME);
                 break;
             case SECOND_NAME:
                 sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
                         ErrorMessage.SECOND_NAME_INCORRECT_ERROR_MESSAGE);
+                sessionRequestContent.removeRequestAttribute(SECOND_NAME);
                 break;
             case PASSWORD:
                 sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,
                         ErrorMessage.PASSWORD_INCORRECT_ERROR_MESSAGE);
+                sessionRequestContent.removeRequestAttribute(PASSWORD);
                 break;
             case LOGIN_IS_UNIQUE:
                 sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE,

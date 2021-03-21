@@ -15,7 +15,7 @@
         <h1><a href="#">Movie<span>Rating</span></a></h1>
         <nav>
             <a href="controller?command=show_all_movies">Movies</a>
-            <a href="controller?command=show_all_actors">Actors</a>
+            <a href="controller?command=show_all_media_persons">Actors</a>
             <form name="loginForm" method="POST" action="controller">
                 <input type="hidden" name="command" value="change_language">
                 <input type="hidden" name="page" value="${ requestScope.page }">
@@ -27,7 +27,7 @@
         </nav>
         <c:set var="user" value="${sessionScope.user}"/>
         <c:choose>
-            <c:when test="${not empty user.login}">
+            <c:when test="${not empty user}">
                 <div class="header-user-menu">
                     <img src="${pageContext.request.contextPath}/pictures/dude.jpg" alt="User Image"/>
                     <ul>
@@ -38,8 +38,8 @@
             </c:when>
             <c:otherwise>
                 <ul>
-                    <li><a href="controller?command=login_page"><fmt:message key="label.login" bundle="${ rb }" /></a></li>
-                    <li><a href="controller?command=registration_page"><fmt:message key="label.register" bundle="${ rb }" /></a></li>
+                    <li><a href="controller?command=open_login_page"><fmt:message key="label.login" bundle="${ rb }" /></a></li>
+                    <li><a href="controller?command=open_registration_page"><fmt:message key="label.register" bundle="${ rb }" /></a></li>
                 </ul>
             </c:otherwise>
         </c:choose>

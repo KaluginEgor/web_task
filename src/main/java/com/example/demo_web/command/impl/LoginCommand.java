@@ -29,7 +29,7 @@ public class LoginCommand implements ActionCommand {
                 user = userService.login(login, password);
                 if (user.isPresent()) {
                     commandResult.setPage(PagePath.MAIN);
-                    sessionRequestContent.setSessionAttribute(SessionAttribute.USER, user.get());
+                    sessionRequestContent.setSessionAttribute(SessionAttribute.USER, user);
                 }
             } else {
                 userService.defineErrorMessageFromDataValidations(sessionRequestContent, usersDataValidations);

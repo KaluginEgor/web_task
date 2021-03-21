@@ -3,8 +3,10 @@ package com.example.demo_web.command;
 import com.example.demo_web.command.impl.*;
 import com.example.demo_web.command.impl.ShowAllMoviesCommand;
 import com.example.demo_web.command.impl.LoginCommand;
-import com.example.demo_web.command.impl.page.LoginPageCommand;
-import com.example.demo_web.command.impl.page.RegistrationPageCommand;
+import com.example.demo_web.command.impl.admin.OpenEditMediaPersonPageCommand;
+import com.example.demo_web.command.impl.admin.UpdateMediaPersonCommand;
+import com.example.demo_web.command.impl.page.OpenLoginPageCommand;
+import com.example.demo_web.command.impl.page.OpenRegistrationPageCommand;
 
 public enum CommandEnum {
     LOGIN {
@@ -22,14 +24,14 @@ public enum CommandEnum {
             this.command = new RegisterCommand();
         }
     },
-    REGISTRATION_PAGE {
+    OPEN_REGISTRATION_PAGE {
         {
-            this.command = new RegistrationPageCommand();
+            this.command = new OpenRegistrationPageCommand();
         }
     },
-    LOGIN_PAGE {
+    OPEN_LOGIN_PAGE {
         {
-            this.command = new LoginPageCommand();
+            this.command = new OpenLoginPageCommand();
         }
     },
     CHANGE_LANGUAGE {
@@ -47,9 +49,29 @@ public enum CommandEnum {
             this.command = new ShowAllMoviesCommand();
         }
     },
-    SHOW_ALL_ACTORS {
+    SHOW_ALL_MEDIA_PERSONS {
         {
-            this.command = new ShowAllActorsCommand();
+            this.command = new ShowAllMediaPersonsCommand();
+        }
+    },
+    SHOW_MEDIA_PERSON_PAGE {
+        {
+            this.command = new ShowMediaPersonPageCommand();
+        }
+    },
+    SHOW_MOVIE_PAGE {
+        {
+            this.command = new ShowMoviePageCommand();
+        }
+    },
+    OPEN_EDIT_MEDIA_PERSON_PAGE {
+        {
+            this.command = new OpenEditMediaPersonPageCommand();
+        }
+    },
+    UPDATE_MEDIA_PERSON {
+        {
+            this.command = new UpdateMediaPersonCommand();
         }
     };
     ActionCommand command;

@@ -14,6 +14,7 @@ public class Movie extends Entity {
     private List<MovieReview> movieReviews;
     private List<Integer> reviewersIds;
     private List<MovieRating> ratingList;
+    private List<MediaPerson> crew;
 
     public int getId() {
         return id;
@@ -93,6 +94,14 @@ public class Movie extends Entity {
 
     public void setRatingList(List<MovieRating> ratingList) {
         this.ratingList = ratingList;
+    }
+
+    public List<MediaPerson> getCrew() {
+        return crew;
+    }
+
+    public void setCrew(List<MediaPerson> crew) {
+        this.crew = crew;
     }
 
     @Override

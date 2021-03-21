@@ -2,12 +2,16 @@ package com.example.demo_web.entity;
 
 import java.time.LocalDate;
 
-public class MovieReview {
+public class MovieReview extends Entity {
     private int id;
     private String title;
     private String body;
     private boolean isDeleted;
     private LocalDate creationDate;
+    private int movieId;
+    private int userId;
+    private String userLogin;
+    private String movieTitle;
 
     public int getId() {
         return id;
@@ -47,6 +51,38 @@ public class MovieReview {
 
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public int getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
+    }
+
+    public String getMovieTitle() {
+        return movieTitle;
+    }
+
+    public void setMovieTitle(String movieTitle) {
+        this.movieTitle = movieTitle;
     }
 
     @Override

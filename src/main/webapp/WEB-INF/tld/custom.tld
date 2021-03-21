@@ -17,7 +17,7 @@
 
     <tag>
         <name>all_actors</name>
-        <tag-class>com.example.demo_web.tag.ViewAllActorsTag</tag-class>
+        <tag-class>com.example.demo_web.tag.ViewAllMediaPersonsTag</tag-class>
         <body-content>empty</body-content>
     </tag>
 </taglib>
