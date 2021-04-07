@@ -1,10 +1,10 @@
 package com.example.demo_web.tag;
 
-import com.example.demo_web.command.CommandEnum;
-import com.example.demo_web.command.SessionAttribute;
-import com.example.demo_web.command.SessionRequestContent;
-import com.example.demo_web.entity.MediaPerson;
-import com.example.demo_web.util.TagUtil;
+import com.example.demo_web.controller.command.CommandEnum;
+import com.example.demo_web.controller.command.SessionAttribute;
+import com.example.demo_web.controller.command.SessionRequestContent;
+import com.example.demo_web.model.entity.MediaPerson;
+import com.example.demo_web.model.util.TagUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;

@@ -32,6 +32,7 @@
                     <img src="${pageContext.request.contextPath}/pictures/dude.jpg" alt="User Image"/>
                     <ul>
                         <li><a href="#" class="highlight">Edit profile</a></li>
+                        <li><a href="controller?command=open_edit_media_person_page" class="highlight">Create media person</a></li>
                         <li><a href="controller?command=logout" class="highlight">Logout</a></li>
                     </ul>
                 </div>

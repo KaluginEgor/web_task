@@ -1,6 +1,5 @@
 package com.example.demo_web.mail;
 
-import com.example.demo_web.service.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

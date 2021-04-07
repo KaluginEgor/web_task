@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: egork
@@ -10,7 +11,7 @@
 <fmt:setBundle basename="pagecontent" var="rb" />
 <c:set var="page" value="/pages/mediaPerson.jsp" scope="request"/>
 <html>
-<jsp:useBean id="mediaPerson" scope="session" class="com.example.demo_web.entity.MediaPerson"/>
+<jsp:useBean id="mediaPerson" scope="session" class="com.example.demo_web.model.entity.MediaPerson"/>
 <head>
     <title>${mediaPerson.firstName} ${mediaPerson.secondName}</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/moviePage.css" />
@@ -19,7 +20,7 @@
 <jsp:include page="/pages/module/header.jsp"/>
 <body class="home">
 <%--<jsp:useBean id="user" class="com.example.demo_web.entity.User" scope="session"/>--%>
-<c:set var="user" value="${sessionScope.user}"/>
+<jsp:useBean id="user" class="com.example.demo_web.model.entity.User" scope="session"/>
 <section class="section main">
 
     <div class="section-title">
@@ -49,7 +50,7 @@
                 </p>
             </c:if>
 
-            <c:if test="${not empty mediaPersonPage.occupation}">
+            <c:if test="${not empty mediaPerson.occupationType}">
                 <p><strong><fmt:message key="occupation"/>: </strong>
                     ${mediaPerson.occupationType}
                 </p>

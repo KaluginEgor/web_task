@@ -20,4 +20,17 @@
         <tag-class>com.example.demo_web.tag.ViewAllMediaPersonsTag</tag-class>
         <body-content>empty</body-content>
     </tag>
+
+    <function>
+        <name>containsGenreType</name>
+        <function-class>com.example.demo_web.tag.ContainsFunction</function-class>
+        <function-signature>boolean containsGenreType(java.util.List,com.example.demo_web.model.entity.GenreType)
+        </function-signature>
+    </function>
+
+    <function>
+        <name>getUserRate</name>
+        <function-class>com.example.demo_web.tag.ContainsFunction</function-class>
+        <function-signature>com.example.demo_web.model.entity.MovieRating getUserRate(java.util.List,int)</function-signature>
+    </function>
 </taglib>

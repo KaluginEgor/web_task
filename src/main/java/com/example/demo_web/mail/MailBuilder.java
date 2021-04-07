@@ -1,6 +1,6 @@
 package com.example.demo_web.mail;
 
-import com.example.demo_web.entity.User;
+import com.example.demo_web.model.entity.User;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

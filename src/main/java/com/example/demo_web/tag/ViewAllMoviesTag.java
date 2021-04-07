@@ -1,10 +1,10 @@
 package com.example.demo_web.tag;
 
-import com.example.demo_web.command.CommandEnum;
-import com.example.demo_web.command.SessionAttribute;
-import com.example.demo_web.command.SessionRequestContent;
-import com.example.demo_web.entity.Movie;
-import com.example.demo_web.util.TagUtil;
+import com.example.demo_web.controller.command.CommandEnum;
+import com.example.demo_web.controller.command.SessionAttribute;
+import com.example.demo_web.controller.command.SessionRequestContent;
+import com.example.demo_web.model.entity.Movie;
+import com.example.demo_web.model.util.TagUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -49,7 +49,7 @@ public class ViewAllMoviesTag extends TagSupport {
                         movie = allMovies.get(createdMoviesCount);
                         writer.write("<li>");
                         writer.write(" <div class=\"movie\">");
-                        writer.write("<a href=\"controller?command=show_movie_page&movieId=" + movie.getId() + "\">");
+                        writer.write("<a href=\"controller?command=open_movie_page&movieId=" + movie.getId() + "\">");
                         writer.write("<h4 class=\"title\">" + movie.getTitle() + "</h4>");
                         writer.write("</a>");
                         writer.write("<div class=\"poster\">");

@@ -1,9 +1,7 @@
 package com.example.demo_web.controller;
 
-import com.example.demo_web.command.*;
-import com.example.demo_web.exception.ConnectionException;
-import com.example.demo_web.manager.MessageManager;
-import com.example.demo_web.connection.ConnectionPool;
+import com.example.demo_web.model.pool.ConnectionPool;
+import com.example.demo_web.controller.command.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -48,8 +46,6 @@ public class Controller extends HttpServlet {
             }
         } else {
             page = PagePath.INDEX;
-            request.getSession().setAttribute(RequestParameter.ERROR_MESSAGE,
-                    MessageManager.getProperty("message.nullpage"));
             response.sendRedirect(request.getContextPath() + page);
         }
     }
