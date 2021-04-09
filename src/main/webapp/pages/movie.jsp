@@ -15,6 +15,7 @@
 <jsp:useBean id="movie" scope="session" class="com.example.demo_web.model.entity.Movie"/>
 <head>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/moviePage.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>${movie.title}</title>
 </head>
 <jsp:include page="/pages/module/header.jsp"/>
@@ -196,7 +197,7 @@
                         <h3 id="title-${review.id}" class="review-title"><c:out value="${review.title}"/></h3>
                         <p id="body-${review.id}" class="review-body"><c:out value="${review.body}"/></p>
                         <p>
-                            <c:out value="${review.date}"/>
+                            <c:out value="${review.creationDate}"/>
                             <br>
                             <br>
                         </p>
@@ -211,13 +212,13 @@
 
 
             <c:if test="${user.id != 0 and not addedReview and user.state == active}">
-                <form action="controller" method="post">
-                    <input type="hidden" name="command" value="create_review"/>
-                    <input type="hidden" name="user-id" value="${user.id}"/>
-                    <input type="hidden" name="movie-id" value="${movie.id}"/>
-                    <input type="text" required name="review-title-input" class="review-title-input"
+                <form action="controller" method="POST">
+                    <input type="hidden" name="command" value="create_movie_review"/>
+                    <input type="hidden" name="userId" value="${user.id}"/>
+                    <input type="hidden" name="movieId" value="${movie.id}"/>
+                    <input type="text" required name="movieReviewTitle" class="review-title-input"
                            placeholder="<fmt:message key="review.title"/>"/>
-                    <textarea required cols="60" rows="5" name="review-body-input" class="review-body-input"
+                    <textarea required cols="60" rows="5" name="movieReviewBody" class="review-body-input"
                               placeholder="<fmt:message key="review.body"/> "></textarea>
                     <input type="submit" class="leave-review-btn" value="<fmt:message key="leave.review"/> ">
                 </form>

@@ -1,4 +1,4 @@
-package com.example.demo_web.controller.command.impl;
+package com.example.demo_web.controller.command.impl.page;
 
 
 import com.example.demo_web.controller.command.*;
@@ -11,7 +11,7 @@ import com.example.demo_web.tag.ViewAllMoviesTag;
 import java.util.List;
 import java.util.Optional;
 
-public class ShowAllMoviesCommand implements ActionCommand {
+public class OpenAllMoviesPageCommand implements ActionCommand {
 
     private MovieService movieService = new MovieServiceImpl();
 

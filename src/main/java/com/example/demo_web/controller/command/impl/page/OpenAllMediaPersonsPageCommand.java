@@ -1,4 +1,4 @@
-package com.example.demo_web.controller.command.impl;
+package com.example.demo_web.controller.command.impl.page;
 
 
 import com.example.demo_web.controller.command.*;
@@ -11,7 +11,7 @@ import com.example.demo_web.tag.ViewAllMediaPersonsTag;
 import java.util.List;
 import java.util.Optional;
 
-public class ShowAllMediaPersonsCommand implements ActionCommand {
+public class OpenAllMediaPersonsPageCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();

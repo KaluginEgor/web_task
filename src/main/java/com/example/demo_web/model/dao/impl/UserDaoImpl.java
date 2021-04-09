@@ -73,11 +73,6 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean delete(User user) {
-        return true;
-    }
-
-    @Override
     public User create(User user) throws DaoException {
         return null;
     }

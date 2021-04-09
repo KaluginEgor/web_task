@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieRatingDaoImpl implements MovieRatingDao {
-    private static final String SQL_SELECT_MOVIE_RATINGS_BY_MOVIE_ID = "SELECT MR.rating_id, MR.rating_value, MR.movie_id, MR.user_id FROM movie_ratings MR INNER JOIN movies M on MR.movie_id = M.movie_id WHERE M.movie_id = ? AND MR.rating_is_deleted = 0;";
+    private static final String SQL_SELECT_MOVIE_RATINGS_BY_MOVIE_ID = "SELECT MR.rating_id, MR.rating_value, MR.movie_id, MR.user_id, M.movie_title FROM movie_ratings MR INNER JOIN movies M on MR.movie_id = M.movie_id WHERE M.movie_id = ? AND MR.rating_is_deleted = 0;";
 
     private static final String SQL_INSERT_MOVIE_RATING = "INSERT INTO movie_ratings (rating_value, rating_is_deleted, movie_id, user_id) VALUES (?, 0, ?, ?);";
 
@@ -22,6 +22,7 @@ public class MovieRatingDaoImpl implements MovieRatingDao {
     private static final String VALUE_COLUMN = "rating_value";
     private static final String MOVIE_ID_COLUMN = "movie_id";
     private static final String USER_ID_COLUMN = "user_id";
+    private static final String MOVIE_TITLE_COLUMN = "movie_title";
 
     private static MovieRatingDao instance = new MovieRatingDaoImpl();
 
@@ -43,11 +44,6 @@ public class MovieRatingDaoImpl implements MovieRatingDao {
 
     @Override
     public boolean delete(Integer id) throws DaoException {
-        return false;
-    }
-
-    @Override
-    public boolean delete(MovieRating movieRating) throws DaoException {
         return false;
     }
 
@@ -113,6 +109,8 @@ public class MovieRatingDaoImpl implements MovieRatingDao {
         movieRating.setMovieId(movieId);
         Integer userId = resultSet.getInt(USER_ID_COLUMN);
         movieRating.setUserId(userId);
+        String movieTitle = resultSet.getString(MOVIE_TITLE_COLUMN);
+        movieRating.setMovieTitle(movieTitle);
         return movieRating;
     }
 }

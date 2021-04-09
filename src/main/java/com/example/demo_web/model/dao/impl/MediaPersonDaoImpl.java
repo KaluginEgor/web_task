@@ -126,11 +126,6 @@ public class MediaPersonDaoImpl implements MediaPersonDao {
     }
 
     @Override
-    public boolean delete(MediaPerson mediaPerson) throws DaoException {
-        return false;
-    }
-
-    @Override
     public MediaPerson create(MediaPerson mediaPerson) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_MEDIA_PERSON, Statement.RETURN_GENERATED_KEYS)) {

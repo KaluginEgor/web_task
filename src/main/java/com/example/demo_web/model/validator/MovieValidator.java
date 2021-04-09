@@ -7,8 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MovieValidator {
-    private static final String MOVIE_REVIEW_TITLE_PATTERN = "[A-Za-zА-Яа-яЁё0-9]{1,100}";
-    private static final String MOVIE_REVIEW_BODY_PATTERN = "[A-Za-zА-Яа-яЁё0-9]{1,1000}";
+    private static final String MOVIE_REVIEW_TITLE_PATTERN = "[A-Za-zА-Яа-яЁё0-9\\s]{1,100}";
+    private static final String MOVIE_REVIEW_BODY_PATTERN = "[A-Za-zА-Яа-яЁё0-9\\s]{1,1000}";
     private static final String TITLE = "title";
     private static final String BODY = "body";
     private MovieValidator() {}

@@ -7,7 +7,6 @@ public class MovieReview extends Entity {
     private String title;
     private String body;
     private LocalDate creationDate;
-    private boolean isDeleted;
     private int movieId;
     private int userId;
     private String userLogin;
@@ -35,14 +34,6 @@ public class MovieReview extends Entity {
 
     public void setBody(String body) {
         this.body = body;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 
     public LocalDate getCreationDate() {
@@ -91,7 +82,6 @@ public class MovieReview extends Entity {
         sb.append("id=").append(id);
         sb.append(", title='").append(title).append('\'');
         sb.append(", body='").append(body).append('\'');
-        sb.append(", isDeleted=").append(isDeleted);
         sb.append(", creationDate=").append(creationDate);
         sb.append('}');
         return sb.toString();

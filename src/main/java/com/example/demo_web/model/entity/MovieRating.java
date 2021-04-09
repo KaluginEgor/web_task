@@ -5,7 +5,6 @@ public class MovieRating extends Entity {
     private float value;
     private int movieId;
     private int userId;
-    private boolean isDeleted;
     private String movieTitle;
 
     public int getId() {
@@ -38,14 +37,6 @@ public class MovieRating extends Entity {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 
     public String getMovieTitle() {

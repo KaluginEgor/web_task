@@ -87,11 +87,6 @@ public class MovieDaoImpl implements MovieDao {
     }
 
     @Override
-    public boolean delete(Movie movie) throws DaoException {
-        return false;
-    }
-
-    @Override
     public Movie create(Movie movie) throws DaoException {
         return null;
     }
