@@ -1,5 +1,7 @@
 package com.example.demo_web.model.service.impl;
 
+import com.example.demo_web.controller.command.RequestParameter;
+import com.example.demo_web.controller.command.SessionRequestContent;
 import com.example.demo_web.model.dao.MediaPersonDao;
 import com.example.demo_web.model.dao.MovieDao;
 import com.example.demo_web.model.entity.MediaPerson;
@@ -8,10 +10,12 @@ import com.example.demo_web.model.dao.impl.MediaPersonDaoImpl;
 import com.example.demo_web.model.dao.impl.MovieDaoImpl;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.exception.ServiceException;
+import com.example.demo_web.model.entity.OccupationType;
 import com.example.demo_web.model.service.MediaPersonService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,15 +25,25 @@ public class MediaPersonServiceImpl implements MediaPersonService {
     private MovieDao movieDao = MovieDaoImpl.getInstance();
 
     @Override
-    public List<MediaPerson> findAll(int begin, int end) throws ServiceException {
-        List<MediaPerson> allUsers;
+    public List<MediaPerson> findAllBetween(int begin, int end) throws ServiceException {
+        List<MediaPerson> allMediaPeopleBetween;
         try {
-            allUsers = new ArrayList<>(mediaPersonDao.findAllBetween(begin, end));
+            allMediaPeopleBetween = mediaPersonDao.findAllBetween(begin, end);
         } catch (DaoException e) {
-            logger.error(e);
             throw new ServiceException(e);
         }
-        return allUsers;
+        return allMediaPeopleBetween;
+    }
+
+    @Override
+    public List<MediaPerson> finaAll() throws ServiceException {
+        List<MediaPerson> allMediaPeople;
+        try {
+            allMediaPeople = mediaPersonDao.findAll();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return allMediaPeople;
     }
 
     @Override
@@ -46,7 +60,7 @@ public class MediaPersonServiceImpl implements MediaPersonService {
 
     @Override
     public MediaPerson findById(Integer id) throws ServiceException {
-        MediaPerson mediaPerson = null;
+        MediaPerson mediaPerson;
         try {
             mediaPerson = mediaPersonDao.findEntityById(id);
             List<Movie> movies = movieDao.findByActorId(id);
@@ -58,24 +72,61 @@ public class MediaPersonServiceImpl implements MediaPersonService {
     }
 
     @Override
-    public MediaPerson update(MediaPerson mediaPerson) throws ServiceException {
+    public MediaPerson update(int id, String firstName, String secondName, String bio, OccupationType occupationType, LocalDate birthday, String picture, String[] moviesId) throws ServiceException {
         try {
-            return mediaPersonDao.update(mediaPerson);
+            MediaPerson mediaPersonToUpdate = convertToMediaPerson(firstName, secondName, bio, occupationType, birthday, picture, moviesId);
+            mediaPersonToUpdate.setId(id);
+            MediaPerson updatedMediaPerson = mediaPersonDao.update(mediaPersonToUpdate);
+            updatedMediaPerson.setMovies(mediaPersonToUpdate.getMovies());
+            mediaPersonDao.deleteMediaPersonMovies(updatedMediaPerson.getId());
+            for (Movie movie : updatedMediaPerson.getMovies()) {
+                mediaPersonDao.insertMediaPersonMovie(updatedMediaPerson.getId(), movie.getId());
+            }
+            return updatedMediaPerson;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public MediaPerson create(MediaPerson mediaPerson, List<Integer> moviesId) throws ServiceException {
+    public MediaPerson create(String firstName, String secondName, String bio, OccupationType occupationType, LocalDate birthday, String picture, String[] moviesId) throws ServiceException {
         try {
-            MediaPerson createdMediaPerson = mediaPersonDao.create(mediaPerson);
-            for (Integer movieId : moviesId) {
-                mediaPersonDao.insertMediaPersonMovie(mediaPerson.getId(), movieId);
+            MediaPerson mediaPersonToCreate = convertToMediaPerson(firstName, secondName, bio, occupationType, birthday, picture, moviesId);
+            MediaPerson createdMediaPerson = mediaPersonDao.create(mediaPersonToCreate);
+            createdMediaPerson.setMovies(mediaPersonToCreate.getMovies());
+            for (Movie movie : createdMediaPerson.getMovies()) {
+                mediaPersonDao.insertMediaPersonMovie(createdMediaPerson.getId(), movie.getId());
             }
             return createdMediaPerson;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public boolean delete(int id) throws ServiceException {
+        try {
+            mediaPersonDao.delete(id);
+            return true;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    private MediaPerson convertToMediaPerson(String firstName, String secondName, String bio, OccupationType occupationType, LocalDate birthday, String picture, String[] moviesId) throws DaoException {
+        MediaPerson mediaPerson = new MediaPerson();
+        mediaPerson.setFirstName(firstName);
+        mediaPerson.setSecondName(secondName);
+        mediaPerson.setBio(bio);
+        mediaPerson.setOccupationType(occupationType);
+        mediaPerson.setBirthday(birthday);
+        mediaPerson.setPicture(picture);
+        List<Movie> movies = new ArrayList<>();
+        for (String movieId : moviesId) {
+            Movie movie = movieDao.findEntityById(Integer.valueOf(movieId));
+            movies.add(movie);
+        }
+        mediaPerson.setMovies(movies);
+        return mediaPerson;
     }
 }

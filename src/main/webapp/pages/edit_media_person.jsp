@@ -88,13 +88,19 @@
         <div class="block occupation">
             <label for="movies-div">Movies</label>
             <div id="movies-div" class="occupation-div">
-                <c:forEach var="title" items="${sessionScope.movieTitles}">
+                <c:forEach var="mediaPerson" items="${sessionScope.movies}">
                     <div class="block-div">
-
-                                <input type="checkbox" id="${title}" name="movieTitle"
-                                       value="${title.getKey()}"/>
-
-                        <label for="${title}">${title.getValue()}</label>
+                        <c:choose>
+                            <c:when test="${requestScope.mediaPerson.movies.contains(mediaPerson)}">
+                                <input type="checkbox" id="${mediaPerson.id}" name="mediaPersonMovies" checked="checked"
+                                       value="${mediaPerson.id}"/>
+                            </c:when>
+                            <c:otherwise>
+                                <input type="checkbox" id="${mediaPerson.id}" name="mediaPersonMovies"
+                                       value="${mediaPerson.id}"/>
+                            </c:otherwise>
+                        </c:choose>
+                        <label for="${mediaPerson}">${mediaPerson.title}</label>
                     </div>
                 </c:forEach>
             </div>

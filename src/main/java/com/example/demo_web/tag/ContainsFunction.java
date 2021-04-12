@@ -1,6 +1,7 @@
 package com.example.demo_web.tag;
 
 import com.example.demo_web.model.entity.GenreType;
+import com.example.demo_web.model.entity.Movie;
 import com.example.demo_web.model.entity.MovieRating;
 
 import java.util.List;
@@ -16,7 +17,6 @@ public class ContainsFunction {
         }
         return useRate;
     }
-
 
     public static boolean containsGenreType(List<GenreType> genreTypes, GenreType genreType) {
         for (GenreType element : genreTypes) {

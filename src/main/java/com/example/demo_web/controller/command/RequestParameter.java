@@ -17,10 +17,15 @@ public class RequestParameter {
     public static final String MEDIA_PERSON_ID = "mediaPersonId";
     public static final String ERROR_MESSAGE = "errorMessage";
     public static final String NEW_PAGE = "newPage";
-    public static final String OCCUPATION_TYPE = "occupationType";
-    public static final String BIRTHDAY = "birthday";
+    public static final String MEDIA_PERSON_OCCUPATION_TYPE = "occupationType";
+    public static final String MEDIA_PERSON_BIRTHDAY = "birthday";
     public static final String PICTURE = "picture";
+    public static final String MEDIA_PERSON_MOVIES = "mediaPersonMovies";
     public static final String MOVIE_TITLE = "movieTitle";
+    public static final String MOVIE_DESCRIPTION = "movieDescription";
+    public static final String MOVIE_RELEASE_DATE = "movieReleaseDate";
+    public static final String MOVIE_GENRE = "movieGenre";
+    public static final String MOVIE_CREW = "movieCrew";
     public static final String MOVIE_RATING_ID = "movieRatingId";
     public static final String MOVIE_RATING_VALUE = "movieRatingValue";
     public static final String MOVIE_REVIEW_ID = "movieReviewId";

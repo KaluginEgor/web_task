@@ -3,8 +3,8 @@ package com.example.demo_web.model.service;
 import com.example.demo_web.model.entity.Movie;
 import com.example.demo_web.exception.ServiceException;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 public interface MovieService {
     List<Movie> findAllBetween(int begin, int end) throws ServiceException;
@@ -13,5 +13,11 @@ public interface MovieService {
 
     Movie findById(Integer id) throws ServiceException;
 
-    Map<Integer, String> findAllTitles() throws ServiceException;
+    List<Movie> findAll() throws ServiceException;
+
+    Movie create(String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws ServiceException;
+
+    Movie update(int id, String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws ServiceException;
+
+    boolean delete(int id) throws ServiceException;
 }

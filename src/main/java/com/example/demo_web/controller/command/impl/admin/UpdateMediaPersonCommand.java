@@ -17,8 +17,18 @@ public class UpdateMediaPersonCommand implements ActionCommand {
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
         commandResult.setTransitionType(TransitionType.FORWARD);
+
+        int id = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MEDIA_PERSON_ID));
+        String firstName = sessionRequestContent.getRequestParameter(RequestParameter.FIRST_NAME);
+        String secondName = sessionRequestContent.getRequestParameter(RequestParameter.SECOND_NAME);
+        String bio = sessionRequestContent.getRequestParameter(RequestParameter.BIO);
+        OccupationType occupationType = OccupationType.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MEDIA_PERSON_OCCUPATION_TYPE));
+        String stringBirthday = sessionRequestContent.getRequestParameter(RequestParameter.MEDIA_PERSON_BIRTHDAY);
+        LocalDate birthday = (stringBirthday != null && !stringBirthday.isEmpty()) ? LocalDate.parse(stringBirthday) : null;
+        String picture = sessionRequestContent.getRequestParameter(RequestParameter.PICTURE);
+        String[] moviesId = sessionRequestContent.getRequestParameters(RequestParameter.MEDIA_PERSON_MOVIES);
         try {
-            MediaPerson mediaPerson = mediaPersonService.update(convertToMediaPerson(sessionRequestContent));
+            MediaPerson mediaPerson = mediaPersonService.update(id, firstName, secondName, bio, occupationType, birthday, picture, moviesId);
             sessionRequestContent.setSessionAttribute(SessionAttribute.MEDIA_PERSON, mediaPerson);
             commandResult.setPage(PagePath.MEDIA_PERSON);
         } catch (ServiceException e) {
@@ -27,20 +37,5 @@ public class UpdateMediaPersonCommand implements ActionCommand {
         return commandResult;
     }
 
-    private MediaPerson convertToMediaPerson(SessionRequestContent sessionRequestContent) {
-        MediaPerson mediaPerson = new MediaPerson();
-        mediaPerson.setId(Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MEDIA_PERSON_ID)));
-        mediaPerson.setFirstName(sessionRequestContent.getRequestParameter(RequestParameter.FIRST_NAME));
-        mediaPerson.setSecondName(sessionRequestContent.getRequestParameter(RequestParameter.SECOND_NAME));
-        mediaPerson.setBio(sessionRequestContent.getRequestParameter(RequestParameter.BIO));
-        OccupationType occupationType = OccupationType.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.OCCUPATION_TYPE));
-        mediaPerson.setOccupationType(occupationType);
 
-        String stringBirthday = sessionRequestContent.getRequestParameter(RequestParameter.BIRTHDAY);
-        LocalDate birthday = (stringBirthday != null && !stringBirthday.isEmpty()) ? LocalDate.parse(stringBirthday) : null;
-        mediaPerson.setBirthday(birthday);
-        mediaPerson.setPicture(sessionRequestContent.getRequestParameter(RequestParameter.PICTURE));
-
-        return mediaPerson;
-    }
 }

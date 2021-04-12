@@ -25,7 +25,7 @@ public class ViewAllMediaPersonsTag extends TagSupport {
         int currentPage = (int) sessionRequestContent.getSessionAttribute(SessionAttribute.ALL_ACTORS_CURRENT_PAGE);
         int moviesCount = (int) sessionRequestContent.getSessionAttribute(SessionAttribute.ACTORS_COUNT);
         int pagesCount = moviesCount % ACTORS_PER_PAGE_NUMBER == 0 ? (moviesCount / ACTORS_PER_PAGE_NUMBER) : (moviesCount / ACTORS_PER_PAGE_NUMBER + 1);
-        String command = CommandEnum.SHOW_ALL_MEDIA_PERSONS.toString().toLowerCase();
+        String command = CommandEnum.OPEN_ALL_MEDIA_PERSONS_PAGE.toString().toLowerCase();
         TagUtil.paginate(pageContext, currentPage, pagesCount, command);
         return SKIP_BODY;
     }
@@ -49,7 +49,7 @@ public class ViewAllMediaPersonsTag extends TagSupport {
                         mediaPerson = allMediaPeople.get(createdActorsCount);
                         writer.write("<li>");
                         writer.write(" <div class=\"movie\">");
-                        writer.write("<a href=\"controller?command=show_media_person_page&mediaPersonId=" + mediaPerson.getId() + "\">");
+                        writer.write("<a href=\"controller?command=open_media_person_page&mediaPersonId=" + mediaPerson.getId() + "\">");
                         writer.write("<h4 class=\"title\">" + mediaPerson.getFirstName() + " " + mediaPerson.getSecondName() + "</h4>");
                         writer.write("</a>");
                         writer.write("<div class=\"poster\">");

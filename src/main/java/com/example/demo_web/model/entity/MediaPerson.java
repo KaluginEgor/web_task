@@ -76,4 +76,24 @@ public class MediaPerson extends Entity {
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MediaPerson that = (MediaPerson) o;
+
+        if (!firstName.equals(that.firstName)) return false;
+        if (!secondName.equals(that.secondName)) return false;
+        return birthday.equals(that.birthday);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = firstName.hashCode();
+        result = 31 * result + secondName.hashCode();
+        result = 31 * result + birthday.hashCode();
+        return result;
+    }
 }

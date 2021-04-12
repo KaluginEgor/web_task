@@ -3,12 +3,15 @@ package com.example.demo_web.controller.command.impl.admin;
 
 import com.example.demo_web.controller.command.*;
 import com.example.demo_web.model.entity.GenreType;
+import com.example.demo_web.model.entity.MediaPerson;
 import com.example.demo_web.model.entity.Movie;
 import com.example.demo_web.exception.ServiceException;
 import com.example.demo_web.model.service.MediaPersonService;
 import com.example.demo_web.model.service.MovieService;
 import com.example.demo_web.model.service.impl.MediaPersonServiceImpl;
 import com.example.demo_web.model.service.impl.MovieServiceImpl;
+
+import java.util.List;
 
 public class OpenEditMoviePageCommand implements ActionCommand {
     private MediaPersonService mediaPersonService = new MediaPersonServiceImpl();
@@ -20,7 +23,9 @@ public class OpenEditMoviePageCommand implements ActionCommand {
         commandResult.setTransitionType(TransitionType.FORWARD);
         try {
             sessionRequestContent.setSessionAttribute(SessionAttribute.GENRE_TYPES, GenreType.values());
-            if (movieExists(sessionRequestContent)) {
+            List<MediaPerson> mediaPeople = mediaPersonService.finaAll();
+            sessionRequestContent.setSessionAttribute(SessionAttribute.MEDIA_PEOPLE, mediaPeople);
+            if (sessionRequestContent.getRequestParameter((RequestParameter.MOVIE_ID)) != null) {
                 Movie movie = movieService.findById(Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID)));
                 sessionRequestContent.setSessionAttribute(SessionAttribute.MOVIE, movie);
             }
@@ -29,13 +34,5 @@ public class OpenEditMoviePageCommand implements ActionCommand {
             commandResult.setPage(PagePath.ERROR);
         }
         return commandResult;
-    }
-
-    private boolean movieExists(SessionRequestContent sessionRequestContent) {
-        if (sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID) != null) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }

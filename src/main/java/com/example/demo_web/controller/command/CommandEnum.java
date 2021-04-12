@@ -1,12 +1,9 @@
 package com.example.demo_web.controller.command;
 
 
+import com.example.demo_web.controller.command.impl.admin.*;
 import com.example.demo_web.controller.command.impl.page.OpenAllMoviesPageCommand;
 import com.example.demo_web.controller.command.impl.LoginCommand;
-import com.example.demo_web.controller.command.impl.admin.CreateMediaPersonCommand;
-import com.example.demo_web.controller.command.impl.admin.OpenEditMediaPersonPageCommand;
-import com.example.demo_web.controller.command.impl.admin.OpenEditMoviePageCommand;
-import com.example.demo_web.controller.command.impl.admin.UpdateMediaPersonCommand;
 import com.example.demo_web.controller.command.impl.page.*;
 import com.example.demo_web.controller.command.impl.user.CreateMovieRatingCommand;
 import com.example.demo_web.controller.command.impl.user.CreateMovieReviewCommand;
@@ -50,17 +47,17 @@ public enum CommandEnum {
             this.command = new ConfirmRegistrationCommand();
         }
     },
-    SHOW_ALL_MOVIES {
+    OPEN_ALL_MOVIES_PAGE {
         {
             this.command = new OpenAllMoviesPageCommand();
         }
     },
-    SHOW_ALL_MEDIA_PERSONS {
+    OPEN_ALL_MEDIA_PERSONS_PAGE {
         {
             this.command = new OpenAllMediaPersonsPageCommand();
         }
     },
-    SHOW_MEDIA_PERSON_PAGE {
+    OPEN_MEDIA_PERSON_PAGE {
         {
             this.command = new OpenMediaPersonPageCommand();
         }
@@ -83,6 +80,26 @@ public enum CommandEnum {
     CREATE_MEDIA_PERSON {
         {
             this.command = new CreateMediaPersonCommand();
+        }
+    },
+    DELETE_MEDIA_PERSON {
+        {
+            this.command = new DeleteMediaPersonCommand();
+        }
+    },
+    CREATE_MOVIE {
+        {
+            this.command = new CreateMovieCommand();
+        }
+    },
+    UPDATE_MOVIE {
+        {
+            this.command = new UpdateMovieCommand();
+        }
+    },
+    DELETE_MOVIE {
+        {
+            this.command = new DeleteMovieCommand();
         }
     },
     CREATE_MOVIE_RATING {

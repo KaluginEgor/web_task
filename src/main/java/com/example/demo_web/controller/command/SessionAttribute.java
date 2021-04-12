@@ -14,7 +14,8 @@ public class SessionAttribute {
     public static final String MEDIA_PERSON = "mediaPerson";
     public static final String OCCUPATION_TYPES = "occupationTypes";
     public static final String GENRE_TYPES = "genreTypes";
-    public static final String MOVIES_TITLES = "movieTitles";
+    public static final String MOVIES = "movies";
+    public static final String MEDIA_PEOPLE = "mediaPeople";
 
     private SessionAttribute(){}
 }

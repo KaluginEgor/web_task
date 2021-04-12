@@ -16,10 +16,9 @@ import com.example.demo_web.model.service.MovieService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MovieServiceImpl implements MovieService {
     private static final Logger logger = LogManager.getLogger(MovieServiceImpl.class);
@@ -54,7 +53,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie findById(Integer id) throws ServiceException {
-        Movie movie = null;
+        Movie movie;
         try {
             movie = movieDao.findEntityById(id);
             List<GenreType> genreTypes = movieDao.findGenreTypesByMovieId(id);
@@ -73,13 +72,91 @@ public class MovieServiceImpl implements MovieService {
 
 
     @Override
-    public Map<Integer, String> findAllTitles() throws ServiceException {
-        Map<Integer, String> foundTitles = new LinkedHashMap<>();
+    public List<Movie> findAll() throws ServiceException {
+        List<Movie> movies = new ArrayList<>();
         try {
-            foundTitles = movieDao.findAllTitles();
+            movies = movieDao.findAll();
+            return movies;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
-        return foundTitles;
+    }
+
+    @Override
+    public Movie create(String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws ServiceException {
+        try {
+            Movie movieToCreate = convertToMovie(title, description, releaseDate, picture, stringGenres, stringMediaPersonsId);
+            Movie createdMovie = movieDao.create(movieToCreate);
+            createdMovie.setGenres(movieToCreate.getGenres());
+            createdMovie.setCrew(movieToCreate.getCrew());
+            for (GenreType genre : createdMovie.getGenres()) {
+                movieDao.insertMovieGenre(createdMovie.getId(), genre.ordinal());
+            }
+            for (MediaPerson mediaPerson : createdMovie.getCrew()) {
+                movieDao.insertMovieMediaPerson(createdMovie.getId(), mediaPerson.getId());
+            }
+            List<MovieReview> movieReviews = reviewDao.findByMovieId(createdMovie.getId());
+            createdMovie.setReviews(movieReviews);
+            List<MovieRating> ratingList = ratingDao.findByMovieId(createdMovie.getId());
+            createdMovie.setRatingList(ratingList);
+            return createdMovie;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public Movie update(int id, String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws ServiceException {
+        try {
+            Movie movieToUpdate = convertToMovie(title, description, releaseDate, picture, stringGenres, stringMediaPersonsId);
+            movieToUpdate.setId(id);
+            movieDao.update(movieToUpdate);
+            movieDao.deleteMovieGenres(movieToUpdate.getId());
+            for (GenreType genre : movieToUpdate.getGenres()) {
+                movieDao.insertMovieGenre(movieToUpdate.getId(), genre.ordinal());
+            }
+            movieDao.deleteMovieCrew(movieToUpdate.getId());
+            for (MediaPerson mediaPerson : movieToUpdate.getCrew()) {
+                movieDao.insertMovieMediaPerson(movieToUpdate.getId(), mediaPerson.getId());
+            }
+            List<MovieReview> movieReviews = reviewDao.findByMovieId(movieToUpdate.getId());
+            movieToUpdate.setReviews(movieReviews);
+            List<MovieRating> ratingList = ratingDao.findByMovieId(movieToUpdate.getId());
+            movieToUpdate.setRatingList(ratingList);
+            return movieToUpdate;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    private Movie convertToMovie(String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws DaoException {
+        Movie movie = new Movie();
+        movie.setTitle(title);
+        movie.setDescription(description);
+        movie.setReleaseDate(releaseDate);
+        movie.setPicture(picture);
+        List<GenreType> genres = new ArrayList<>();
+        for (String stringGenre : stringGenres) {
+            GenreType genreType = GenreType.valueOf(stringGenre);
+            genres.add(genreType);
+        }
+        movie.setGenres(genres);
+        List<MediaPerson> mediaPersons = new ArrayList<>();
+        for (String stringId : stringMediaPersonsId) {
+            MediaPerson mediaPerson = mediaPersonDao.findEntityById(Integer.valueOf(stringId));
+            mediaPersons.add(mediaPerson);
+        }
+        movie.setCrew(mediaPersons);
+        return movie;
+    }
+
+    @Override
+    public boolean delete(int id) throws ServiceException {
+        try {
+            movieDao.delete(id);
+            return true;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 }

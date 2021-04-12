@@ -25,7 +25,7 @@ public class ViewAllMoviesTag extends TagSupport {
         int currentPage = (int) sessionRequestContent.getSessionAttribute(SessionAttribute.ALL_MOVIES_CURRENT_PAGE);
         int moviesCount = (int) sessionRequestContent.getSessionAttribute(SessionAttribute.MOVIES_COUNT);
         int pagesCount = moviesCount % MOVIES_PER_PAGE_NUMBER == 0 ? (moviesCount / MOVIES_PER_PAGE_NUMBER) : (moviesCount / MOVIES_PER_PAGE_NUMBER + 1);
-        String command = CommandEnum.SHOW_ALL_MOVIES.toString().toLowerCase();
+        String command = CommandEnum.OPEN_ALL_MOVIES_PAGE.toString().toLowerCase();
         TagUtil.paginate(pageContext, currentPage, pagesCount, command);
         return SKIP_BODY;
     }

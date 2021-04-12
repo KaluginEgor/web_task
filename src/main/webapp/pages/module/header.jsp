@@ -14,8 +14,8 @@
     <div class="header-limiter">
         <h1><a href="#">Movie<span>Rating</span></a></h1>
         <nav>
-            <a href="controller?command=show_all_movies">Movies</a>
-            <a href="controller?command=show_all_media_persons">Actors</a>
+            <a href="controller?command=open_all_movies_page">Movies</a>
+            <a href="controller?command=open_all_media_persons_page">Actors</a>
             <form name="loginForm" method="POST" action="controller">
                 <input type="hidden" name="command" value="change_language">
                 <input type="hidden" name="page" value="${ requestScope.page }">
@@ -33,6 +33,7 @@
                     <ul>
                         <li><a href="#" class="highlight">Edit profile</a></li>
                         <li><a href="controller?command=open_edit_media_person_page" class="highlight">Create media person</a></li>
+                        <li><a href="controller?command=open_edit_movie_page" class="highlight">Create movie</a></li>
                         <li><a href="controller?command=logout" class="highlight">Logout</a></li>
                     </ul>
                 </div>

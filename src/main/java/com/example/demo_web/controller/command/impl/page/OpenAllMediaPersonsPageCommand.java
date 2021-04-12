@@ -30,7 +30,7 @@ public class OpenAllMediaPersonsPageCommand implements ActionCommand {
         int end = actorsNumber + start;
         MediaPersonService mediaPersonService = new MediaPersonServiceImpl();
         try {
-            List<MediaPerson> allCurrentMediaPeople = mediaPersonService.findAll(start, end);
+            List<MediaPerson> allCurrentMediaPeople = mediaPersonService.findAllBetween(start, end);
             sessionRequestContent.setSessionAttribute(SessionAttribute.ALL_ACTORS_LIST, allCurrentMediaPeople);
             int actorsCount = mediaPersonService.countMediaPersons();
             sessionRequestContent.setSessionAttribute(SessionAttribute.ACTORS_COUNT, actorsCount);

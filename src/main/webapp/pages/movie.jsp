@@ -29,10 +29,17 @@
         <h2>${movie.title}
             <c:set var="admin" value="ADMIN"/>
             <c:if test="${user.role == admin}">
-                <button class="edit-by-admin-btn"><a
-                        href="controller?command=open_edit_movie_page&movieId=${movie.id}"><i
-                        class="fa fa-pencil-square-o"
-                        aria-hidden="true"></i></a></button>
+                <div class="btn">
+                    <button class="edit-by-admin-btn"><a
+                            href="controller?command=open_edit_movie_page&movieId=${movie.id}"><i
+                            class="fa fa-pencil-square-o"
+                            aria-hidden="true"></i></a></button>
+                </div>
+                <div class="btn">
+                    <button class="delete-btn"><a href="controller?command=delete_movie&movieId=${movie.id}">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                    </button>
+                </div>
             </c:if>
         </h2>
     </div>
@@ -69,6 +76,21 @@
                 <p><strong><fmt:message key="rating"/>: </strong>
                 <p id="movieRate">${movie.averageRating}</p>
                 </p>
+            </c:if>
+
+            <c:if test="${not empty movie.crew}">
+                <p><strong><fmt:message key="crew"/>: </strong></p>
+                <c:forEach var="mediaPerson" items="${movie.crew}">
+                    <div class="crew">
+                        <p>
+                            <a href="controller?command=open_media_person_page&mediaPersonId=${mediaPerson.id}">
+                                <c:out value="${mediaPerson.firstName}"/>
+                                <c:out value="${mediaPerson.secondName}"/>
+                            </a>
+                            <br>
+                        </p>
+                    </div>
+                </c:forEach>
             </c:if>
 
             <c:set var="active" value="ACTIVE"/>
@@ -136,21 +158,6 @@
             </c:if>
             <br/>
             <br/>
-            <c:if test="${not empty movie.crew}">
-                <p><strong><fmt:message key="crew"/>: </strong></p>
-                <c:forEach var="mediaPerson" items="${movie.crew}">
-                    <div class="crew">
-                        <p>
-                            <a href="controller?command=show_media_person_page&mediaPersonId=${mediaPerson.id}">
-                                <c:out value="${mediaPerson.firstName}"/>
-                                <c:out value="${mediaPerson.secondName}"/>
-                            </a>
-                            <br>
-                        </p>
-                    </div>
-                </c:forEach>
-            </c:if>
-
 
             <c:set var="addedReview" value="false"/>
 
@@ -169,8 +176,8 @@
                                                                                   aria-hidden="true"></i></button>
                                 </div>
 
-                                <form action="controller" method="post" class="delete-review-form">
-                                    <input type="hidden" name="command" value="delete_review"/>
+                                <form action="controller" method="POST" class="delete-review-form">
+                                    <input type="hidden" name="command" value="delete_movie_review"/>
                                     <input type="hidden" name="reviewId" value="${review.id}"/>
                                     <div class="btn">
                                         <button class="delete-btn"><i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -178,9 +185,9 @@
                                     </div>
                                 </form>
 
-                                <form action="controller" method="post" id="edit-review-form-${review.id}">
+                                <form action="controller" method="POST" id="edit-review-form-${review.id}">
                                     <input type="hidden" name="reviewId" value="${review.id}"/>
-                                    <input type="hidden" name="command" value="update_review"/>
+                                    <input type="hidden" name="command" value="update_movie_review"/>
                                     <input type="hidden" name="review"/>
 
                                     <div class="btn">

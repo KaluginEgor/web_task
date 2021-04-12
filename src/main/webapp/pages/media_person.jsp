@@ -27,9 +27,16 @@
         <h2>${mediaPerson.firstName} ${mediaPerson.secondName}
             <c:set var="admin" value="ADMIN"/>
             <c:if test="${user.role == admin}">
-                <button class="edit-by-admin-btn"><a href="controller?command=open_edit_media_person_page&mediaPersonId=${mediaPerson.id}"><i
-                        class="fa fa-pencil-square-o"
-                        aria-hidden="true"></i></a></button>
+                <div class="btn">
+                    <button class="edit-by-admin-btn"><a href="controller?command=open_edit_media_person_page&mediaPersonId=${mediaPerson.id}"><i
+                            class="fa fa-pencil-square-o"
+                            aria-hidden="true"></i></a></button>
+                </div>
+                <div class="btn">
+                    <button class="delete-btn"><a href="controller?command=delete_media_person&mediaPersonId=${mediaPerson.id}">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                    </button>
+                </div>
             </c:if>
         </h2>
     </div>
@@ -65,7 +72,7 @@
                 <c:forEach var="movie" items="${mediaPerson.movies}">
                     <div class="movie">
                         <p>
-                            <a href="controller?command=show_movie_page&movieId=${movie.id}">
+                            <a href="controller?command=open_movie_page&movieId=${movie.id}">
                                 <c:out value="${movie.title}"/>
                             </a>
                             <br>

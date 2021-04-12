@@ -10,5 +10,5 @@ public interface MediaPersonDao extends BaseDao<Integer, MediaPerson> {
     int countMediaPersons() throws DaoException;
     List<MediaPerson> findByMovieId(Integer id) throws DaoException;
     boolean insertMediaPersonMovie(Integer mediaPersonId, Integer movieId) throws DaoException;
-    boolean deleteMediaPersonMovie(Integer mediaPersonId) throws DaoException;
+    boolean deleteMediaPersonMovies(Integer mediaPersonId) throws DaoException;
 }
