@@ -31,12 +31,32 @@ public class MovieReviewServiceImpl implements MovieReviewService {
     @Override
     public MovieReview update(int movieReviewId, String reviewTitle, String reviewBody, int movieId, int userId) throws ServiceException {
         try {
-            MovieReview movieReview = convertToMovieReview(reviewTitle, reviewBody, movieId, userId);
-            MovieReview updatedMovieReview = new MovieReview();
-            if (MovieValidator.isMovieReviewValid(movieReview)) {
-                updatedMovieReview = movieReviewDao.update(movieReview);
+            MovieReview movieReviewToUpdate = convertToMovieReview(reviewTitle, reviewBody, movieId, userId);
+            movieReviewToUpdate.setId(movieReviewId);
+            if (MovieValidator.isMovieReviewValid(movieReviewToUpdate)) {
+                movieReviewDao.update(movieReviewToUpdate);
             }
-            return updatedMovieReview;
+            return movieReviewToUpdate;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean delete(int id) throws ServiceException {
+        try {
+            movieReviewDao.delete(id);
+            return true;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public MovieReview findById(int id) throws ServiceException {
+        try {
+            MovieReview movieReview = movieReviewDao.findEntityById(id);
+            return movieReview;
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

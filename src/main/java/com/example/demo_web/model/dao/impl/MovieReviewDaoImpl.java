@@ -18,6 +18,10 @@ public class MovieReviewDaoImpl implements MovieReviewDao {
 
     private static final String SQL_UPDATE_MOVIE_REVIEW = "UPDATE movie_reviews MR SET MR.review_title = ?, MR.review_body = ?, MR.review_creation_date = ? WHERE MR.review_id = ?;";
 
+    private static final String SQL_DELETE_MOVIE_REVIEW = "DELETE FROM movie_reviews MR WHERE MR.review_id = ?;";
+
+    private static final String SQL_SELECT_MOVIE_REVIEW_BY_ID = "SELECT MR.review_id, MR.review_title, MR.review_body, MR.review_creation_date, MR.movie_id, MR.user_id, M.movie_title, U.user_login FROM movie_reviews MR INNER JOIN users U on MR.user_id = u.user_id INNER JOIN movies M on MR.movie_id = M.movie_id WHERE MR.review_id = ?;";
+
     private static final String REVIEW_ID_COLUMN = "review_id";
     private static final String TITLE_COLUMN = "review_title";
     private static final String BODY_COLUMN = "review_body";
@@ -42,12 +46,30 @@ public class MovieReviewDaoImpl implements MovieReviewDao {
 
     @Override
     public MovieReview findEntityById(Integer id) throws DaoException {
-        return null;
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_MOVIE_REVIEW_BY_ID)) {
+            MovieReview movieReview = new MovieReview();
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                movieReview = buildMovieReview(resultSet);
+            }
+            return movieReview;
+        } catch (ConnectionException | SQLException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override
     public boolean delete(Integer id) throws DaoException {
-        return false;
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_MOVIE_REVIEW)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException | ConnectionException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override

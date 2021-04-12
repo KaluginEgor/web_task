@@ -8,29 +8,24 @@ import com.example.demo_web.model.service.MovieService;
 import com.example.demo_web.model.service.impl.MovieReviewServiceImpl;
 import com.example.demo_web.model.service.impl.MovieServiceImpl;
 
-public class UpdateMovieReviewCommand implements ActionCommand {
-    MovieReviewService movieReviewService = new MovieReviewServiceImpl();
-    MovieService movieService = new MovieServiceImpl();
+public class DeleteMovieReviewCommand implements ActionCommand {
+    private MovieReviewService movieReviewService = new MovieReviewServiceImpl();
+    private MovieService movieService = new MovieServiceImpl();
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
         commandResult.setTransitionType(TransitionType.FORWARD);
-
         try {
-            int movieReviewId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_REVIEW_ID));
+            int reviewId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_REVIEW_ID));
             int movieId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID));
-            int userId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.USER_ID));
-            String reviewTitle = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_REVIEW_TITLE);
-            String reviewBody = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_REVIEW_BODY);
-            movieReviewService.update(movieReviewId, reviewTitle, reviewBody, movieId, userId);
-            Movie movie = movieService.findById(Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID)));
+            movieReviewService.delete(reviewId);
+            Movie movie = movieService.findById(movieId);
             sessionRequestContent.setSessionAttribute(SessionAttribute.MOVIE, movie);
             commandResult.setPage(PagePath.MOVIE);
         } catch (ServiceException e) {
             commandResult.setPage(PagePath.ERROR);
         }
-
         return commandResult;
     }
 }

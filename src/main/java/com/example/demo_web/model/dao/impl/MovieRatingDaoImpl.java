@@ -17,6 +17,7 @@ public class MovieRatingDaoImpl implements MovieRatingDao {
 
     private static final String SQL_UPDATE_MOVIE_RATING = "UPDATE movie_ratings SET movie_ratings.rating_value = ? WHERE movie_ratings.rating_id = ?;";
 
+    private static final String SQL_DELETE_MOVIE_RATING = "DELETE FROM movie_ratings MR WHERE MR.rating_id = ?;";
 
     private static final String DEFAULT_ID_COLUMN = "rating_id";
     private static final String VALUE_COLUMN = "rating_value";
@@ -44,7 +45,14 @@ public class MovieRatingDaoImpl implements MovieRatingDao {
 
     @Override
     public boolean delete(Integer id) throws DaoException {
-        return false;
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_MOVIE_RATING)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException | ConnectionException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override

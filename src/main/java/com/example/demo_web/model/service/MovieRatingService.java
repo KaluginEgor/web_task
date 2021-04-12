@@ -7,5 +7,5 @@ public interface MovieRatingService {
 
     MovieRating create(int movieId, int userId, float value) throws ServiceException;
     MovieRating update(int movieRatingId, int movieId, int userId, float value) throws ServiceException;
-
+    boolean delete(int id) throws ServiceException;
 }

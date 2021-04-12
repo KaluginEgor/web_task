@@ -5,11 +5,8 @@ import com.example.demo_web.controller.command.impl.admin.*;
 import com.example.demo_web.controller.command.impl.page.OpenAllMoviesPageCommand;
 import com.example.demo_web.controller.command.impl.LoginCommand;
 import com.example.demo_web.controller.command.impl.page.*;
-import com.example.demo_web.controller.command.impl.user.CreateMovieRatingCommand;
-import com.example.demo_web.controller.command.impl.user.CreateMovieReviewCommand;
-import com.example.demo_web.controller.command.impl.user.UpdateMovieRatingCommand;
+import com.example.demo_web.controller.command.impl.user.*;
 import com.example.demo_web.controller.command.impl.*;
-import com.example.demo_web.controller.command.impl.user.UpdateMovieReviewCommand;
 
 public enum CommandEnum {
     LOGIN {
@@ -112,14 +109,29 @@ public enum CommandEnum {
             this.command = new UpdateMovieRatingCommand();
         }
     },
+    DELETE_MOVIE_RATING {
+        {
+            this.command = new DeleteMovieRatingCommand();
+        }
+    },
     CREATE_MOVIE_REVIEW {
         {
             this.command = new CreateMovieReviewCommand();
         }
     },
+    PREPARE_MOVIE_REVIEW_UPDATE {
+        {
+            this.command = new PrepareMovieReviewUpdateCommand();
+        }
+    },
     UPDATE_MOVIE_REVIEW {
         {
             this.command = new UpdateMovieReviewCommand();
+        }
+    },
+    DELETE_MOVIE_REVIEW {
+        {
+            this.command = new DeleteMovieReviewCommand();
         }
     },
     OPEN_EDIT_MOVIE_PAGE {

@@ -51,6 +51,16 @@ public class MovieRatingServiceImpl implements MovieRatingService {
         }
     }
 
+    @Override
+    public boolean delete(int id) throws ServiceException {
+        try {
+            movieRatingDao.delete(id);
+            return true;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
     private void updateMovieRating(MovieRating movieRating) throws ServiceException {
 
     }
