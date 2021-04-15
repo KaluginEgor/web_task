@@ -138,6 +138,21 @@ public enum CommandEnum {
         {
             this.command = new OpenEditMoviePageCommand();
         }
+    },
+    OPEN_USER_PAGE {
+        {
+            this.command = new OpenUserPageCommand();
+        }
+    },
+    OPEN_EDIT_USER_PAGE {
+        {
+            this.command = new OpenEditUserPageCommand();
+        }
+    },
+    UPDATE_USER {
+        {
+            this.command = new UpdateUserCommand();
+        }
     };
     ActionCommand command;
     public ActionCommand getCurrentCommand() {

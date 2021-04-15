@@ -12,6 +12,8 @@ public class PagePath {
     public static final String ERROR = "/pages/error/error.jsp";
     public static final String EDIT_MEDIA_PERSON = "/pages/edit_media_person.jsp";
     public static final String EDIT_MOVIE = "/pages/edit_movie.jsp";
+    public static final String USER = "/pages/user.jsp";
+    public static final String EDIT_USER = "/pages/edit_user.jsp";
 
     private PagePath() {}
 }

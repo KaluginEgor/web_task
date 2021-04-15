@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface MovieRatingDao extends BaseDao<Integer, MovieRating> {
     List<MovieRating> findByMovieId(Integer id) throws DaoException;
+    List<MovieRating> findByUserId(Integer id) throws DaoException;
 }

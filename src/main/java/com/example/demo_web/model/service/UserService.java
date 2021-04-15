@@ -12,9 +12,11 @@ public interface UserService {
 
     Optional<User> register(String login, String email, String firstName, String secondName, String password) throws ServiceException;
 
-    Optional<User> findById(int id);
+    Optional<User> findById(int id) throws ServiceException;
 
     boolean activateUser(int id) throws ServiceException;
+
+    Optional<User> update(int id, String login, String email, String firstName, String secondName, String picture, String role, String state, String rating) throws ServiceException;
 
     void constructAndSendConfirmEmail(String locale, User user);
 

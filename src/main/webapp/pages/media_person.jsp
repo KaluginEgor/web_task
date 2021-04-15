@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="pagecontent" var="rb" />
-<c:set var="page" value="/pages/mediaPerson.jsp" scope="request"/>
+<c:set var="page" value="/pages/mediaPerson.jsp" scope="session"/>
 <html>
 <jsp:useBean id="mediaPerson" scope="session" class="com.example.demo_web.model.entity.MediaPerson"/>
 <head>

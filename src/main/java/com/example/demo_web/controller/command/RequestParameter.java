@@ -8,6 +8,9 @@ public class RequestParameter {
     public static final String LOGIN = "login";
     public static final String FIRST_NAME = "firstName";
     public static final String SECOND_NAME = "secondName";
+    public static final String USER_ROLE = "userRole";
+    public static final String USER_STATE = "userState";
+    public static final String USER_RATING = "userRating";
     public static final String LANG = "lang";
     public static final String CURRENT_PAGE = "page";
     public static final String ID = "id";

@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieReviewDaoImpl implements MovieReviewDao {
-    private static final String SQL_SELECT_MOVIE_REVIEWS_BY_MOVIE_ID = "SELECT MR.review_id, MR.review_title, MR.review_body, MR.review_creation_date, MR.movie_id, MR.user_id, M.movie_title, U.user_login FROM movie_reviews MR INNER JOIN users U on MR.user_id = u.user_id INNER JOIN movies M on MR.movie_id = M.movie_id WHERE M.movie_id = ? AND MR.review_is_deleted = 0;";
+    private static final String SQL_SELECT_MOVIE_REVIEWS_BY_MOVIE_ID = "SELECT MR.review_id, MR.review_title, MR.review_body, MR.review_creation_date, MR.movie_id, MR.user_id, M.movie_title, U.user_login FROM movie_reviews MR INNER JOIN users U on MR.user_id = u.user_id INNER JOIN movies M on MR.movie_id = M.movie_id WHERE M.movie_id = ?;";
 
-    private static final String SQL_INSERT_MOVIE_REVIEW = "INSERT INTO movie_reviews (review_title, review_body, review_creation_date, review_is_deleted, movie_id, user_id) VALUES (?, ?, ?, 0, ?, ?);";
+    private static final String SQL_SELECT_MOVIE_REVIEWS_BY_USER_ID = "SELECT MR.review_id, MR.review_title, MR.review_body, MR.review_creation_date, MR.movie_id, MR.user_id, M.movie_title, U.user_login FROM movie_reviews MR INNER JOIN users U on MR.user_id = u.user_id INNER JOIN movies M on MR.movie_id = M.movie_id WHERE U.user_id = ?;";
+
+    private static final String SQL_INSERT_MOVIE_REVIEW = "INSERT INTO movie_reviews (review_title, review_body, review_creation_date, movie_id, user_id) VALUES (?, ?, ?, ?, ?);";
 
     private static final String SQL_UPDATE_MOVIE_REVIEW = "UPDATE movie_reviews MR SET MR.review_title = ?, MR.review_body = ?, MR.review_creation_date = ? WHERE MR.review_id = ?;";
 
@@ -113,6 +115,24 @@ public class MovieReviewDaoImpl implements MovieReviewDao {
         MovieReview movieReview;
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_MOVIE_REVIEWS_BY_MOVIE_ID)) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                movieReview = buildMovieReview(resultSet);
+                movieReviews.add(movieReview);
+            }
+            return movieReviews;
+        } catch (ConnectionException | SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<MovieReview> findByUserId(Integer id) throws DaoException {
+        List<MovieReview> movieReviews = new ArrayList<>();
+        MovieReview movieReview;
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_MOVIE_REVIEWS_BY_USER_ID)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {

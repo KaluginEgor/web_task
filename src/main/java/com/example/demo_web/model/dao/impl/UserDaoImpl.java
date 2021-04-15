@@ -15,11 +15,11 @@ import java.util.Locale;
 import java.util.Optional;
 
 public class UserDaoImpl implements UserDao {
-    private static final String SQL_CREATE_USER = "INSERT INTO users (user_login, user_email, user_password, user_first_name, user_second_name, user_role_id, user_state_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    private static final String SQL_CREATE_USER = "INSERT INTO users (user_login, user_email, user_password, user_first_name, user_second_name,  user_role_id, user_state_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
 
-    private static final String SQL_SELECT_USER_BY_LOGIN = "SELECT U.user_id, U.user_login, U.user_email, U.user_first_name, U.user_second_name, UR.user_role_name, US.user_state_name FROM users U INNER JOIN user_roles UR ON U.user_role_id = UR.user_role_id INNER JOIN user_states US ON U.user_state_id = US.user_state_id WHERE U.user_login = ?;";
+    private static final String SQL_SELECT_USER_BY_LOGIN = "SELECT U.user_id, U.user_login, U.user_email, U.user_first_name, U.user_second_name, U.user_picture, UR.user_role_name, US.user_state_name FROM users U INNER JOIN user_roles UR ON U.user_role_id = UR.user_role_id INNER JOIN user_states US ON U.user_state_id = US.user_state_id WHERE U.user_login = ?;";
 
-    private static final String SQL_SELECT_USER_BY_ID = "SELECT U.user_id, U.user_login, U.user_email, U.user_first_name, U.user_second_name, UR.user_role_name, US.user_state_name FROM users U INNER JOIN user_roles UR ON U.user_role_id = UR.user_role_id INNER JOIN user_states US ON U.user_state_id = US.user_state_id WHERE U.user_id = ?;";
+    private static final String SQL_SELECT_USER_BY_ID = "SELECT U.user_id, U.user_login, U.user_email, U.user_first_name, U.user_second_name, U.user_picture, UR.user_role_name, US.user_state_name FROM users U INNER JOIN user_roles UR ON U.user_role_id = UR.user_role_id INNER JOIN user_states US ON U.user_state_id = US.user_state_id WHERE U.user_id = ?;";
 
     private static final String SQL_SELECT_PASSWORD_BY_LOGIN = "SELECT user_password FROM users WHERE user_login = ?;";
 
@@ -29,6 +29,7 @@ public class UserDaoImpl implements UserDao {
 
     private static final String SQL_UPDATE_USER_RATING = "UPDATE users SET user_rating = ? WHERE user_id = ?";
 
+    private static final String SQL_UPDATE_USER = "UPDATE users U SET U.user_login = ?, U.user_email = ?, U.user_first_name = ?, U.user_second_name = ?, U.user_picture = ?, U.user_role_id = ?, U.user_state_id = ?, U.user_rating = ? WHERE U.user_id = ?;";
 
     private static final String DEFAULT_ID_COLUMN = "user_id";
     private static final String LOGIN_COLUMN = "user_login";
@@ -37,6 +38,7 @@ public class UserDaoImpl implements UserDao {
     private static final String SECOND_NAME_COLUMN = "user_second_name";
     private static final String ROLE_ID = "user_role_name";
     private static final String STATE_ID = "user_state_name";
+    private static final String PICTURE = "user_picture";
 
     private static UserDao instance = new UserDaoImpl();
 
@@ -98,8 +100,23 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User update(User user) {
-        return null;
+    public User update(User user) throws DaoException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_USER)) {
+            preparedStatement.setString(1, user.getLogin());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getFirstName());
+            preparedStatement.setString(4, user.getSecondName());
+            preparedStatement.setString(5, user.getPicture());
+            preparedStatement.setInt(6, user.getRole().ordinal());
+            preparedStatement.setInt(7, user.getState().ordinal());
+            preparedStatement.setInt(8, user.getRating());
+            preparedStatement.setInt(9, user.getId());
+            preparedStatement.executeUpdate();
+            return user;
+        } catch (SQLException | ConnectionException e) {
+            throw new DaoException(e);
+        }
     }
 
     @Override
@@ -174,16 +191,26 @@ public class UserDaoImpl implements UserDao {
     }
 
     private User buildUser(ResultSet resultSet) throws SQLException {
+        User user = new User();
         if (resultSet.wasNull()) {
             return null;
         }
         Integer userId = resultSet.getInt(DEFAULT_ID_COLUMN);
+        user.setId(userId);
         String userLogin = resultSet.getString(LOGIN_COLUMN);
+        user.setLogin(userLogin);
         String userEmail = resultSet.getString(EMAIL_COLUMN);
+        user.setEmail(userEmail);
         String userFirstName = resultSet.getString(FIRST_NAME_COLUMN);
+        user.setFirstName(userFirstName);
         String userSecondName = resultSet.getString(SECOND_NAME_COLUMN);
+        user.setSecondName(userSecondName);
+        String picture = resultSet.getString(PICTURE);
+        user.setPicture(picture);
         UserRole userRole = UserRole.valueOf(resultSet.getString(ROLE_ID).toUpperCase(Locale.ROOT));
+        user.setRole(userRole);
         UserState userState = UserState.valueOf(resultSet.getString(STATE_ID).toUpperCase(Locale.ROOT));
-        return new User(userId, userLogin, userEmail, userFirstName, userSecondName, userRole, userState);
+        user.setState(userState);
+        return user;
     }
 }

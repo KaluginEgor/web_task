@@ -9,6 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="pagecontent" var="rb" />
+<c:set var="page" value="/pages/edit_movie.jsp" scope="session"/>
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/editPage.css" />

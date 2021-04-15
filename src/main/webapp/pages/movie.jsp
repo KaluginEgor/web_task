@@ -11,6 +11,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="pagecontent" var="rb" />
+<c:set var="page" value="/pages/movie.jsp" scope="session"/>
 <html>
 <jsp:useBean id="movie" scope="session" class="com.example.demo_web.model.entity.Movie"/>
 <head>
@@ -176,7 +177,7 @@
                 <c:forEach var="review" items="${movie.reviews}">
                     <c:if test="${reviewToUpdate.id != review.id}">
                         <div class="review">
-                            <h4><a href="controller?command=show_user_page&userId=${review.userId}"><c:out
+                            <h4><a href="controller?command=open_user_page&userId=${review.userId}"><c:out
                                     value="${review.userLogin}"/></a></h4>
 
                             <div class="btn-row">
@@ -224,10 +225,10 @@
             </c:forEach>
 
 
-            <c:if test="${user.id != 0 and user.state == active and not addedReview and reviewToUpdate.id != 0}">
+            <c:if test="${user.id != 0 and user.state == active and (not addedReview or reviewToUpdate.id != 0)}">
                 <form action="controller" method="POST">
                     <c:choose>
-                        <c:when test="${empty reviewToUpdate}">
+                        <c:when test="${reviewToUpdate.id == 0}">
                             <input type="hidden" name="command" value="create_movie_review"/>
                         </c:when>
                         <c:otherwise>
@@ -242,10 +243,9 @@
                     <textarea required cols="60" rows="5" name="movieReviewBody" class="review-body-input"
                               placeholder="<fmt:message key="review.body"/> ">${reviewToUpdate.body}</textarea>
                     <input type="submit" class="leave-review-btn" value="<fmt:message key="leave.review"/> ">
-                    <c:remove var="reviewToUpdate"/>
                 </form>
             </c:if>
-
+            <c:remove var="reviewToUpdate"/>
         </div>
     </section>
 </section>

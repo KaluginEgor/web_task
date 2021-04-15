@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieRatingDaoImpl implements MovieRatingDao {
-    private static final String SQL_SELECT_MOVIE_RATINGS_BY_MOVIE_ID = "SELECT MR.rating_id, MR.rating_value, MR.movie_id, MR.user_id, M.movie_title FROM movie_ratings MR INNER JOIN movies M on MR.movie_id = M.movie_id WHERE M.movie_id = ? AND MR.rating_is_deleted = 0;";
+    private static final String SQL_SELECT_MOVIE_RATINGS_BY_MOVIE_ID = "SELECT MR.rating_id, MR.rating_value, MR.movie_id, MR.user_id, M.movie_title FROM movie_ratings MR INNER JOIN movies M on MR.movie_id = M.movie_id WHERE M.movie_id = ?;";
 
-    private static final String SQL_INSERT_MOVIE_RATING = "INSERT INTO movie_ratings (rating_value, rating_is_deleted, movie_id, user_id) VALUES (?, 0, ?, ?);";
+    private static final String SQL_SELECT_MOVIE_RATINGS_BY_USER_ID = "SELECT MR.rating_id, MR.rating_value, MR.movie_id, MR.user_id, M.movie_title FROM movie_ratings MR INNER JOIN movies M on MR.movie_id = M.movie_id INNER JOIN users U on MR.user_id = U.user_id WHERE U.user_id = ?;";
+
+    private static final String SQL_INSERT_MOVIE_RATING = "INSERT INTO movie_ratings (rating_value, movie_id, user_id) VALUES (?, ?, ?);";
 
     private static final String SQL_UPDATE_MOVIE_RATING = "UPDATE movie_ratings SET movie_ratings.rating_value = ? WHERE movie_ratings.rating_id = ?;";
 
@@ -92,6 +94,24 @@ public class MovieRatingDaoImpl implements MovieRatingDao {
         MovieRating movieRating;
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_MOVIE_RATINGS_BY_MOVIE_ID)) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                movieRating = buildMovieRating(resultSet);
+                movieRatings.add(movieRating);
+            }
+            return movieRatings;
+        } catch (ConnectionException | SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<MovieRating> findByUserId(Integer id) throws DaoException {
+        List<MovieRating> movieRatings = new ArrayList<>();
+        MovieRating movieRating;
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_MOVIE_RATINGS_BY_USER_ID)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {

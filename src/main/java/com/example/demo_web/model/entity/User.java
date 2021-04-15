@@ -1,5 +1,7 @@
 package com.example.demo_web.model.entity;
 
+import java.util.List;
+
 public class User extends Entity {
     private int id;
     private String login;
@@ -10,6 +12,8 @@ public class User extends Entity {
     private UserState state;
     private String picture;
     private int rating;
+    private List<MovieRating> movieRatings;
+    private List<MovieReview> movieReviews;
 
     public User() {}
 
@@ -100,6 +104,22 @@ public class User extends Entity {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public List<MovieRating> getMovieRatings() {
+        return movieRatings;
+    }
+
+    public void setMovieRatings(List<MovieRating> movieRatings) {
+        this.movieRatings = movieRatings;
+    }
+
+    public List<MovieReview> getMovieReviews() {
+        return movieReviews;
+    }
+
+    public void setMovieReviews(List<MovieReview> movieReviews) {
+        this.movieReviews = movieReviews;
     }
 
     @Override

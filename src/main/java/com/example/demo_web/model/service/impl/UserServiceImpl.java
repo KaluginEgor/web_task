@@ -3,11 +3,13 @@ package com.example.demo_web.model.service.impl;
 import com.example.demo_web.controller.command.ErrorMessage;
 import com.example.demo_web.controller.command.RequestParameter;
 import com.example.demo_web.controller.command.SessionRequestContent;
+import com.example.demo_web.model.dao.MovieRatingDao;
+import com.example.demo_web.model.dao.MovieReviewDao;
 import com.example.demo_web.model.dao.UserDao;
+import com.example.demo_web.model.dao.impl.MovieRatingDaoImpl;
+import com.example.demo_web.model.dao.impl.MovieReviewDaoImpl;
 import com.example.demo_web.model.dao.impl.UserDaoImpl;
-import com.example.demo_web.model.entity.User;
-import com.example.demo_web.model.entity.UserRole;
-import com.example.demo_web.model.entity.UserState;
+import com.example.demo_web.model.entity.*;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.exception.ServiceException;
 import com.example.demo_web.mail.MailBuilder;
@@ -18,6 +20,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -35,6 +38,8 @@ public class UserServiceImpl implements UserService {
     private static final String USER_NOT_BLOCKED = "userNotBlocked";
     private static final String USER_NOT_DELETED = "userNotDeleted";
 
+    private final MovieRatingDao ratingDao = MovieRatingDaoImpl.getInstance();
+    private final MovieReviewDao reviewDao = MovieReviewDaoImpl.getInstance();
     private final UserDao userDao = UserDaoImpl.getInstance();
 
     public UserServiceImpl() {
@@ -80,8 +85,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(int id) {
-        return Optional.empty();
+    public Optional<User> update(int id, String login, String email, String firstName, String secondName, String picture, String role, String state, String rating) throws ServiceException {
+        User user = new User();
+        user.setId(id);
+        user.setLogin(login);
+        user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setSecondName(secondName);
+        user.setPicture(picture);
+        user.setRole(UserRole.valueOf(role));
+        user.setState(UserState.valueOf(state));
+        user.setRating(Integer.valueOf(rating));
+        try {
+            userDao.update(user);
+            List<MovieReview> reviews = reviewDao.findByUserId(id);
+            user.setMovieReviews(reviews);
+            List<MovieRating> ratings = ratingDao.findByUserId(id);
+            user.setMovieRatings(ratings);
+            return Optional.of(user);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public Optional<User> findById(int id) throws ServiceException {
+        Optional<User> foundUser = Optional.empty();
+        User user;
+        try {
+            user = userDao.findEntityById(id);
+            List<MovieReview> reviews = reviewDao.findByUserId(id);
+            user.setMovieReviews(reviews);
+            List<MovieRating> ratings = ratingDao.findByUserId(id);
+            user.setMovieRatings(ratings);
+            foundUser = Optional.of(user);
+            logger.info("User {} created.", foundUser);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+        return foundUser;
     }
 
     @Override

@@ -18,7 +18,7 @@
             <a href="controller?command=open_all_media_persons_page">Actors</a>
             <form name="loginForm" method="POST" action="controller">
                 <input type="hidden" name="command" value="change_language">
-                <input type="hidden" name="page" value="${ requestScope.page }">
+                <input type="hidden" name="page" value="${ sessionScope.page }">
                 <select name="lang" onchange="submit()">
                     <option value="en_US" <c:if test="${lang eq 'en_US'}">selected</c:if>>English</option>
                     <option value="ru_RU" <c:if test="${lang eq 'ru_RU'}">selected</c:if>>Русский</option>

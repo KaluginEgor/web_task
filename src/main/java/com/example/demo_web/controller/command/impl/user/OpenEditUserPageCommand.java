@@ -2,18 +2,16 @@ package com.example.demo_web.controller.command.impl.user;
 
 import com.example.demo_web.controller.command.*;
 import com.example.demo_web.exception.ServiceException;
+import com.example.demo_web.model.entity.MediaPerson;
 import com.example.demo_web.model.entity.Movie;
+import com.example.demo_web.model.entity.OccupationType;
 import com.example.demo_web.model.entity.User;
-import com.example.demo_web.model.service.MovieReviewService;
-import com.example.demo_web.model.service.MovieService;
 import com.example.demo_web.model.service.UserService;
-import com.example.demo_web.model.service.impl.MovieReviewServiceImpl;
-import com.example.demo_web.model.service.impl.MovieServiceImpl;
 import com.example.demo_web.model.service.impl.UserServiceImpl;
 
-public class DeleteMovieReviewCommand implements ActionCommand {
-    private MovieReviewService movieReviewService = new MovieReviewServiceImpl();
-    private MovieService movieService = new MovieServiceImpl();
+import java.util.List;
+
+public class OpenEditUserPageCommand implements ActionCommand {
     private UserService userService = new UserServiceImpl();
 
     @Override
@@ -21,20 +19,12 @@ public class DeleteMovieReviewCommand implements ActionCommand {
         CommandResult commandResult = new CommandResult();
         commandResult.setTransitionType(TransitionType.FORWARD);
         try {
-            int reviewId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_REVIEW_ID));
-            String page = (String)sessionRequestContent.getSessionAttribute(SessionAttribute.PAGE);
-            movieReviewService.delete(reviewId);
-            if (sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID) != null) {
-                int movieId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID));
-                Movie movie = movieService.findById(movieId);
-                sessionRequestContent.setSessionAttribute(SessionAttribute.MOVIE, movie);
-            }
             if (sessionRequestContent.getRequestParameter(RequestParameter.USER_ID) != null) {
                 int userId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.USER_ID));
                 User someUser = userService.findById(userId).get();
                 sessionRequestContent.setSessionAttribute(SessionAttribute.SOME_USER, someUser);
             }
-            commandResult.setPage(page);
+            commandResult.setPage(PagePath.EDIT_USER);
         } catch (ServiceException e) {
             commandResult.setPage(PagePath.ERROR);
         }
