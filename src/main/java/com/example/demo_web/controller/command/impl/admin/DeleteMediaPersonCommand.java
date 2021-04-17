@@ -11,7 +11,7 @@ public class DeleteMediaPersonCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
         try {
             int mediaPersonId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MEDIA_PERSON_ID));
             mediaPersonService.delete(mediaPersonId);

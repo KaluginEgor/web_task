@@ -4,6 +4,11 @@ html{
 	background-color: #eaf0f2;
 }
 
+button.link {
+	background:none;
+	border:none;
+}
+
 body{
 	font:14px/1.5 Arial, Helvetica, sans-serif;
 	padding:0;
@@ -32,7 +37,7 @@ body{
 	color: #F05283;
 }
 
-.menu h2 a{
+.menu h2 button{
 	color:inherit;
 	text-decoration: none;
 	display: inline-block;
@@ -43,7 +48,7 @@ body{
 	text-transform: uppercase;
 }
 
-.menu h2 a:hover{
+.menu h2 button:hover{
 	background-color:#F05283;
 	transition:0.2s;
 	color:#fff;
@@ -54,7 +59,7 @@ body{
 	margin: 60px auto 0;
 }
 
-.menu ul a{
+.menu ul button{
 	text-decoration: none;
 	color: #FFF;
 	text-align: left;
@@ -71,12 +76,12 @@ body{
 	transition: 0.2s ease;
 }
 
-.menu ul li a.active{
+.menu ul li button.active{
 	background-color: #66B650;
 	pointer-events: none;
 }
 
-.menu ul li a:hover {
+.menu ul li button:hover {
 	opacity: 1;
 }
 

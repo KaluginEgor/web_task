@@ -2,7 +2,6 @@ package com.example.demo_web.controller.command.impl.user;
 
 import com.example.demo_web.controller.command.*;
 import com.example.demo_web.exception.ServiceException;
-import com.example.demo_web.model.entity.Movie;
 import com.example.demo_web.model.entity.User;
 import com.example.demo_web.model.service.UserService;
 import com.example.demo_web.model.service.impl.UserServiceImpl;
@@ -18,7 +17,7 @@ public class OpenUserPageCommand implements ActionCommand {
         try {
             Integer someUserID = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.USER_ID));
             User someUser = userService.findById(someUserID).get();
-            sessionRequestContent.setSessionAttribute(SessionAttribute.SOME_USER, someUser);
+            sessionRequestContent.setSessionAttribute(Attribute.SOME_USER, someUser);
             commandResult.setPage(PagePath.USER);
         } catch (ServiceException e) {
             commandResult.setPage(PagePath.ERROR);

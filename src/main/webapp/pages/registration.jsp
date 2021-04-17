@@ -20,7 +20,7 @@
 <body>
     <jsp:include page="/pages/module/header.jsp"/>
     <div class="user">
-        <form class="form" name="registerForm" method="POST" action="controller">
+        <form class="form" name="registerForm" method="POST" action="<c:url value="/controller"/>">
             <input type="hidden" name="command" value="register"/>
             <div class="form__group">
                 <input type="text" class="form__input" name="login" placeholder=<fmt:message key="label.login" bundle="${ rb }" /> pattern="[A-Za-zА-Яа-яЁё0-9]{4,}" value=""/>
@@ -42,7 +42,6 @@
             </div>
             <input type="submit" class="btn" value=<fmt:message key="label.submit" bundle="${ rb }" />>
         </form>
-        <a href="controller?command=logout" class="user__title"><fmt:message key="label.login" bundle="${ rb }" /></a>
         <br/>
         ${errorMessage}
     </div>

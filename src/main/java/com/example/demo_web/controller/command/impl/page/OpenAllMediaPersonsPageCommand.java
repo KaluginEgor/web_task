@@ -17,23 +17,23 @@ public class OpenAllMediaPersonsPageCommand implements ActionCommand {
         CommandResult commandResult = new CommandResult();
         commandResult.setTransitionType(TransitionType.FORWARD);
 
-        Integer currentTablePage = (Integer) sessionRequestContent.getSessionAttribute(SessionAttribute.ALL_ACTORS_CURRENT_PAGE);
+        Integer currentTablePage = (Integer) sessionRequestContent.getSessionAttribute(Attribute.ALL_ACTORS_CURRENT_PAGE);
         Optional<String> currentPage = Optional.ofNullable(sessionRequestContent.getRequestParameter(RequestParameter.NEW_PAGE));
         if (currentPage.isEmpty() && currentTablePage == null) {
             currentTablePage = 1;
         } else if (currentPage.isPresent()) {
             currentTablePage = Integer.parseInt(currentPage.get());
         }
-        sessionRequestContent.setSessionAttribute(SessionAttribute.ALL_ACTORS_CURRENT_PAGE, currentTablePage);
+        sessionRequestContent.setSessionAttribute(Attribute.ALL_ACTORS_CURRENT_PAGE, currentTablePage);
         int actorsNumber = ViewAllMediaPersonsTag.ACTORS_PER_PAGE_NUMBER;
         int start = (currentTablePage - 1) * actorsNumber;
         int end = actorsNumber + start;
         MediaPersonService mediaPersonService = new MediaPersonServiceImpl();
         try {
             List<MediaPerson> allCurrentMediaPeople = mediaPersonService.findAllBetween(start, end);
-            sessionRequestContent.setSessionAttribute(SessionAttribute.ALL_ACTORS_LIST, allCurrentMediaPeople);
+            sessionRequestContent.setSessionAttribute(Attribute.ALL_ACTORS_LIST, allCurrentMediaPeople);
             int actorsCount = mediaPersonService.countMediaPersons();
-            sessionRequestContent.setSessionAttribute(SessionAttribute.ACTORS_COUNT, actorsCount);
+            sessionRequestContent.setSessionAttribute(Attribute.ACTORS_COUNT, actorsCount);
             if (allCurrentMediaPeople.size() == 0) {
                 //sessionRequestContent.setRequestAttribute(RequestAttribute.CONFIRM_MESSAGE, FriendlyMessage.EMPTY_USER_LIST);
             }

@@ -2,9 +2,7 @@ package com.example.demo_web.controller.command.impl.admin;
 
 import com.example.demo_web.controller.command.*;
 import com.example.demo_web.exception.ServiceException;
-import com.example.demo_web.model.entity.MediaPerson;
 import com.example.demo_web.model.entity.Movie;
-import com.example.demo_web.model.entity.OccupationType;
 import com.example.demo_web.model.service.MovieService;
 import com.example.demo_web.model.service.impl.MovieServiceImpl;
 
@@ -16,7 +14,7 @@ public class CreateMovieCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
         String title = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_TITLE);
         String description = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_DESCRIPTION);
         String stringReleaseDate = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_RELEASE_DATE);
@@ -27,7 +25,7 @@ public class CreateMovieCommand implements ActionCommand {
 
         try {
             Movie movie = movieService.create(title, description, releaseDate, picture, stringGenresId, stringMediaPeopleId);
-            sessionRequestContent.setSessionAttribute(SessionAttribute.MOVIE, movie);
+            sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie);
             commandResult.setPage(PagePath.MOVIE);
         } catch (ServiceException e) {
             commandResult.setPage(PagePath.ERROR);

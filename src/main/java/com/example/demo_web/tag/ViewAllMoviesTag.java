@@ -1,7 +1,7 @@
 package com.example.demo_web.tag;
 
 import com.example.demo_web.controller.command.CommandEnum;
-import com.example.demo_web.controller.command.SessionAttribute;
+import com.example.demo_web.controller.command.Attribute;
 import com.example.demo_web.controller.command.SessionRequestContent;
 import com.example.demo_web.model.entity.Movie;
 import com.example.demo_web.model.util.TagUtil;
@@ -22,8 +22,8 @@ public class ViewAllMoviesTag extends TagSupport {
         SessionRequestContent sessionRequestContent = new SessionRequestContent();
         sessionRequestContent.extractValues(request);
         createMovies(writer, sessionRequestContent);
-        int currentPage = (int) sessionRequestContent.getSessionAttribute(SessionAttribute.ALL_MOVIES_CURRENT_PAGE);
-        int moviesCount = (int) sessionRequestContent.getSessionAttribute(SessionAttribute.MOVIES_COUNT);
+        int currentPage = (int) sessionRequestContent.getSessionAttribute(Attribute.ALL_MOVIES_CURRENT_PAGE);
+        int moviesCount = (int) sessionRequestContent.getSessionAttribute(Attribute.MOVIES_COUNT);
         int pagesCount = moviesCount % MOVIES_PER_PAGE_NUMBER == 0 ? (moviesCount / MOVIES_PER_PAGE_NUMBER) : (moviesCount / MOVIES_PER_PAGE_NUMBER + 1);
         String command = CommandEnum.OPEN_ALL_MOVIES_PAGE.toString().toLowerCase();
         TagUtil.paginate(pageContext, currentPage, pagesCount, command);
@@ -36,7 +36,7 @@ public class ViewAllMoviesTag extends TagSupport {
     }
 
     private void createMovies(JspWriter writer, SessionRequestContent sessionRequestContext) throws JspException {
-        List<Movie> allMovies = (List<Movie>) sessionRequestContext.getSessionAttribute(SessionAttribute.ALL_MOVIES_LIST);
+        List<Movie> allMovies = (List<Movie>) sessionRequestContext.getSessionAttribute(Attribute.ALL_MOVIES_LIST);
         if (allMovies != null) {
             int size = allMovies.size();
             int createdMoviesCount = 0;

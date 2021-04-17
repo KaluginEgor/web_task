@@ -13,6 +13,12 @@ label {
 
 /****** Style Star Rating Widget *****/
 
+button.link {
+    background:none;
+    border:none;
+    color: blue;
+}
+
 .rating {
     border: none;
     float: left;
@@ -168,6 +174,6 @@ label {
 }
 
 .poster img {
-    width: 70%;
-    height: 70%;
+    width: auto;
+    height: 720px;
 }

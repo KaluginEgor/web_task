@@ -1,5 +1,6 @@
 package com.example.demo_web.model.dao.impl;
 
+import com.example.demo_web.model.dao.column.MovieReviewsColumn;
 import com.example.demo_web.model.pool.ConnectionPool;
 import com.example.demo_web.model.dao.MovieReviewDao;
 import com.example.demo_web.model.entity.MovieReview;
@@ -23,15 +24,6 @@ public class MovieReviewDaoImpl implements MovieReviewDao {
     private static final String SQL_DELETE_MOVIE_REVIEW = "DELETE FROM movie_reviews MR WHERE MR.review_id = ?;";
 
     private static final String SQL_SELECT_MOVIE_REVIEW_BY_ID = "SELECT MR.review_id, MR.review_title, MR.review_body, MR.review_creation_date, MR.movie_id, MR.user_id, M.movie_title, U.user_login FROM movie_reviews MR INNER JOIN users U on MR.user_id = u.user_id INNER JOIN movies M on MR.movie_id = M.movie_id WHERE MR.review_id = ?;";
-
-    private static final String REVIEW_ID_COLUMN = "review_id";
-    private static final String TITLE_COLUMN = "review_title";
-    private static final String BODY_COLUMN = "review_body";
-    private static final String CREATION_DATE_COLUMN = "review_creation_date";
-    private static final String MOVIE_ID_COLUMN = "movie_id";
-    private static final String USER_ID_COLUMN = "user_id";
-    private static final String MOVIE_TITLE_COLUMN = "movie_title";
-    private static final String USER_LOGIN_TITLE = "user_login";
 
     private static MovieReviewDao instance = new MovieReviewDaoImpl();
 
@@ -150,21 +142,21 @@ public class MovieReviewDaoImpl implements MovieReviewDao {
             return null;
         }
         MovieReview movieReview = new MovieReview();
-        Integer movieReviewId = resultSet.getInt(REVIEW_ID_COLUMN);
+        Integer movieReviewId = resultSet.getInt(MovieReviewsColumn.ID);
         movieReview.setId(movieReviewId);
-        String movieReviewTitle = resultSet.getString(TITLE_COLUMN);
+        String movieReviewTitle = resultSet.getString(MovieReviewsColumn.TITLE);
         movieReview.setTitle(movieReviewTitle);
-        String movieReviewBody = resultSet.getString(BODY_COLUMN);
+        String movieReviewBody = resultSet.getString(MovieReviewsColumn.BODY);
         movieReview.setBody(movieReviewBody);
-        LocalDate movieReviewCreationDate = resultSet.getDate(CREATION_DATE_COLUMN).toLocalDate();
+        LocalDate movieReviewCreationDate = resultSet.getDate(MovieReviewsColumn.CREATION_DATE).toLocalDate();
         movieReview.setCreationDate(movieReviewCreationDate);
-        Integer movieId = resultSet.getInt(MOVIE_ID_COLUMN);
+        Integer movieId = resultSet.getInt(MovieReviewsColumn.MOVIE_ID);
         movieReview.setMovieId(movieId);
-        Integer userId = resultSet.getInt(USER_ID_COLUMN);
+        Integer userId = resultSet.getInt(MovieReviewsColumn.USER_ID);
         movieReview.setUserId(userId);
-        String movieTitle = resultSet.getString(MOVIE_TITLE_COLUMN);
+        String movieTitle = resultSet.getString(MovieReviewsColumn.MOVIE_TITLE);
         movieReview.setMovieTitle(movieTitle);
-        String userLogin = resultSet.getString(USER_LOGIN_TITLE);
+        String userLogin = resultSet.getString(MovieReviewsColumn.USER_LOGIN);
         movieReview.setUserLogin(userLogin);
         return movieReview;
     }

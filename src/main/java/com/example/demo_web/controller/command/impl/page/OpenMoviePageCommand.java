@@ -18,7 +18,7 @@ public class OpenMoviePageCommand implements ActionCommand {
         try {
             Integer movieId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID));
             Movie movie = movieService.findById(movieId);
-            sessionRequestContent.setSessionAttribute(SessionAttribute.MOVIE, movie);
+            sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie);
             commandResult.setPage(PagePath.MOVIE);
         } catch (ServiceException e) {
             commandResult.setPage(PagePath.ERROR);

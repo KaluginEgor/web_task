@@ -1,17 +1,17 @@
 package com.example.demo_web.controller.command;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.util.*;
 
 public class SessionRequestContent {
     private Map<String, Object> requestAttributes;
     private Map<String, String[]> requestParameters;
     private Map<String, Object> sessionAttributes;
-    private String contextPath;
-    private String servletPath;
+    private List<Part> fileParts;
 
     public SessionRequestContent() {
         requestAttributes = new HashMap<>();
@@ -24,8 +24,7 @@ public class SessionRequestContent {
         requestParameters = extractRequestParameters(request);
         requestAttributes = extractRequestAttributes(request);
         sessionAttributes = extractSessionAttributes(request);
-        contextPath = request.getContextPath();
-        servletPath = request.getServletPath();
+        fileParts = extractFileParts(request);
     }
 
     public void insertAttributes(HttpServletRequest request) {
@@ -86,6 +85,14 @@ public class SessionRequestContent {
         sessionAttributes.remove(key);
     }
 
+    public List<Part> getFileParts() {
+        return fileParts;
+    }
+
+    public void setFileParts(List<Part> fileParts) {
+        this.fileParts = fileParts;
+    }
+
     private Map<String, String[]> extractRequestParameters(HttpServletRequest request) {
         requestParameters = request.getParameterMap();
         return requestParameters;
@@ -110,5 +117,17 @@ public class SessionRequestContent {
             sessionAttributes.put(name, session.getAttribute(name));
         }
         return sessionAttributes;
+    }
+
+    private List<Part> extractFileParts(HttpServletRequest request) {
+        List<Part> fileParts = new ArrayList<>();
+        try {
+            if (request.getContentType() != null && request.getContentType().toLowerCase().contains("multipart/form-data")) {
+                fileParts.addAll(request.getParts());
+            }
+        } catch (IOException | ServletException e) {
+            //logger.error(e);
+        }
+        return fileParts;
     }
 }

@@ -26,6 +26,7 @@ public class MovieServiceImpl implements MovieService {
     private MediaPersonDao mediaPersonDao = MediaPersonDaoImpl.getInstance();
     private MovieReviewDao reviewDao = MovieReviewDaoImpl.getInstance();
     private MovieRatingDao ratingDao = MovieRatingDaoImpl.getInstance();
+    private static final String DEFAULT_MOVIE_PICTURE = "C:/Epam/pictures/movie.jpg";
 
     @Override
     public List<Movie> findAllBetween(int begin, int end) throws ServiceException {
@@ -85,6 +86,9 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie create(String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws ServiceException {
         try {
+            if (picture == null) {
+                picture = DEFAULT_MOVIE_PICTURE;
+            }
             Movie movieToCreate = convertToMovie(title, description, releaseDate, picture, stringGenres, stringMediaPersonsId);
             Movie createdMovie = movieDao.create(movieToCreate);
             createdMovie.setGenres(movieToCreate.getGenres());
@@ -108,6 +112,9 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie update(int id, String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws ServiceException {
         try {
+            if (picture == null) {
+                picture = DEFAULT_MOVIE_PICTURE;
+            }
             Movie movieToUpdate = convertToMovie(title, description, releaseDate, picture, stringGenres, stringMediaPersonsId);
             movieToUpdate.setId(id);
             movieDao.update(movieToUpdate);

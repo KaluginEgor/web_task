@@ -20,14 +20,15 @@ public class OpenEditMoviePageCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
         try {
-            sessionRequestContent.setSessionAttribute(SessionAttribute.GENRE_TYPES, GenreType.values());
+            sessionRequestContent.setSessionAttribute(Attribute.GENRE_TYPES, GenreType.values());
             List<MediaPerson> mediaPeople = mediaPersonService.finaAll();
-            sessionRequestContent.setSessionAttribute(SessionAttribute.MEDIA_PEOPLE, mediaPeople);
+            sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PEOPLE, mediaPeople);
+            sessionRequestContent.removeSessionAttribute(Attribute.MOVIE);
             if (sessionRequestContent.getRequestParameter((RequestParameter.MOVIE_ID)) != null) {
                 Movie movie = movieService.findById(Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID)));
-                sessionRequestContent.setSessionAttribute(SessionAttribute.MOVIE, movie);
+                sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie);
             }
             commandResult.setPage(PagePath.EDIT_MOVIE);
         } catch (ServiceException e) {

@@ -20,21 +20,21 @@ public class PrepareMovieReviewUpdateCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
         try {
-            String page = (String)sessionRequestContent.getSessionAttribute(SessionAttribute.PAGE);
+            String page = (String)sessionRequestContent.getSessionAttribute(Attribute.PAGE);
             int reviewId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_REVIEW_ID));
             MovieReview reviewToUpdate = movieReviewService.findById(reviewId);
-            sessionRequestContent.setSessionAttribute(SessionAttribute.REVIEW_TO_UPDATE, reviewToUpdate);
+            sessionRequestContent.setSessionAttribute(Attribute.REVIEW_TO_UPDATE, reviewToUpdate);
             if (sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID) != null) {
                 int movieId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID));
                 Movie movie = movieService.findById(movieId);
-                sessionRequestContent.setSessionAttribute(SessionAttribute.MOVIE, movie);
+                sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie);
             }
             if (sessionRequestContent.getRequestParameter(RequestParameter.USER_ID) != null) {
                 int userId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.USER_ID));
                 User someUser = userService.findById(userId).get();
-                sessionRequestContent.setSessionAttribute(SessionAttribute.SOME_USER, someUser);
+                sessionRequestContent.setSessionAttribute(Attribute.SOME_USER, someUser);
             }
             commandResult.setPage(page);
         } catch (ServiceException e) {

@@ -10,6 +10,7 @@
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="pagecontent" var="rb" />
 <c:set var="page" value="/pages/edit_movie.jsp" scope="session"/>
+<jsp:useBean id="movie" class="com.example.demo_web.model.entity.Movie" scope="session"/>
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/editPage.css" />
@@ -28,30 +29,53 @@
         <h4>${validationException}</h4>
     </c:forEach>
 
-    <form class="edit-form" action="controller" method="POST">
+    <form action="<c:url value="/controller"/>" enctype="multipart/form-data" method="POST">
+        <input type="hidden" name="command" value="upload_picture">
+        <input type="hidden" name="movieId" value="${movie.id}">
+        <input type="file" accept="image/*" name="content" height="130">
+        <input type="submit" value="Upload File">
+    </form>
+
+    <form class="edit-form" action="<c:url value="/controller"/>" method="POST">
         <c:choose>
-            <c:when test="${empty sessionScope.movie}">
+            <c:when test="${empty movie}">
                 <input type="hidden" name="command" value="create_movie"/>
             </c:when>
             <c:otherwise>
                 <input type="hidden" name="command" value="update_movie"/>
-                <input type="hidden" name="movieId" value="${sessionScope.movie.id}"/>
+                <input type="hidden" name="movieId" value="${movie.id}"/>
             </c:otherwise>
         </c:choose>
+
+        <c:choose>
+            <c:when test="${empty sessionScope.newPicture}">
+                <div class="poster">
+                    <img src="${pageContext.request.contextPath}/picture?currentPicture=${movie.picture}">
+                    <input type="hidden" name="picture" value="${movie.picture}">
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="poster">
+                    <img src="${pageContext.request.contextPath}/picture?currentPicture=${sessionScope.newPicture}">
+                    <input type="hidden" name="picture" value="${sessionScope.newPicture}">
+                </div>
+            </c:otherwise>
+        </c:choose>
+
         <div class="block">
             <label for="title">Title</label><br>
-            <input type="text" required id="title" class="title" name="movieTitle" value="${sessionScope.movie.title}"/>
+            <input type="text" required id="title" class="title" name="movieTitle" value="${movie.title}"/>
         </div>
 
         <div class="block">
             <label for="release-date">Release date</label><br>
-            <input type="date" id="release-date" name="movieReleaseDate" value="${sessionScope.movie.releaseDate}"/>
+            <input type="date" id="release-date" name="movieReleaseDate" value="${movie.releaseDate}"/>
         </div>
 
         <div class="block">
             <label for="description">Description</label><br/>
             <textarea id="description" name="movieDescription" cols="40"
-                      rows="5">${sessionScope.movie.description}</textarea>
+                      rows="5">${movie.description}</textarea>
         </div>
 
         <div class="block genre">
@@ -60,7 +84,7 @@
                 <c:forEach var="genre" items="${sessionScope.genreTypes}">
                     <div class="block-div">
                         <c:choose>
-                            <c:when test="${not empty sessionScope.movie.genres and sessionScope.movie.genres.contains(genre)}">
+                            <c:when test="${not empty movie.genres and movie.genres.contains(genre)}">
                                 <input type="checkbox" id="${genre}" name="movieGenre" checked="checked"
                                        value="${genre}"/>
                             </c:when>
@@ -81,7 +105,7 @@
                 <c:forEach var="mediaPerson" items="${sessionScope.mediaPeople}">
                     <div class="block-div">
                         <c:choose>
-                            <c:when test="${not empty sessionScope.movie.crew and sessionScope.movie.crew.contains(mediaPerson)}">
+                            <c:when test="${not empty movie.crew and movie.crew.contains(mediaPerson)}">
                                 <input type="checkbox" id="${mediaPerson.id}" name="movieCrew" checked="checked"
                                        value="${mediaPerson.id}"/>
                             </c:when>
@@ -97,17 +121,18 @@
         </div>
 
         <div class="block">
-            <label for="poster">Poster</label><br/>
-            <input type="text" id="poster" name="picture" value="${sessionScope.movie.picture}"/>
-        </div>
-
-        <div class="block">
             <input type="submit" class="edit-btn" value="Edit">
         </div>
     </form>
     <div class="block">
-        <a href="${requestScope.previous_page}"><fmt:message key="back"/></a>
+        <form action="<c:url value="/controller"/>" method="POST">
+            <input type="hidden" name="command" value="open_movie_page"/>
+            <input type="hidden" name="movieId" value="${movie.id}"/>
+            <input type="submit" value="back"/>
+            <br>
+        </form>
     </div>
 </div>
 </body>
 </html>
+

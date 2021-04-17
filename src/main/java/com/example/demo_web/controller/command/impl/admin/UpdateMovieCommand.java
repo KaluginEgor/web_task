@@ -14,7 +14,7 @@ public class UpdateMovieCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
         int id = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID));
         String title = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_TITLE);
         String description = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_DESCRIPTION);
@@ -26,7 +26,7 @@ public class UpdateMovieCommand implements ActionCommand {
 
         try {
             Movie movie = movieService.update(id, title, description, releaseDate, picture, stringGenresId, stringMediaPeopleId);
-            sessionRequestContent.setSessionAttribute(SessionAttribute.MOVIE, movie);
+            sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie);
             commandResult.setPage(PagePath.MOVIE);
         } catch (ServiceException e) {
             commandResult.setPage(PagePath.ERROR);

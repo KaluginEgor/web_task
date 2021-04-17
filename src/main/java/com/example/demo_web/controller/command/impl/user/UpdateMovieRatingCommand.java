@@ -16,7 +16,7 @@ public class UpdateMovieRatingCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
 
         try {
             int movieRatingId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_RATING_ID));
@@ -25,7 +25,7 @@ public class UpdateMovieRatingCommand implements ActionCommand {
             float value = Float.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_RATING_VALUE));
             movieRatingService.update(movieRatingId, movieId, userId, value);
             Movie movie = movieService.findById(Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID)));
-            sessionRequestContent.setSessionAttribute(SessionAttribute.MOVIE, movie);
+            sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie);
             commandResult.setPage(PagePath.MOVIE);
         } catch (ServiceException e) {
             commandResult.setPage(PagePath.ERROR);

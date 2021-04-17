@@ -16,7 +16,7 @@ public class CreateMediaPersonCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
 
         String firstName = sessionRequestContent.getRequestParameter(RequestParameter.FIRST_NAME);
         String secondName = sessionRequestContent.getRequestParameter(RequestParameter.SECOND_NAME);
@@ -28,7 +28,7 @@ public class CreateMediaPersonCommand implements ActionCommand {
         String[] moviesId = sessionRequestContent.getRequestParameters(RequestParameter.MEDIA_PERSON_MOVIES);
         try {
             MediaPerson mediaPerson = mediaPersonService.create(firstName, secondName, bio, occupationType, birthday, picture, moviesId);
-            sessionRequestContent.setSessionAttribute(SessionAttribute.MEDIA_PERSON, mediaPerson);
+            sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PERSON, mediaPerson);
             commandResult.setPage(PagePath.MEDIA_PERSON);
         } catch (ServiceException e) {
             commandResult.setPage(PagePath.ERROR);

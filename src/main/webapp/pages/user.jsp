@@ -27,7 +27,7 @@
         <h2>${someUser.login}</h2>
         <c:set var="admin" value="ADMIN"/>
         <c:if test="${user.id == someUser.id or user.role == admin}">
-            <form action="controller" method="POST" >
+            <form action="<c:url value="/controller"/>" method="POST" >
                 <input type="hidden" name="command" value="open_edit_user_page"/>
                 <input type="hidden" name="userId" value="${someUser.id}">
                 <div class="btn">
@@ -80,12 +80,15 @@
                 <c:forEach var="review" items="${someUser.movieReviews}">
                     <c:if test="${reviewToUpdate.id != review.id}">
                     <div class="review" style="background: #d0cecd">
-                        <h4><a href="controller?command=open_movie_page&movieId=${review.movieId}"><c:out
-                                value="${review.movieTitle}"/></a></h4>
+                        <form action="<c:url value="/controller"/>" method="POST">
+                            <input type="hidden" name="command" value="open_movie_page"/>
+                            <input type="hidden" name="movieId" value="${review.movieId}"/>
+                            <h4><button class="link"><c:out value="${review.movieTitle}"/></button></h4>
+                        </form>
 
                         <div class="btn-row">
                             <c:if test="${sessionScope.user.id == someUser.id}">
-                                <form action="controller" method="POST" >
+                                <form action="<c:url value="/controller"/>" method="POST" >
                                     <input type="hidden" name="command" value="prepare_movie_review_update"/>
                                     <input type="hidden" name="movieReviewId" value="${review.id}"/>
                                     <input type="hidden" name="userId" value="${someUser.id}">
@@ -95,7 +98,7 @@
                                     </div>
                                 </form>
 
-                                <form action="controller" method="POST" class="delete-review-form">
+                                <form action="<c:url value="/controller"/>" method="POST" class="delete-review-form">
                                     <input type="hidden" name="command" value="delete_movie_review"/>
                                     <input type="hidden" name="userId" value="${someUser.id}">
                                     <input type="hidden" name="movieReviewId" value="${review.id}"/>
@@ -120,7 +123,7 @@
             <p><strong><fmt:message key="ratings"/>: </strong></p>
             <c:forEach var="rating" items="${someUser.movieRatings}">
                 <c:if test="${sessionScope.user.id == someUser.id}">
-                    <form action="controller" method="POST" class="delete-rating-form">
+                    <form action="<c:url value="/controller"/>" method="POST" class="delete-rating-form">
                         <input type="hidden" name="command" value="delete_movie_rating"/>
                         <input type="hidden" name="movieRatingId" value="${rating.id}"/>
                         <input type="hidden" name="userId" value="${someUser.id}">
@@ -130,11 +133,13 @@
                     </form>
                 </c:if>
                 <p>
-                    <a href="controller?command=open_movie_page&movieId=${rating.movieId}">
-                            ${rating.movieTitle}
-                    </a>
+                <form action="<c:url value="/controller"/>" method="POST">
+                    <input type="hidden" name="command" value="open_movie_page"/>
+                    <input type="hidden" name="movieId" value="${rating.movieId}"/>
+                    <button class="link">${rating.movieTitle}</button>
                     : ${rating.value}
                     <br>
+                </form>
                 </p>
 
             </c:forEach>
@@ -143,7 +148,7 @@
 
         <c:set var="active" value="ACTIVE"/>
         <c:if test="${user.state == active and reviewToUpdate.id != 0}">
-            <form action="controller" method="POST">
+            <form action="<c:url value="/controller"/>" method="POST">
                 <input type="hidden" name="movieReviewId" value="${reviewToUpdate.id}"/>
                 <input type="hidden" name="command" value="update_movie_review"/>
                 <input type="hidden" name="userId" value="${user.id}"/>

@@ -153,6 +153,11 @@ public enum CommandEnum {
         {
             this.command = new UpdateUserCommand();
         }
+    },
+    UPLOAD_PICTURE {
+        {
+            this.command = new UploadPictureCommand();
+        }
     };
     ActionCommand command;
     public ActionCommand getCurrentCommand() {

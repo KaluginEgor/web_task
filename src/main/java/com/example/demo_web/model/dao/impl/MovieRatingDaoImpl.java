@@ -1,5 +1,6 @@
 package com.example.demo_web.model.dao.impl;
 
+import com.example.demo_web.model.dao.column.MovieRatingsColumn;
 import com.example.demo_web.model.pool.ConnectionPool;
 import com.example.demo_web.model.dao.MovieRatingDao;
 import com.example.demo_web.model.entity.MovieRating;
@@ -20,12 +21,6 @@ public class MovieRatingDaoImpl implements MovieRatingDao {
     private static final String SQL_UPDATE_MOVIE_RATING = "UPDATE movie_ratings SET movie_ratings.rating_value = ? WHERE movie_ratings.rating_id = ?;";
 
     private static final String SQL_DELETE_MOVIE_RATING = "DELETE FROM movie_ratings MR WHERE MR.rating_id = ?;";
-
-    private static final String DEFAULT_ID_COLUMN = "rating_id";
-    private static final String VALUE_COLUMN = "rating_value";
-    private static final String MOVIE_ID_COLUMN = "movie_id";
-    private static final String USER_ID_COLUMN = "user_id";
-    private static final String MOVIE_TITLE_COLUMN = "movie_title";
 
     private static MovieRatingDao instance = new MovieRatingDaoImpl();
 
@@ -129,15 +124,15 @@ public class MovieRatingDaoImpl implements MovieRatingDao {
             return null;
         }
         MovieRating movieRating = new MovieRating();
-        Integer movieRatingId = resultSet.getInt(DEFAULT_ID_COLUMN);
+        Integer movieRatingId = resultSet.getInt(MovieRatingsColumn.ID);
         movieRating.setId(movieRatingId);
-        Float movieRatingValue = resultSet.getFloat(VALUE_COLUMN);
+        Float movieRatingValue = resultSet.getFloat(MovieRatingsColumn.VALUE);
         movieRating.setValue(movieRatingValue);
-        Integer movieId = resultSet.getInt(MOVIE_ID_COLUMN);
+        Integer movieId = resultSet.getInt(MovieRatingsColumn.MOVIE_ID);
         movieRating.setMovieId(movieId);
-        Integer userId = resultSet.getInt(USER_ID_COLUMN);
+        Integer userId = resultSet.getInt(MovieRatingsColumn.USER_ID);
         movieRating.setUserId(userId);
-        String movieTitle = resultSet.getString(MOVIE_TITLE_COLUMN);
+        String movieTitle = resultSet.getString(MovieRatingsColumn.MOVIE_TITLE);
         movieRating.setMovieTitle(movieTitle);
         return movieRating;
     }

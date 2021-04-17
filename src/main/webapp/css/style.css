@@ -144,8 +144,8 @@ body {
 }
 
 .poster img {
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: 720px;
 }
 
 .main-footer {
@@ -217,4 +217,22 @@ footer {
     height: 100px;
     width: 100%;
     overflow:hidden;
+}
+
+.accent-bar {
+    position: relative;
+    height: 25px;
+}
+ul .accents {
+    list-style-type: none;
+}
+ul.accents li {
+    display: inline;
+    margin-left: 5px;
+}
+ul.accents li#first {
+    margin-left: 10px;
+}
+ul.accents li#last {
+    margin: 1px 0 0 15px;
 }

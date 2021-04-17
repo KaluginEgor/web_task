@@ -17,7 +17,7 @@ public class OpenMediaPersonPageCommand implements ActionCommand {
         try {
             Integer mediaPersonId = Integer.valueOf(sessionRequestContent.getRequestParameter((RequestParameter.MEDIA_PERSON_ID)));
             MediaPerson mediaPerson = mediaPersonService.findById(mediaPersonId);
-            sessionRequestContent.setSessionAttribute(SessionAttribute.MEDIA_PERSON, mediaPerson);
+            sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PERSON, mediaPerson);
             commandResult.setPage(PagePath.MEDIA_PERSON);
         } catch (ServiceException e) {
             commandResult.setPage(PagePath.ERROR);

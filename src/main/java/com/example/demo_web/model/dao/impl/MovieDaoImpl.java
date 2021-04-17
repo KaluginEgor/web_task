@@ -1,5 +1,6 @@
 package com.example.demo_web.model.dao.impl;
 
+import com.example.demo_web.model.dao.column.MoviesColumn;
 import com.example.demo_web.model.pool.ConnectionPool;
 import com.example.demo_web.model.dao.MovieDao;
 import com.example.demo_web.model.entity.GenreType;
@@ -13,17 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieDaoImpl implements MovieDao {
-    private static final String SQL_SELECT_ALL_MOVIES = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M WHERE M.movie_is_deleted = 0;";
+    private static final String SQL_SELECT_ALL_MOVIES = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M;";
 
-    private static final String SQL_SELECT_ALL_MOVIES_WITH_LIMIT = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M WHERE M.movie_is_deleted = 0 LIMIT ?, ?;";
+    private static final String SQL_SELECT_ALL_MOVIES_WITH_LIMIT = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M LIMIT ?, ?;";
 
-    private static final String SQL_SELECT_MOVIE_BY_ID = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M WHERE M.movie_id = ? AND M.movie_is_deleted = 0;";
+    private static final String SQL_SELECT_MOVIE_BY_ID = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M WHERE M.movie_id = ?;";
 
-    private static final String SQL_COUNT_MOVIES = "SELECT COUNT(*) AS movies_count FROM movies WHERE movie_is_deleted = 0;";
+    private static final String SQL_COUNT_MOVIES = "SELECT COUNT(*) AS movies_count FROM movies;";
 
-    private static final String SQL_SELECT_GENRE_TYPES_BY_MOVIE_ID = "SELECT MG.movie_genre_name FROM movie_genre MG INNER JOIN genres_movies GM on MG.movie_genre_id = GM.movie_genre_id INNER JOIN movies M on GM.movie_id = M.movie_id WHERE M.movie_id = ? AND M.movie_is_deleted = 0;";
+    private static final String SQL_SELECT_GENRE_TYPES_BY_MOVIE_ID = "SELECT MG.movie_genre_name FROM movie_genre MG INNER JOIN genres_movies GM on MG.movie_genre_id = GM.movie_genre_id INNER JOIN movies M on GM.movie_id = M.movie_id WHERE M.movie_id = ?;";
 
-    private static final String SQL_SELECT_MOVIES_BY_ACTOR_ID = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M INNER JOIN media_persons_movies MPM on M.movie_id = MPM.movie_id INNER JOIN media_persons MP on MPM.media_person_id = MP.media_person_id WHERE MP.media_person_id = ? AND M.movie_is_deleted = 0;";
+    private static final String SQL_SELECT_MOVIES_BY_ACTOR_ID = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M INNER JOIN media_persons_movies MPM on M.movie_id = MPM.movie_id INNER JOIN media_persons MP on MPM.media_person_id = MP.media_person_id WHERE MP.media_person_id = ?;";
 
     private static final String SQL_INSERT_MOVIE_GENRE = "INSERT INTO genres_movies (movie_id, movie_genre_id) VALUES (?, ?);";
 
@@ -33,18 +34,11 @@ public class MovieDaoImpl implements MovieDao {
 
     private static final String SQL_DELETE_MOVIE_GENRES = "DELETE FROM genres_movies GM WHERE GM.movie_id = ?;";
 
-    private static final String SQL_INSERT_MOVIE = "INSERT INTO movies (movie_title, movie_description, movie_rating, movie_release_date, movie_picture, movie_is_deleted) VALUES (?, ?, 0, ?, ?, 0);";
+    private static final String SQL_INSERT_MOVIE = "INSERT INTO movies (movie_title, movie_description, movie_rating, movie_release_date, movie_picture) VALUES (?, ?, 0, ?, ?);";
 
     private static final String SQL_UPDATE_MOVIE = "UPDATE movies M SET M.movie_title = ?, M.movie_description = ?, M.movie_release_date = ?, M.movie_picture = ? WHERE M.movie_id = ?;";
 
-    private static final String SQL_DELETE_MOVIE = "UPDATE movies M SET M.movie_is_deleted = 1 WHERE M.movie_id = ?;";
-
-    private static final String DEFAULT_ID_COLUMN = "movie_id";
-    private static final String TITLE_COLUMN = "movie_title";
-    private static final String DESCRIPTION_COLUMN = "movie_description";
-    private static final String RATING_COLUMN = "movie_rating";
-    private static final String RELEASE_DATE_COLUMN = "movie_release_date";
-    private static final String PICTURE_COLUMN = "movie_picture";
+    private static final String SQL_DELETE_MOVIE = "DELETE FROM movies M WHERE M.movie_id = ?;";
 
     private static MovieDao instance = new MovieDaoImpl();
 
@@ -260,17 +254,17 @@ public class MovieDaoImpl implements MovieDao {
             return null;
         }
         Movie movie = new Movie();
-        Integer movieId = resultSet.getInt(DEFAULT_ID_COLUMN);
+        Integer movieId = resultSet.getInt(MoviesColumn.ID);
         movie.setId(movieId);
-        String movieTitle = resultSet.getString(TITLE_COLUMN);
+        String movieTitle = resultSet.getString(MoviesColumn.TITLE);
         movie.setTitle(movieTitle);
-        String movieDescription = resultSet.getString(DESCRIPTION_COLUMN);
+        String movieDescription = resultSet.getString(MoviesColumn.DESCRIPTION);
         movie.setDescription(movieDescription);
-        Float movieRating = resultSet.getFloat(RATING_COLUMN);
+        Float movieRating = resultSet.getFloat(MoviesColumn.RATING);
         movie.setAverageRating(movieRating);
-        LocalDate movieReleaseDate = resultSet.getDate(RELEASE_DATE_COLUMN).toLocalDate();
+        LocalDate movieReleaseDate = resultSet.getDate(MoviesColumn.RELEASE_DATE).toLocalDate();
         movie.setReleaseDate(movieReleaseDate);
-        String moviePicture = resultSet.getString(PICTURE_COLUMN);
+        String moviePicture = resultSet.getString(MoviesColumn.PICTURE);
         movie.setPicture(moviePicture);
         return movie;
     }

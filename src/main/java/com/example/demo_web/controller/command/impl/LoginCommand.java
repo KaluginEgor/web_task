@@ -20,7 +20,7 @@ public class LoginCommand implements ActionCommand {
         String password = sessionRequestContent.getRequestParameter(RequestParameter.PASSWORD);
         Optional<User> user = Optional.empty();
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
 
         sessionRequestContent.setRequestAttribute(RequestParameter.LOGIN, login);
 
@@ -30,7 +30,7 @@ public class LoginCommand implements ActionCommand {
                 user = userService.login(login, password);
                 if (user.isPresent()) {
                     commandResult.setPage(PagePath.MAIN);
-                    sessionRequestContent.setSessionAttribute(SessionAttribute.USER, user.get());
+                    sessionRequestContent.setSessionAttribute(Attribute.USER, user.get());
                 }
             } else {
                 userService.defineErrorMessageFromDataValidations(sessionRequestContent, usersDataValidations);

@@ -15,18 +15,18 @@ public class UpdateMovieReviewCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
 
         try {
             int movieReviewId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_REVIEW_ID));
             int movieId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID));
             int userId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.USER_ID));
-            String page = (String)sessionRequestContent.getSessionAttribute(SessionAttribute.PAGE);
+            String page = (String)sessionRequestContent.getSessionAttribute(Attribute.PAGE);
             String reviewTitle = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_REVIEW_TITLE);
             String reviewBody = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_REVIEW_BODY);
             movieReviewService.update(movieReviewId, reviewTitle, reviewBody, movieId, userId);
             Movie movie = movieService.findById(Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID)));
-            sessionRequestContent.setSessionAttribute(SessionAttribute.MOVIE, movie);
+            sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie);
             commandResult.setPage(page);
         } catch (ServiceException e) {
             commandResult.setPage(PagePath.ERROR);

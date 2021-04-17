@@ -27,16 +27,21 @@
         <h2>${mediaPerson.firstName} ${mediaPerson.secondName}
             <c:set var="admin" value="ADMIN"/>
             <c:if test="${user.role == admin}">
-                <div class="btn">
-                    <button class="edit-by-admin-btn"><a href="controller?command=open_edit_media_person_page&mediaPersonId=${mediaPerson.id}"><i
-                            class="fa fa-pencil-square-o"
-                            aria-hidden="true"></i></a></button>
-                </div>
-                <div class="btn">
-                    <button class="delete-btn"><a href="controller?command=delete_media_person&mediaPersonId=${mediaPerson.id}">
-                        <i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                    </button>
-                </div>
+                <form action="<c:url value="/controller"/>" method="POST" >
+                    <input type="hidden" name="command" value="open_edit_media_person_page">
+                    <input type="hidden" name="mediaPersonId" value="${mediaPerson.id}">
+                    <div class="btn">
+                        <button class="edit-by-admin-btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                    </div>
+                </form>
+                <form action="<c:url value="/controller"/>" method="POST" >
+                    <input type="hidden" name="command" value="delete_media_person">
+                    <input type="hidden" name="mediaPersonId" value="${mediaPerson.id}">
+                    <div class="btn">
+                        <button class="delete-btn"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        </button>
+                    </div>
+                </form>
             </c:if>
         </h2>
     </div>
@@ -72,10 +77,12 @@
                 <c:forEach var="movie" items="${mediaPerson.movies}">
                     <div class="movie">
                         <p>
-                            <a href="controller?command=open_movie_page&movieId=${movie.id}">
-                                <c:out value="${movie.title}"/>
-                            </a>
+                        <form action="<c:url value="/controller"/>" method="POST">
+                            <input type="hidden" name="command" value="open_movie_page"/>
+                            <input type="hidden" name="movieId" value="${movie.id}"/>
+                            <button class="link"><c:out value="${movie.title}"/></button>
                             <br>
+                        </form>
                         </p>
                     </div>
                 </c:forEach>

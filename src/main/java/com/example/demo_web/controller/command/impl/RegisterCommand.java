@@ -23,7 +23,7 @@ public class RegisterCommand implements ActionCommand {
         String passwordRepeat = sessionRequestContent.getRequestParameter(RequestParameter.PASSWORD_REPEAT);
         Optional<User> registeredUser = Optional.empty();
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
 
         if (password.equals(passwordRepeat)) {
             try {
@@ -33,8 +33,8 @@ public class RegisterCommand implements ActionCommand {
                     commandResult.setPage(PagePath.REGISTRATION);
                 } else {
                     registeredUser = userService.register(login, email, firstName, secondName, password);
-                    sessionRequestContent.setSessionAttribute(SessionAttribute.ACTIVATION_USER_ID, registeredUser.get().getId());
-                    String locale = (String) sessionRequestContent.getSessionAttribute(SessionAttribute.LANG);
+                    sessionRequestContent.setSessionAttribute(Attribute.ACTIVATION_USER_ID, registeredUser.get().getId());
+                    String locale = (String) sessionRequestContent.getSessionAttribute(Attribute.LANG);
                     userService.constructAndSendConfirmEmail(locale, registeredUser.get());
                     commandResult.setPage(PagePath.LOGIN);
                     sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE, ErrorMessage.CONFIRM_MESSAGE_SENT);

@@ -16,7 +16,7 @@ public class UpdateMediaPersonCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
 
         int id = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MEDIA_PERSON_ID));
         String firstName = sessionRequestContent.getRequestParameter(RequestParameter.FIRST_NAME);
@@ -29,7 +29,7 @@ public class UpdateMediaPersonCommand implements ActionCommand {
         String[] moviesId = sessionRequestContent.getRequestParameters(RequestParameter.MEDIA_PERSON_MOVIES);
         try {
             MediaPerson mediaPerson = mediaPersonService.update(id, firstName, secondName, bio, occupationType, birthday, picture, moviesId);
-            sessionRequestContent.setSessionAttribute(SessionAttribute.MEDIA_PERSON, mediaPerson);
+            sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PERSON, mediaPerson);
             commandResult.setPage(PagePath.MEDIA_PERSON);
         } catch (ServiceException e) {
             commandResult.setPage(PagePath.ERROR);

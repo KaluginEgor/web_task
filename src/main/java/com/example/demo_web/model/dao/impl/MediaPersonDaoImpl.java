@@ -1,5 +1,6 @@
 package com.example.demo_web.model.dao.impl;
 
+import com.example.demo_web.model.dao.column.MediaPersonsColumn;
 import com.example.demo_web.model.entity.OccupationType;
 import com.example.demo_web.model.pool.ConnectionPool;
 import com.example.demo_web.model.dao.MediaPersonDao;
@@ -15,33 +16,25 @@ import java.util.List;
 public class MediaPersonDaoImpl implements MediaPersonDao {
     private static MediaPersonDao instance = new MediaPersonDaoImpl();
 
-    private static final String SQL_SELECT_ALL_MEDIA_PERSONS_WITH_LIMIT = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id WHERE MP.media_person_is_deleted = 0 LIMIT ?, ?;";
+    private static final String SQL_SELECT_ALL_MEDIA_PERSONS_WITH_LIMIT = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id LIMIT ?, ?;";
 
-    private static final String SQL_COUNT_MEDIA_PERSONS = "SELECT COUNT(*) AS media_person_count FROM media_persons WHERE media_person_is_deleted = 0;";
+    private static final String SQL_COUNT_MEDIA_PERSONS = "SELECT COUNT(*) AS media_person_count FROM media_persons;";
 
-    private static final String SQL_SELECT_MEDIA_PERSONS_BY_MOVIE_ID = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id INNER JOIN media_persons_movies MPM on MP.media_person_id = MPM.media_person_id INNER JOIN movies M on MPM.movie_id = M.movie_id WHERE M.movie_id = ? AND MP.media_person_is_deleted = 0 AND M.movie_is_deleted = 0;";
+    private static final String SQL_SELECT_MEDIA_PERSONS_BY_MOVIE_ID = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id INNER JOIN media_persons_movies MPM on MP.media_person_id = MPM.media_person_id INNER JOIN movies M on MPM.movie_id = M.movie_id WHERE M.movie_id = ?;";
 
-    private static final String SQL_SELECT_MEDIA_PERSON_BY_ID = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id WHERE MP.media_person_id = ? AND MP.media_person_is_deleted = 0;";
+    private static final String SQL_SELECT_MEDIA_PERSON_BY_ID = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id WHERE MP.media_person_id = ?;";
 
     private static final String SQL_UPDATE_MEDIA_PERSON = "UPDATE media_persons MP SET MP.media_person_first_name = ?, MP.media_person_second_name = ?, MP.media_person_occupation_id = ?, MP.media_person_bio = ?, MP.media_person_birthday = ?, MP.media_person_picture = ? WHERE MP.media_person_id = ?;";
 
-    private static final String SQL_INSERT_MEDIA_PERSON = "INSERT INTO media_persons (media_person_first_name, media_person_second_name, media_person_occupation_id, media_person_bio, media_person_birthday, media_person_picture, media_person_is_deleted) VALUES (?, ?, ?, ?, ?, ?, 0);";
+    private static final String SQL_INSERT_MEDIA_PERSON = "INSERT INTO media_persons (media_person_first_name, media_person_second_name, media_person_occupation_id, media_person_bio, media_person_birthday, media_person_picture) VALUES (?, ?, ?, ?, ?, ?);";
 
     private static final String SQL_DELETE_MEDIA_PERSON_MOVIES = "DELETE FROM media_persons_movies MPM WHERE MPM.media_person_id = ?";
 
     private static final String SQL_INSERT_MEDIA_PERSON_MOVIE = "INSERT INTO media_persons_movies (media_person_id, movie_id) VALUES (?, ?);";
 
-    private static final String SQL_SELECT_ALL_MOVIES = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id WHERE MP.media_person_is_deleted = 0;";
+    private static final String SQL_SELECT_ALL_MOVIES = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id;";
 
-    private static final String SQL_DELETE_MEDIA_PERSON = "UPDATE media_persons MP SET MP.media_person_is_deleted = 1 WHERE MP.media_person_id = ?;";
-
-    private static final String DEFAULT_ID_COLUMN = "media_person_id";
-    private static final String FIRST_NAME_COLUMN = "media_person_first_name";
-    private static final String SECOND_NAME_COLUMN = "media_person_second_name";
-    private static final String OCCUPATION_TYPE_COLUMN = "media_person_occupation_name";
-    private static final String BIO_COLUMN = "media_person_bio";
-    private static final String BIRTHDAY_COLUMN = "media_person_birthday";
-    private static final String PICTURE_COLUMN = "media_person_picture";
+    private static final String SQL_DELETE_MEDIA_PERSON = "DELETE FROM media_persons MP WHERE MP.media_person_id = ?;";
 
     private MediaPersonDaoImpl(){}
 
@@ -217,19 +210,19 @@ public class MediaPersonDaoImpl implements MediaPersonDao {
             return null;
         }
         MediaPerson mediaPerson = new MediaPerson();
-        Integer actorId = resultSet.getInt(DEFAULT_ID_COLUMN);
+        Integer actorId = resultSet.getInt(MediaPersonsColumn.ID);
         mediaPerson.setId(actorId);
-        String actorFirstName = resultSet.getString(FIRST_NAME_COLUMN);
+        String actorFirstName = resultSet.getString(MediaPersonsColumn.FIRST_NAME);
         mediaPerson.setFirstName(actorFirstName);
-        String actorSecondName = resultSet.getString(SECOND_NAME_COLUMN);
+        String actorSecondName = resultSet.getString(MediaPersonsColumn.SECOND_NAME);
         mediaPerson.setSecondName(actorSecondName);
-        OccupationType occupationType = OccupationType.valueOf(resultSet.getString(OCCUPATION_TYPE_COLUMN));
+        OccupationType occupationType = OccupationType.valueOf(resultSet.getString(MediaPersonsColumn.OCCUPATION_TYPE));
         mediaPerson.setOccupationType(occupationType);
-        String actorBio = resultSet.getString(BIO_COLUMN);
+        String actorBio = resultSet.getString(MediaPersonsColumn.BIO);
         mediaPerson.setBio(actorBio);
-        LocalDate actorBirthday = resultSet.getDate(BIRTHDAY_COLUMN).toLocalDate();
+        LocalDate actorBirthday = resultSet.getDate(MediaPersonsColumn.BIRTHDAY).toLocalDate();
         mediaPerson.setBirthday(actorBirthday);
-        String actorPicture = resultSet.getString(PICTURE_COLUMN);
+        String actorPicture = resultSet.getString(MediaPersonsColumn.PICTURE);
         mediaPerson.setPicture(actorPicture);
         return mediaPerson;
     }

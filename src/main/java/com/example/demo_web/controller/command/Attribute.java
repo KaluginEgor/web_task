@@ -1,6 +1,6 @@
 package com.example.demo_web.controller.command;
 
-public class SessionAttribute {
+public class Attribute {
     public static final String ACTIVATION_USER_ID = "activationUserId";
     public static final String LANG = "lang";
     public static final String ALL_MOVIES_CURRENT_PAGE = "movies_current_page";
@@ -19,6 +19,7 @@ public class SessionAttribute {
     public static final String MEDIA_PEOPLE = "mediaPeople";
     public static final String REVIEW_TO_UPDATE = "reviewToUpdate";
     public static final String PAGE = "page";
+    public static final String NEW_PICTURE = "newPicture";
 
-    private SessionAttribute(){}
+    private Attribute(){}
 }

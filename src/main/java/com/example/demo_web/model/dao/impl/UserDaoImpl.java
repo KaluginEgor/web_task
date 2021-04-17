@@ -1,5 +1,6 @@
 package com.example.demo_web.model.dao.impl;
 
+import com.example.demo_web.model.dao.column.UsersColumn;
 import com.example.demo_web.model.entity.UserRole;
 import com.example.demo_web.model.entity.UserState;
 import com.example.demo_web.model.pool.ConnectionPool;
@@ -30,15 +31,6 @@ public class UserDaoImpl implements UserDao {
     private static final String SQL_UPDATE_USER_RATING = "UPDATE users SET user_rating = ? WHERE user_id = ?";
 
     private static final String SQL_UPDATE_USER = "UPDATE users U SET U.user_login = ?, U.user_email = ?, U.user_first_name = ?, U.user_second_name = ?, U.user_picture = ?, U.user_role_id = ?, U.user_state_id = ?, U.user_rating = ? WHERE U.user_id = ?;";
-
-    private static final String DEFAULT_ID_COLUMN = "user_id";
-    private static final String LOGIN_COLUMN = "user_login";
-    private static final String EMAIL_COLUMN = "user_email";
-    private static final String FIRST_NAME_COLUMN = "user_first_name";
-    private static final String SECOND_NAME_COLUMN = "user_second_name";
-    private static final String ROLE_ID = "user_role_name";
-    private static final String STATE_ID = "user_state_name";
-    private static final String PICTURE = "user_picture";
 
     private static UserDao instance = new UserDaoImpl();
 
@@ -195,21 +187,21 @@ public class UserDaoImpl implements UserDao {
         if (resultSet.wasNull()) {
             return null;
         }
-        Integer userId = resultSet.getInt(DEFAULT_ID_COLUMN);
+        Integer userId = resultSet.getInt(UsersColumn.ID);
         user.setId(userId);
-        String userLogin = resultSet.getString(LOGIN_COLUMN);
+        String userLogin = resultSet.getString(UsersColumn.LOGIN);
         user.setLogin(userLogin);
-        String userEmail = resultSet.getString(EMAIL_COLUMN);
+        String userEmail = resultSet.getString(UsersColumn.EMAIL);
         user.setEmail(userEmail);
-        String userFirstName = resultSet.getString(FIRST_NAME_COLUMN);
+        String userFirstName = resultSet.getString(UsersColumn.FIRST_NAME);
         user.setFirstName(userFirstName);
-        String userSecondName = resultSet.getString(SECOND_NAME_COLUMN);
+        String userSecondName = resultSet.getString(UsersColumn.SECOND_NAME);
         user.setSecondName(userSecondName);
-        String picture = resultSet.getString(PICTURE);
+        String picture = resultSet.getString(UsersColumn.PICTURE);
         user.setPicture(picture);
-        UserRole userRole = UserRole.valueOf(resultSet.getString(ROLE_ID).toUpperCase(Locale.ROOT));
+        UserRole userRole = UserRole.valueOf(resultSet.getString(UsersColumn.ROLE_ID).toUpperCase(Locale.ROOT));
         user.setRole(userRole);
-        UserState userState = UserState.valueOf(resultSet.getString(STATE_ID).toUpperCase(Locale.ROOT));
+        UserState userState = UserState.valueOf(resultSet.getString(UsersColumn.STATE_ID).toUpperCase(Locale.ROOT));
         user.setState(userState);
         return user;
     }

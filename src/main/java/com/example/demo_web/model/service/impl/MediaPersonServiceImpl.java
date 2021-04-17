@@ -23,6 +23,7 @@ public class MediaPersonServiceImpl implements MediaPersonService {
     private static final Logger logger = LogManager.getLogger(MediaPersonServiceImpl.class);
     private MediaPersonDao mediaPersonDao = MediaPersonDaoImpl.getInstance();
     private MovieDao movieDao = MovieDaoImpl.getInstance();
+    private static final String DEFAULT_MEDIA_PERSON_PICTURE = "C:/Epam/pictures/media_person.jpg";
 
     @Override
     public List<MediaPerson> findAllBetween(int begin, int end) throws ServiceException {
@@ -74,6 +75,9 @@ public class MediaPersonServiceImpl implements MediaPersonService {
     @Override
     public MediaPerson update(int id, String firstName, String secondName, String bio, OccupationType occupationType, LocalDate birthday, String picture, String[] moviesId) throws ServiceException {
         try {
+            if (picture == null) {
+                picture = DEFAULT_MEDIA_PERSON_PICTURE;
+            }
             MediaPerson mediaPersonToUpdate = convertToMediaPerson(firstName, secondName, bio, occupationType, birthday, picture, moviesId);
             mediaPersonToUpdate.setId(id);
             MediaPerson updatedMediaPerson = mediaPersonDao.update(mediaPersonToUpdate);
@@ -91,6 +95,9 @@ public class MediaPersonServiceImpl implements MediaPersonService {
     @Override
     public MediaPerson create(String firstName, String secondName, String bio, OccupationType occupationType, LocalDate birthday, String picture, String[] moviesId) throws ServiceException {
         try {
+            if (picture == null) {
+                picture = DEFAULT_MEDIA_PERSON_PICTURE;
+            }
             MediaPerson mediaPersonToCreate = convertToMediaPerson(firstName, secondName, bio, occupationType, birthday, picture, moviesId);
             MediaPerson createdMediaPerson = mediaPersonDao.create(mediaPersonToCreate);
             createdMediaPerson.setMovies(mediaPersonToCreate.getMovies());

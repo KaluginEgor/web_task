@@ -10,6 +10,7 @@
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="pagecontent" var="rb" />
 <c:set var="page" value="/pages/edit_media_person.jsp" scope="session"/>
+<jsp:useBean id="mediaPerson" class="com.example.demo_web.model.entity.MediaPerson" scope="session"/>
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/editPage.css" />
@@ -28,31 +29,55 @@
         <h4>${validationException}</h4>
     </c:forEach>
 
-    <form class="edit-form" action="controller" method="POST">
+
+    <form action="<c:url value="/controller"/>" enctype="multipart/form-data" method="POST">
+        <input type="hidden" name="command" value="upload_picture">
+        <input type="hidden" name="mediaPersonId" value="${mediaPerson.id}">
+        <input type="file" accept="image/*" name="content" height="130">
+        <input type="submit" value="Upload File">
+    </form>
+
+    <form class="edit-form" action="<c:url value="/controller"/>" method="POST">
         <c:choose>
-            <c:when test="${empty requestScope.mediaPerson}">
+            <c:when test="${empty mediaPerson}">
                 <input type="hidden" name="command" value="create_media_person"/>
             </c:when>
             <c:otherwise>
-                <input type="hidden" name="mediaPersonId" value="${requestScope.mediaPerson.id}"/>
+                <input type="hidden" name="mediaPersonId" value="${mediaPerson.id}"/>
                 <input type="hidden" name="command" value="update_media_person"/>
             </c:otherwise>
         </c:choose>
+
+        <c:choose>
+            <c:when test="${empty sessionScope.newPicture}">
+                <div class="poster">
+                    <img src="${pageContext.request.contextPath}/picture?currentPicture=${mediaPerson.picture}">
+                    <input type="hidden" name="picture" value="${mediaPerson.picture}">
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="poster">
+                    <img src="${pageContext.request.contextPath}/picture?currentPicture=${sessionScope.newPicture}">
+                    <input type="hidden" name="picture" value="${sessionScope.newPicture}">
+                </div>
+            </c:otherwise>
+        </c:choose>
+
         <div class="block">
             <label for="firstName">First name</label><br/>
             <input type="text" required id="firstName" class="first-name" name="firstName" pattern="[A-Za-zА-Яа-яЁё]{1,20}"
-                   value="${requestScope.mediaPerson.firstName}">
+                   value="${mediaPerson.firstName}">
         </div>
 
         <div class="block">
             <label for="secondName">Second name</label><br/>
             <input type="text" required id="secondName" class="last-name" name="secondName" pattern="[A-Za-zА-Яа-яЁё]{1,20}"
-                   value="${requestScope.mediaPerson.secondName}"/>
+                   value="${mediaPerson.secondName}"/>
         </div>
 
         <div class="block">
             <label for="bio">Biography</label><br/>
-            <textarea id="bio" name="bio" cols="40" rows="5">${requestScope.mediaPerson.bio}</textarea>
+            <textarea id="bio" name="bio" cols="40" rows="5">${mediaPerson.bio}</textarea>
         </div>
 
         <div class="block occupation">
@@ -61,7 +86,7 @@
                 <c:forEach var="occupation" items="${sessionScope.occupationTypes}">
                     <div class="block-div">
                         <c:choose>
-                            <c:when test="${requestScope.mediaPerson.occupationType == occupation}">
+                            <c:when test="${mediaPerson.occupationType == occupation}">
                                 <input type="radio" id="${occupation}" name="occupationType" checked="checked"
                                        value="${occupation}"/>
                             </c:when>
@@ -78,30 +103,25 @@
 
         <div class="block">
             <label for="birthday">Birthday</label><br/>
-            <input type="date" id="birthday" name="birthday" value="${requestScope.mediaPerson.birthday}"/>
-        </div>
-
-        <div class="block">
-            <label for="picture">Picture</label><br/>
-            <input type="text" id="picture" name="picture" value="${requestScope.mediaPerson.picture}"/>
+            <input type="date" id="birthday" name="birthday" value="${mediaPerson.birthday}"/>
         </div>
 
         <div class="block occupation">
             <label for="movies-div">Movies</label>
             <div id="movies-div" class="occupation-div">
-                <c:forEach var="mediaPerson" items="${sessionScope.movies}">
+                <c:forEach var="movie" items="${sessionScope.movies}">
                     <div class="block-div">
                         <c:choose>
-                            <c:when test="${requestScope.mediaPerson.movies.contains(mediaPerson)}">
-                                <input type="checkbox" id="${mediaPerson.id}" name="mediaPersonMovies" checked="checked"
-                                       value="${mediaPerson.id}"/>
+                            <c:when test="${mediaPerson.movies.contains(movie)}">
+                                <input type="checkbox" id="${movie.id}" name="mediaPersonMovies" checked="checked"
+                                       value="${movie.id}"/>
                             </c:when>
                             <c:otherwise>
-                                <input type="checkbox" id="${mediaPerson.id}" name="mediaPersonMovies"
-                                       value="${mediaPerson.id}"/>
+                                <input type="checkbox" id="${movie.id}" name="mediaPersonMovies"
+                                       value="${movie.id}"/>
                             </c:otherwise>
                         </c:choose>
-                        <label for="${mediaPerson}">${mediaPerson.title}</label>
+                        <label for="${movie}">${movie.title}</label>
                     </div>
                 </c:forEach>
             </div>
@@ -112,8 +132,16 @@
         </div>
     </form>
     <div class="block">
-        <a href="${requestScope.previous_page}"><fmt:message key="back"/></a>
+        <form action="<c:url value="/controller"/>" method="POST">
+            <input type="hidden" name="command" value="open_media_person_page"/>
+            <input type="hidden" name="mediaPersonId" value="${mediaPerson.id}"/>
+            <input type="submit" value="back"/>
+            <br>
+        </form>
     </div>
 </div>
 </body>
 </html>
+
+
+

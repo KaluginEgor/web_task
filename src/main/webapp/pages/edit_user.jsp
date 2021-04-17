@@ -30,13 +30,36 @@
         <h4>${validationException}</h4>
     </c:forEach>
 
-    <form class="edit-form" action="controller" method="POST">
+    <form action="<c:url value="/controller"/>" enctype="multipart/form-data" method="POST">
+        <input type="hidden" name="command" value="upload_picture">
+        <input type="hidden" name="userId" value="${someUser.id}">
+        <input type="file" accept="image/*" name="content" height="130">
+        <input type="submit" value="Upload File">
+    </form>
+
+    <form class="edit-form" action="<c:url value="/controller"/>" method="POST">
         <input type="hidden" name="command" value="update_user"/>
         <input type="hidden" name="userId" value="${someUser.id}">
         <input type="hidden" name="login" value="${someUser.login}">
         <input type="hidden" name="userRole" value="${someUser.role}">
         <input type="hidden" name="userState" value="${someUser.state}">
         <input type="hidden" name="userRating" value="${someUser.rating}">
+
+        <c:choose>
+            <c:when test="${empty sessionScope.newPicture}">
+                <div class="poster">
+                    <img src="${pageContext.request.contextPath}/picture?currentPicture=${someUser.picture}">
+                    <input type="hidden" name="picture" value="${someUser.picture}">
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="poster">
+                    <img src="${pageContext.request.contextPath}/picture?currentPicture=${sessionScope.newPicture}">
+                    <input type="hidden" name="picture" value="${sessionScope.newPicture}">
+                </div>
+            </c:otherwise>
+        </c:choose>
+
         <div class="block">
             <label for="first-name">First name</label><br/>
             <input type="text" id="first-name" class="first-name" name="firstName" value="${someUser.firstName}"/>
@@ -53,17 +76,20 @@
         </div>
 
         <div class="block">
-            <label for="picture">Picture</label><br/>
-            <input type="text" id="picture" name="picture" value="${someUser.picture}"/>
-        </div>
-
-        <div class="block">
             <input type="submit" class="edit-btn" value="Edit">
         </div>
     </form>
     <div class="block">
-        <a href="${requestScope.previous_page}"><fmt:message key="back"/></a>
+        <form action="<c:url value="/controller"/>" method="POST">
+            <input type="hidden" name="command" value="open_user_page"/>
+            <input type="hidden" name="userId" value="${someUser.id}"/>
+            <input type="submit" value="back"/>
+            <br>
+        </form>
     </div>
 </div>
 </body>
 </html>
+
+<c:remove var="someUser"/>
+<c:remove var="newPicture"/>

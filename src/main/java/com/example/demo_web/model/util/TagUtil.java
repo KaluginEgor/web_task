@@ -11,11 +11,13 @@ public class TagUtil {
             JspWriter writer = pageContext.getOut();
             writer.write("<form method=\"post\" action=\"controller\">");
             writer.write("<input type=\"hidden\" name=\"command\" value=\"" + command + "\"/>");
-            writer.write("<ul class=\"navigate\">");
+            writer.write("<div class=\"accent-bar\">");
+            writer.write("<ul class=\"accents\">");
             for (int i = 0; i < pagesCount; i++) {
                 createButton(writer, i + 1);
             }
             writer.write("</ul>");
+            writer.write("</div>");
             writer.write("</form>");
         } catch (IOException e) {
             //logger.error(e);

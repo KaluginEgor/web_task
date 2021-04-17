@@ -1,7 +1,7 @@
 package com.example.demo_web.tag;
 
 import com.example.demo_web.controller.command.CommandEnum;
-import com.example.demo_web.controller.command.SessionAttribute;
+import com.example.demo_web.controller.command.Attribute;
 import com.example.demo_web.controller.command.SessionRequestContent;
 import com.example.demo_web.model.entity.MediaPerson;
 import com.example.demo_web.model.util.TagUtil;
@@ -22,8 +22,8 @@ public class ViewAllMediaPersonsTag extends TagSupport {
         SessionRequestContent sessionRequestContent = new SessionRequestContent();
         sessionRequestContent.extractValues(request);
         createActors(writer, sessionRequestContent);
-        int currentPage = (int) sessionRequestContent.getSessionAttribute(SessionAttribute.ALL_ACTORS_CURRENT_PAGE);
-        int moviesCount = (int) sessionRequestContent.getSessionAttribute(SessionAttribute.ACTORS_COUNT);
+        int currentPage = (int) sessionRequestContent.getSessionAttribute(Attribute.ALL_ACTORS_CURRENT_PAGE);
+        int moviesCount = (int) sessionRequestContent.getSessionAttribute(Attribute.ACTORS_COUNT);
         int pagesCount = moviesCount % ACTORS_PER_PAGE_NUMBER == 0 ? (moviesCount / ACTORS_PER_PAGE_NUMBER) : (moviesCount / ACTORS_PER_PAGE_NUMBER + 1);
         String command = CommandEnum.OPEN_ALL_MEDIA_PERSONS_PAGE.toString().toLowerCase();
         TagUtil.paginate(pageContext, currentPage, pagesCount, command);
@@ -36,7 +36,7 @@ public class ViewAllMediaPersonsTag extends TagSupport {
     }
 
     private void createActors(JspWriter writer, SessionRequestContent sessionRequestContext) throws JspException {
-        List<MediaPerson> allMediaPeople = (List<MediaPerson>) sessionRequestContext.getSessionAttribute(SessionAttribute.ALL_ACTORS_LIST);
+        List<MediaPerson> allMediaPeople = (List<MediaPerson>) sessionRequestContext.getSessionAttribute(Attribute.ALL_ACTORS_LIST);
         if (allMediaPeople != null) {
             int size = allMediaPeople.size();
             int createdActorsCount = 0;

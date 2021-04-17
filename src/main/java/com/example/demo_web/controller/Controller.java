@@ -5,6 +5,7 @@ import com.example.demo_web.controller.command.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "controller", urlPatterns = {"/controller"})
+@MultipartConfig(maxFileSize = 1024 * 1024 * 4, maxRequestSize = 1024 * 1024 * 8)
 public class Controller extends HttpServlet {
 
     @Override
