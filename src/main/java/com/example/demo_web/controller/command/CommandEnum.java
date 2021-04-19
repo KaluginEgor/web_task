@@ -3,7 +3,7 @@ package com.example.demo_web.controller.command;
 
 import com.example.demo_web.controller.command.impl.admin.*;
 import com.example.demo_web.controller.command.impl.page.OpenAllMoviesPageCommand;
-import com.example.demo_web.controller.command.impl.LoginCommand;
+import com.example.demo_web.controller.command.impl.user.LoginCommand;
 import com.example.demo_web.controller.command.impl.page.*;
 import com.example.demo_web.controller.command.impl.user.*;
 import com.example.demo_web.controller.command.impl.*;
@@ -157,6 +157,11 @@ public enum CommandEnum {
     UPLOAD_PICTURE {
         {
             this.command = new UploadPictureCommand();
+        }
+    },
+    FIND_MOVIES_BY_TITLE {
+        {
+            this.command = new FindMoviesByTitleCommand();
         }
     };
     ActionCommand command;

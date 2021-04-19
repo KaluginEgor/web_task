@@ -2,10 +2,8 @@ package com.example.demo_web.model.dao.impl;
 
 import com.example.demo_web.model.dao.column.MediaPersonsColumn;
 import com.example.demo_web.model.entity.OccupationType;
-import com.example.demo_web.model.pool.ConnectionPool;
-import com.example.demo_web.model.dao.MediaPersonDao;
+import com.example.demo_web.model.dao.AbstractMediaPersonDao;
 import com.example.demo_web.model.entity.MediaPerson;
-import com.example.demo_web.exception.ConnectionException;
 import com.example.demo_web.exception.DaoException;
 
 import java.sql.*;
@@ -13,14 +11,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MediaPersonDaoImpl implements MediaPersonDao {
-    private static MediaPersonDao instance = new MediaPersonDaoImpl();
+public class MediaPersonDao extends AbstractMediaPersonDao {
+    private static AbstractMediaPersonDao instance = new MediaPersonDao();
 
-    private static final String SQL_SELECT_ALL_MEDIA_PERSONS_WITH_LIMIT = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id LIMIT ?, ?;";
+    private static final String SQL_SELECT_ALL_MEDIA_PERSONS_WITH_LIMIT = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id ORDER BY MP.media_person_second_name LIMIT ?, ?;";
 
     private static final String SQL_COUNT_MEDIA_PERSONS = "SELECT COUNT(*) AS media_person_count FROM media_persons;";
 
-    private static final String SQL_SELECT_MEDIA_PERSONS_BY_MOVIE_ID = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id INNER JOIN media_persons_movies MPM on MP.media_person_id = MPM.media_person_id INNER JOIN movies M on MPM.movie_id = M.movie_id WHERE M.movie_id = ?;";
+    private static final String SQL_SELECT_MEDIA_PERSONS_BY_MOVIE_ID = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id INNER JOIN media_persons_movies MPM on MP.media_person_id = MPM.media_person_id INNER JOIN movies M on MPM.movie_id = M.movie_id WHERE M.movie_id = ? ORDER BY MP.media_person_second_name;";
 
     private static final String SQL_SELECT_MEDIA_PERSON_BY_ID = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id WHERE MP.media_person_id = ?;";
 
@@ -32,21 +30,20 @@ public class MediaPersonDaoImpl implements MediaPersonDao {
 
     private static final String SQL_INSERT_MEDIA_PERSON_MOVIE = "INSERT INTO media_persons_movies (media_person_id, movie_id) VALUES (?, ?);";
 
-    private static final String SQL_SELECT_ALL_MOVIES = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id;";
+    private static final String SQL_SELECT_ALL_MOVIES = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id ORDER BY MP.media_person_second_name;";
 
     private static final String SQL_DELETE_MEDIA_PERSON = "DELETE FROM media_persons MP WHERE MP.media_person_id = ?;";
 
-    private MediaPersonDaoImpl(){}
+    private MediaPersonDao(){}
 
-    public static MediaPersonDao getInstance() {
+    public static AbstractMediaPersonDao getInstance() {
         return instance;
     }
 
     @Override
     public List<MediaPerson> findAllBetween(int begin, int end) throws DaoException {
         List<MediaPerson> mediaPersonList = new ArrayList<>();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_MEDIA_PERSONS_WITH_LIMIT)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_MEDIA_PERSONS_WITH_LIMIT)) {
             preparedStatement.setInt(1, begin);
             preparedStatement.setInt(2, end);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -57,7 +54,7 @@ public class MediaPersonDaoImpl implements MediaPersonDao {
                 }
             }
             return mediaPersonList;
-        } catch (SQLException | ConnectionException e) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
@@ -65,14 +62,13 @@ public class MediaPersonDaoImpl implements MediaPersonDao {
     @Override
     public int countMediaPersons() throws DaoException {
         int actorsCount = 0;
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_COUNT_MEDIA_PERSONS)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()) {
-                actorsCount = resultSet.getInt(1);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_COUNT_MEDIA_PERSONS)) {
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    actorsCount = resultSet.getInt(1);
+                }
             }
-        } catch (ConnectionException | SQLException e) {
-            //logger.error(e);
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
         return actorsCount;
@@ -82,16 +78,16 @@ public class MediaPersonDaoImpl implements MediaPersonDao {
     public List<MediaPerson> findByMovieId(Integer id) throws DaoException {
         List<MediaPerson> crew = new ArrayList<>();
         MediaPerson mediaPerson;
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_MEDIA_PERSONS_BY_MOVIE_ID)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_MEDIA_PERSONS_BY_MOVIE_ID)) {
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                mediaPerson = buildMediaPerson(resultSet);
-                crew.add(mediaPerson);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    mediaPerson = buildMediaPerson(resultSet);
+                    crew.add(mediaPerson);
+                }
             }
             return crew;
-        } catch (ConnectionException | SQLException e) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
@@ -99,16 +95,16 @@ public class MediaPersonDaoImpl implements MediaPersonDao {
     @Override
     public List<MediaPerson> findAll() throws DaoException {
         List<MediaPerson> mediaPeople = new ArrayList<>();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_MOVIES)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            MediaPerson mediaPerson;
-            while (resultSet.next()) {
-                mediaPerson = buildMediaPerson(resultSet);
-                mediaPeople.add(mediaPerson);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_MOVIES)) {
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                MediaPerson mediaPerson;
+                while (resultSet.next()) {
+                    mediaPerson = buildMediaPerson(resultSet);
+                    mediaPeople.add(mediaPerson);
+                }
             }
             return mediaPeople;
-        } catch (SQLException | ConnectionException e) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
@@ -116,56 +112,50 @@ public class MediaPersonDaoImpl implements MediaPersonDao {
     @Override
     public MediaPerson findEntityById(Integer id) throws DaoException {
         MediaPerson mediaPerson = null;
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_MEDIA_PERSON_BY_ID)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_MEDIA_PERSON_BY_ID)) {
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                mediaPerson = buildMediaPerson(resultSet);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    mediaPerson = buildMediaPerson(resultSet);
+                }
             }
             return mediaPerson;
-        } catch (SQLException | ConnectionException e) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
 
     @Override
     public boolean delete(Integer id) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_MEDIA_PERSON)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_MEDIA_PERSON)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             return true;
-        } catch (SQLException | ConnectionException e) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
 
     @Override
     public MediaPerson create(MediaPerson mediaPerson) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_MEDIA_PERSON, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_MEDIA_PERSON, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, mediaPerson.getFirstName());
             preparedStatement.setString(2, mediaPerson.getSecondName());
             preparedStatement.setInt(3, mediaPerson.getOccupationType().ordinal());
             preparedStatement.setString(4, mediaPerson.getBio());
             preparedStatement.setDate(5, java.sql.Date.valueOf(mediaPerson.getBirthday()));
             preparedStatement.setString(6, mediaPerson.getPicture());
-            preparedStatement.executeUpdate();
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                mediaPerson.setId(generatedKeys.getInt(1));
-            }
+            int id = executeUpdateAndGetGeneratedId(preparedStatement);
+            mediaPerson.setId(id);
             return mediaPerson;
-        } catch (SQLException | ConnectionException e) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
 
     @Override
     public MediaPerson update(MediaPerson mediaPerson) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_MEDIA_PERSON)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_MEDIA_PERSON)) {
             preparedStatement.setString(1, mediaPerson.getFirstName());
             preparedStatement.setString(2, mediaPerson.getSecondName());
             preparedStatement.setInt(3, mediaPerson.getOccupationType().ordinal());
@@ -175,32 +165,30 @@ public class MediaPersonDaoImpl implements MediaPersonDao {
             preparedStatement.setInt(7, mediaPerson.getId());
             preparedStatement.executeUpdate();
             return mediaPerson;
-        } catch (SQLException | ConnectionException e) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
 
     @Override
     public boolean deleteMediaPersonMovies(Integer mediaPersonId) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_MEDIA_PERSON_MOVIES)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_MEDIA_PERSON_MOVIES)) {
             preparedStatement.setInt(1, mediaPersonId);
             preparedStatement.executeUpdate();
             return true;
-        } catch (SQLException | ConnectionException e) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
 
     @Override
     public boolean insertMediaPersonMovie(Integer mediaPersonId, Integer movieId) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_MEDIA_PERSON_MOVIE)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_MEDIA_PERSON_MOVIE)) {
             preparedStatement.setInt(1, mediaPersonId);
             preparedStatement.setInt(2, movieId);
             preparedStatement.executeUpdate();
             return true;
-        } catch (SQLException | ConnectionException e) {
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }

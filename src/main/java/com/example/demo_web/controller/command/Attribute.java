@@ -20,6 +20,7 @@ public class Attribute {
     public static final String REVIEW_TO_UPDATE = "reviewToUpdate";
     public static final String PAGE = "page";
     public static final String NEW_PICTURE = "newPicture";
+    public static final String QUERY_NAME = "queryName";
 
     private Attribute(){}
 }

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: egork
@@ -8,7 +9,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
-<fmt:setBundle basename="pagecontent" var="rb" />
+<fmt:setBundle basename="pagecontent"/>
 <c:set var="page" value="/pages/mediaPerson.jsp" scope="session"/>
 <html>
 <jsp:useBean id="mediaPerson" scope="session" class="com.example.demo_web.model.entity.MediaPerson"/>
@@ -51,29 +52,29 @@
 
             <div class="poster">
                 <a href="#">
-                    <img src="${pageContext}${mediaPerson.picture}"
+                    <img src="${pageContext.request.contextPath}/picture?currentPicture=${mediaPerson.picture}"
                          alt="${mediaPerson.firstName} ${mediaPerson.secondName}"/>
                 </a>
             </div>
 
             <c:if test="${not empty mediaPerson.bio}">
-                <p class="description">
+                <p class="description"><strong><fmt:message key="media.person.bio"/>: </strong>
                         ${mediaPerson.bio}
                 </p>
             </c:if>
 
             <c:if test="${not empty mediaPerson.occupationType}">
-                <p><strong><fmt:message key="occupation"/>: </strong>
+                <p><strong><fmt:message key="media.person.occupation"/>: </strong>
                     ${mediaPerson.occupationType}
                 </p>
             </c:if>
 
             <c:if test="${not empty mediaPerson.birthday}">
-                <p><strong><fmt:message key="birthday"/>: </strong>${mediaPerson.birthday}</p>
+                <p><strong><fmt:message key="media.person.birthday"/>: </strong>${mediaPerson.birthday}</p>
             </c:if>
 
             <c:if test="${not empty mediaPerson.movies}">
-                <p><strong><fmt:message key="movies"/>: </strong></p>
+                <p><strong><fmt:message key="media.person.movies"/>: </strong></p>
                 <c:forEach var="movie" items="${mediaPerson.movies}">
                     <div class="movie">
                         <p>
@@ -89,7 +90,6 @@
             </c:if>
 
         </div>
-        <a href="${requestScope.previous_page}"><fmt:message key="back"/></a>
     </section>
 </section>
 </body>

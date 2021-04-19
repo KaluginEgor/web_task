@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: egork
@@ -8,7 +9,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
-<fmt:setBundle basename="pagecontent" var="rb" />
+<fmt:setBundle basename="pagecontent"/>
 <c:set var="page" value="/pages/edit_media_person.jsp" scope="session"/>
 <jsp:useBean id="mediaPerson" class="com.example.demo_web.model.entity.MediaPerson" scope="session"/>
 <html>
@@ -16,7 +17,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/editPage.css" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Edit media person</title>
+    <title><fmt:message key="label.edit.media.person"/></title>
 </head>
 <jsp:include page="/pages/module/header.jsp"/>
 <body class="home">
@@ -39,7 +40,7 @@
 
     <form class="edit-form" action="<c:url value="/controller"/>" method="POST">
         <c:choose>
-            <c:when test="${empty mediaPerson}">
+            <c:when test="${mediaPerson.id == 0}">
                 <input type="hidden" name="command" value="create_media_person"/>
             </c:when>
             <c:otherwise>
@@ -66,22 +67,22 @@
         <div class="block">
             <label for="firstName">First name</label><br/>
             <input type="text" required id="firstName" class="first-name" name="firstName" pattern="[A-Za-zА-Яа-яЁё]{1,20}"
-                   value="${mediaPerson.firstName}">
+                   placeholder="<fmt:message key="user.name.first"/>" value="${mediaPerson.firstName}">
         </div>
 
         <div class="block">
             <label for="secondName">Second name</label><br/>
             <input type="text" required id="secondName" class="last-name" name="secondName" pattern="[A-Za-zА-Яа-яЁё]{1,20}"
-                   value="${mediaPerson.secondName}"/>
+                   placeholder="<fmt:message key="user.name.second"/>" value="${mediaPerson.secondName}"/>
         </div>
 
         <div class="block">
-            <label for="bio">Biography</label><br/>
+            <label for="bio"><fmt:message key="media.person.bio"/></label><br/>
             <textarea id="bio" name="bio" cols="40" rows="5">${mediaPerson.bio}</textarea>
         </div>
 
         <div class="block occupation">
-            <label for="occupation-div">Occupation</label>
+            <label for="occupation-div"><fmt:message key="media.person.occupation"/></label>
             <div id="occupation-div" class="occupation-div">
                 <c:forEach var="occupation" items="${sessionScope.occupationTypes}">
                     <div class="block-div">
@@ -102,12 +103,12 @@
         </div>
 
         <div class="block">
-            <label for="birthday">Birthday</label><br/>
+            <label for="birthday"><fmt:message key="media.person.birthday"/></label><br/>
             <input type="date" id="birthday" name="birthday" value="${mediaPerson.birthday}"/>
         </div>
 
         <div class="block occupation">
-            <label for="movies-div">Movies</label>
+            <label for="movies-div"><fmt:message key="media.person.movies"/></label>
             <div id="movies-div" class="occupation-div">
                 <c:forEach var="movie" items="${sessionScope.movies}">
                     <div class="block-div">
@@ -128,20 +129,22 @@
         </div>
 
         <div class="block">
-            <input type="submit" class="edit-btn" value="Edit">
+            <input type="submit" class="edit-btn" value="<fmt:message key="label.submit"/>">
         </div>
     </form>
-    <div class="block">
-        <form action="<c:url value="/controller"/>" method="POST">
-            <input type="hidden" name="command" value="open_media_person_page"/>
-            <input type="hidden" name="mediaPersonId" value="${mediaPerson.id}"/>
-            <input type="submit" value="back"/>
-            <br>
-        </form>
-    </div>
+    <c:if test="${mediaPerson.id != 0}">
+        <div class="block">
+            <form action="<c:url value="/controller"/>" method="POST">
+                <input type="hidden" name="command" value="open_media_person_page"/>
+                <input type="hidden" name="mediaPersonId" value="${mediaPerson.id}"/>
+                <input type="submit" value="<fmt:message key="label.back"/>"/>
+                <br>
+            </form>
+        </div>
+    </c:if>
 </div>
 </body>
 </html>
-
+<c:remove var="newPicture"/>
 
 

@@ -35,6 +35,7 @@ public class RequestParameter {
     public static final String MOVIE_REVIEW_TITLE = "movieReviewTitle";
     public static final String MOVIE_REVIEW_BODY = "movieReviewBody";
     public static final String CURRENT_PICTURE = "currentPicture";
+    public static final String MOVIE_TO_FIND = "movieToFind";
 
     private RequestParameter() {}
 }

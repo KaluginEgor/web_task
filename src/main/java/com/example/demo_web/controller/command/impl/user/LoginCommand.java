@@ -1,4 +1,4 @@
-package com.example.demo_web.controller.command.impl;
+package com.example.demo_web.controller.command.impl.user;
 
 
 import com.example.demo_web.controller.command.*;
@@ -29,7 +29,7 @@ public class LoginCommand implements ActionCommand {
             if (!usersDataValidations.containsValue(Boolean.FALSE)) {
                 user = userService.login(login, password);
                 if (user.isPresent()) {
-                    commandResult.setPage(PagePath.MAIN);
+                    commandResult.setPage(PagePath.ALL_MOVIES);
                     sessionRequestContent.setSessionAttribute(Attribute.USER, user.get());
                 }
             } else {

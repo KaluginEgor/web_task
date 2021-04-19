@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: egork
@@ -8,7 +9,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
-<fmt:setBundle basename="pagecontent" var="rb" />
+<fmt:setBundle basename="pagecontent"/>
 <c:set var="page" value="/pages/edit_movie.jsp" scope="session"/>
 <jsp:useBean id="movie" class="com.example.demo_web.model.entity.Movie" scope="session"/>
 <html>
@@ -16,7 +17,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/editPage.css" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Edit movie</title>
+    <title><fmt:message key="label.edit.movie"/></title>
 </head>
 <jsp:include page="/pages/module/header.jsp"/>
 <body class="home">
@@ -38,7 +39,7 @@
 
     <form class="edit-form" action="<c:url value="/controller"/>" method="POST">
         <c:choose>
-            <c:when test="${empty movie}">
+            <c:when test="${movie.id == 0}">
                 <input type="hidden" name="command" value="create_movie"/>
             </c:when>
             <c:otherwise>
@@ -63,23 +64,23 @@
         </c:choose>
 
         <div class="block">
-            <label for="title">Title</label><br>
+            <label for="title"><fmt:message key="movie.title"/></label><br>
             <input type="text" required id="title" class="title" name="movieTitle" value="${movie.title}"/>
         </div>
 
         <div class="block">
-            <label for="release-date">Release date</label><br>
+            <label for="release-date"><fmt:message key="movie.release.date"/></label><br>
             <input type="date" id="release-date" name="movieReleaseDate" value="${movie.releaseDate}"/>
         </div>
 
         <div class="block">
-            <label for="description">Description</label><br/>
+            <label for="description"><fmt:message key="movie.description"/></label><br/>
             <textarea id="description" name="movieDescription" cols="40"
                       rows="5">${movie.description}</textarea>
         </div>
 
         <div class="block genre">
-            <label for="genre-div">Genre</label>
+            <label for="genre-div"><fmt:message key="movie.genres"/></label>
             <div id="genre-div" class="genre-div">
                 <c:forEach var="genre" items="${sessionScope.genreTypes}">
                     <div class="block-div">
@@ -100,7 +101,7 @@
         </div>
 
         <div class="block occupation">
-            <label for="movies-div">Movies</label>
+            <label for="movies-div"><fmt:message key="movie.crew"/></label>
             <div id="movies-div" class="occupation-div">
                 <c:forEach var="mediaPerson" items="${sessionScope.mediaPeople}">
                     <div class="block-div">
@@ -124,15 +125,17 @@
             <input type="submit" class="edit-btn" value="Edit">
         </div>
     </form>
-    <div class="block">
-        <form action="<c:url value="/controller"/>" method="POST">
-            <input type="hidden" name="command" value="open_movie_page"/>
-            <input type="hidden" name="movieId" value="${movie.id}"/>
-            <input type="submit" value="back"/>
-            <br>
-        </form>
-    </div>
+    <c:if test="${movie.id != 0}">
+        <div class="block">
+            <form action="<c:url value="/controller"/>" method="POST">
+                <input type="hidden" name="command" value="open_movie_page"/>
+                <input type="hidden" name="movieId" value="${movie.id}"/>
+                <input type="submit" value="<fmt:message key="label.back"/>"/>
+                <br>
+            </form>
+        </div>
+    </c:if>
 </div>
 </body>
 </html>
-
+<c:remove var="newPicture"/>

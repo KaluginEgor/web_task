@@ -25,7 +25,7 @@ public class OpenAllMediaPersonsPageCommand implements ActionCommand {
             currentTablePage = Integer.parseInt(currentPage.get());
         }
         sessionRequestContent.setSessionAttribute(Attribute.ALL_ACTORS_CURRENT_PAGE, currentTablePage);
-        int actorsNumber = ViewAllMediaPersonsTag.ACTORS_PER_PAGE_NUMBER;
+        int actorsNumber = ViewAllMediaPersonsTag.MEDIA_PERSONS_PER_PAGE_NUMBER;
         int start = (currentTablePage - 1) * actorsNumber;
         int end = actorsNumber + start;
         MediaPersonService mediaPersonService = new MediaPersonServiceImpl();

@@ -1,13 +1,12 @@
 package com.example.demo_web.model.service.impl;
 
-import com.example.demo_web.controller.command.RequestParameter;
-import com.example.demo_web.controller.command.SessionRequestContent;
-import com.example.demo_web.model.dao.MediaPersonDao;
-import com.example.demo_web.model.dao.MovieDao;
+import com.example.demo_web.model.dao.EntityTransaction;
+import com.example.demo_web.model.dao.AbstractMediaPersonDao;
+import com.example.demo_web.model.dao.AbstractMovieDao;
 import com.example.demo_web.model.entity.MediaPerson;
 import com.example.demo_web.model.entity.Movie;
-import com.example.demo_web.model.dao.impl.MediaPersonDaoImpl;
-import com.example.demo_web.model.dao.impl.MovieDaoImpl;
+import com.example.demo_web.model.dao.impl.MediaPersonDao;
+import com.example.demo_web.model.dao.impl.MovieDao;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.exception.ServiceException;
 import com.example.demo_web.model.entity.OccupationType;
@@ -21,17 +20,21 @@ import java.util.List;
 
 public class MediaPersonServiceImpl implements MediaPersonService {
     private static final Logger logger = LogManager.getLogger(MediaPersonServiceImpl.class);
-    private MediaPersonDao mediaPersonDao = MediaPersonDaoImpl.getInstance();
-    private MovieDao movieDao = MovieDaoImpl.getInstance();
+    private AbstractMediaPersonDao abstractMediaPersonDao = MediaPersonDao.getInstance();
+    private AbstractMovieDao abstractMovieDao = MovieDao.getInstance();
     private static final String DEFAULT_MEDIA_PERSON_PICTURE = "C:/Epam/pictures/media_person.jpg";
 
     @Override
     public List<MediaPerson> findAllBetween(int begin, int end) throws ServiceException {
         List<MediaPerson> allMediaPeopleBetween;
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.init(abstractMediaPersonDao);
         try {
-            allMediaPeopleBetween = mediaPersonDao.findAllBetween(begin, end);
+            allMediaPeopleBetween = abstractMediaPersonDao.findAllBetween(begin, end);
         } catch (DaoException e) {
             throw new ServiceException(e);
+        } finally {
+            transaction.end();
         }
         return allMediaPeopleBetween;
     }
@@ -39,10 +42,14 @@ public class MediaPersonServiceImpl implements MediaPersonService {
     @Override
     public List<MediaPerson> finaAll() throws ServiceException {
         List<MediaPerson> allMediaPeople;
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.init(abstractMediaPersonDao);
         try {
-            allMediaPeople = mediaPersonDao.findAll();
+            allMediaPeople = abstractMediaPersonDao.findAll();
         } catch (DaoException e) {
             throw new ServiceException(e);
+        } finally {
+            transaction.end();
         }
         return allMediaPeople;
     }
@@ -50,11 +57,15 @@ public class MediaPersonServiceImpl implements MediaPersonService {
     @Override
     public int countMediaPersons() throws ServiceException {
         int moviesCount;
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.init(abstractMediaPersonDao);
         try {
-            moviesCount = mediaPersonDao.countMediaPersons();
+            moviesCount = abstractMediaPersonDao.countMediaPersons();
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e);
+        } finally {
+            transaction.end();
         }
         return moviesCount;
     }
@@ -62,61 +73,79 @@ public class MediaPersonServiceImpl implements MediaPersonService {
     @Override
     public MediaPerson findById(Integer id) throws ServiceException {
         MediaPerson mediaPerson;
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.initTransaction(abstractMediaPersonDao, abstractMovieDao);
         try {
-            mediaPerson = mediaPersonDao.findEntityById(id);
-            List<Movie> movies = movieDao.findByActorId(id);
+            mediaPerson = abstractMediaPersonDao.findEntityById(id);
+            List<Movie> movies = abstractMovieDao.findByActorId(id);
             mediaPerson.setMovies(movies);
+            transaction.commit();
             return mediaPerson;
         } catch (DaoException e) {
+            transaction.rollback();
             throw new ServiceException(e);
+        } finally {
+            transaction.endTransaction();
         }
     }
 
     @Override
     public MediaPerson update(int id, String firstName, String secondName, String bio, OccupationType occupationType, LocalDate birthday, String picture, String[] moviesId) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.init(abstractMediaPersonDao);
         try {
-            if (picture == null) {
+            if (picture.isEmpty()) {
                 picture = DEFAULT_MEDIA_PERSON_PICTURE;
             }
             MediaPerson mediaPersonToUpdate = convertToMediaPerson(firstName, secondName, bio, occupationType, birthday, picture, moviesId);
             mediaPersonToUpdate.setId(id);
-            MediaPerson updatedMediaPerson = mediaPersonDao.update(mediaPersonToUpdate);
+            MediaPerson updatedMediaPerson = abstractMediaPersonDao.update(mediaPersonToUpdate);
             updatedMediaPerson.setMovies(mediaPersonToUpdate.getMovies());
-            mediaPersonDao.deleteMediaPersonMovies(updatedMediaPerson.getId());
+            abstractMediaPersonDao.deleteMediaPersonMovies(updatedMediaPerson.getId());
             for (Movie movie : updatedMediaPerson.getMovies()) {
-                mediaPersonDao.insertMediaPersonMovie(updatedMediaPerson.getId(), movie.getId());
+                abstractMediaPersonDao.insertMediaPersonMovie(updatedMediaPerson.getId(), movie.getId());
             }
             return updatedMediaPerson;
         } catch (DaoException e) {
             throw new ServiceException(e);
+        } finally {
+            transaction.end();
         }
     }
 
     @Override
     public MediaPerson create(String firstName, String secondName, String bio, OccupationType occupationType, LocalDate birthday, String picture, String[] moviesId) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.init(abstractMediaPersonDao);
         try {
-            if (picture == null) {
+            if (picture.isEmpty()) {
                 picture = DEFAULT_MEDIA_PERSON_PICTURE;
             }
             MediaPerson mediaPersonToCreate = convertToMediaPerson(firstName, secondName, bio, occupationType, birthday, picture, moviesId);
-            MediaPerson createdMediaPerson = mediaPersonDao.create(mediaPersonToCreate);
+            MediaPerson createdMediaPerson = abstractMediaPersonDao.create(mediaPersonToCreate);
             createdMediaPerson.setMovies(mediaPersonToCreate.getMovies());
             for (Movie movie : createdMediaPerson.getMovies()) {
-                mediaPersonDao.insertMediaPersonMovie(createdMediaPerson.getId(), movie.getId());
+                abstractMediaPersonDao.insertMediaPersonMovie(createdMediaPerson.getId(), movie.getId());
             }
             return createdMediaPerson;
         } catch (DaoException e) {
             throw new ServiceException(e);
+        } finally {
+            transaction.end();
         }
     }
 
     @Override
     public boolean delete(int id) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.init(abstractMediaPersonDao);
         try {
-            mediaPersonDao.delete(id);
+            abstractMediaPersonDao.delete(id);
             return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
+        } finally {
+            transaction.end();
         }
     }
 
@@ -129,9 +158,11 @@ public class MediaPersonServiceImpl implements MediaPersonService {
         mediaPerson.setBirthday(birthday);
         mediaPerson.setPicture(picture);
         List<Movie> movies = new ArrayList<>();
-        for (String movieId : moviesId) {
-            Movie movie = movieDao.findEntityById(Integer.valueOf(movieId));
-            movies.add(movie);
+        if (moviesId != null) {
+            for (String movieId : moviesId) {
+                Movie movie = abstractMovieDao.findEntityById(Integer.valueOf(movieId));
+                movies.add(movie);
+            }
         }
         mediaPerson.setMovies(movies);
         return mediaPerson;

@@ -10,7 +10,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
-<fmt:setBundle basename="pagecontent" var="rb" />
+<fmt:setBundle basename="pagecontent"/>
 <c:set var="page" value="/pages/movie.jsp" scope="session"/>
 <html>
 <jsp:useBean id="movie" scope="session" class="com.example.demo_web.model.entity.Movie"/>
@@ -54,7 +54,7 @@
         <div class="movie">
             <div class="poster">
                 <a href="#">
-                    <img src="${pageContext.request.contextPath}/${movie.picture}"
+                    <img src="${pageContext.request.contextPath}/picture?currentPicture=${movie.picture}"
                          alt="${movie.title}"/>
                 </a>
             </div>
@@ -66,11 +66,11 @@
             </c:if>
 
             <c:if test="${not empty movie.releaseDate}">
-                <p><strong><fmt:message key="release.date"/>: </strong>${movie.releaseDate}</p>
+                <p><strong><fmt:message key="movie.release.date"/>: </strong>${movie.releaseDate}</p>
             </c:if>
 
             <c:if test="${not empty movie.genres}">
-                <p><strong><fmt:message key="genre"/>: </strong>
+                <p><strong><fmt:message key="movie.genres"/>: </strong>
                     <c:forEach var="genre" items="${movie.genres}">
                         ${genre},
                     </c:forEach>
@@ -78,13 +78,12 @@
             </c:if>
 
             <c:if test="${not empty movie.averageRating}">
-                <p><strong><fmt:message key="rating"/>: </strong>
-                <p id="movieRate">${movie.averageRating}</p>
+                <p><strong><fmt:message key="movie.rating"/>: </strong>${movie.averageRating}
                 </p>
             </c:if>
 
             <c:if test="${not empty movie.crew}">
-                <p><strong><fmt:message key="crew"/>: </strong></p>
+                <p><strong><fmt:message key="movie.crew"/>: </strong></p>
                 <c:forEach var="mediaPerson" items="${movie.crew}">
                     <div class="crew">
                         <p>
@@ -92,6 +91,7 @@
                             <input type="hidden" name="command" value="open_media_person_page">
                             <input type="hidden" name="mediaPersonId" value="${mediaPerson.id}">
                             <button class="link">
+                                <c:out value="${mediaPerson.occupationType}"/>
                                 <c:out value="${mediaPerson.firstName}"/>
                                 <c:out value="${mediaPerson.secondName}"/>
                             </button>
@@ -181,7 +181,7 @@
 
 
             <c:if test="${user.id != 0 and user.state == active and not empty movie.reviews}">
-                <p><strong><fmt:message key="reviews"/> : </strong></p>
+                <p><strong><fmt:message key="label.reviews"/> : </strong></p>
                 <c:forEach var="review" items="${movie.reviews}">
                     <c:if test="${reviewToUpdate.id != review.id}">
                         <div class="review">
@@ -254,7 +254,7 @@
                            placeholder="<fmt:message key="review.title"/>"/>
                     <textarea required cols="60" rows="5" name="movieReviewBody" class="review-body-input"
                               placeholder="<fmt:message key="review.body"/> ">${reviewToUpdate.body}</textarea>
-                    <input type="submit" class="leave-review-btn" value="<fmt:message key="leave.review"/> ">
+                    <input type="submit" class="leave-review-btn" value="<fmt:message key="label.leave.review"/> ">
                 </form>
             </c:if>
             <c:remove var="reviewToUpdate"/>

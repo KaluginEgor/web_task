@@ -12,12 +12,12 @@
 <jsp:useBean id="user" class="com.example.demo_web.model.entity.User" scope="session"/>
 <jsp:useBean id="someUser" scope="session" class="com.example.demo_web.model.entity.User"/>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
-<fmt:setBundle basename="pagecontent" var="rb" />
+<fmt:setBundle basename="pagecontent"/>
 <c:set var="page" value="/pages/user.jsp" scope="session"/>
 <head>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/moviePage.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Title</title>
+    <title>${user.login}</title>
 </head>
 <body class="home">
 <jsp:include page="/pages/module/header.jsp"/>
@@ -41,8 +41,8 @@
         <div class="movie">
 
             <div class="poster">
-                <a href="#">
-                    <img src="${someUser.picture}"
+                <a>
+                    <img src="${pageContext.request.contextPath}/picture?currentPicture=${someUser.picture}"
                          alt="${someUser.login}"/>
                 </a>
             </div>
@@ -52,11 +52,11 @@
             </c:if>
 
             <c:if test="${not empty someUser.firstName}">
-                <p><strong><fmt:message key="first.name"/>: </strong>${someUser.firstName}</p>
+                <p><strong><fmt:message key="user.name.first"/>: </strong>${someUser.firstName}</p>
             </c:if>
 
             <c:if test="${not empty someUser.secondName}">
-                <p><strong><fmt:message key="last.name"/>: </strong>${someUser.secondName}</p>
+                <p><strong><fmt:message key="user.name.second"/>: </strong>${someUser.secondName}</p>
             </c:if>
 
             <c:if test="${not empty someUser.email}">
@@ -76,7 +76,7 @@
             </c:forEach>
 
             <c:if test="${not empty someUser.movieReviews}">
-                <p><strong><fmt:message key="reviews"/> : </strong></p>
+                <p><strong><fmt:message key="label.reviews"/> : </strong></p>
                 <c:forEach var="review" items="${someUser.movieReviews}">
                     <c:if test="${reviewToUpdate.id != review.id}">
                     <div class="review" style="background: #d0cecd">
@@ -120,7 +120,7 @@
             </c:if>
 
             <c:if test="${not empty someUser.movieRatings}">
-            <p><strong><fmt:message key="ratings"/>: </strong></p>
+            <p><strong><fmt:message key="label.ratings"/>: </strong></p>
             <c:forEach var="rating" items="${someUser.movieRatings}">
                 <c:if test="${sessionScope.user.id == someUser.id}">
                     <form action="<c:url value="/controller"/>" method="POST" class="delete-rating-form">
@@ -157,11 +157,10 @@
                        placeholder="<fmt:message key="review.title"/>"/>
                 <textarea required cols="60" rows="5" name="movieReviewBody" class="review-body-input"
                           placeholder="<fmt:message key="review.body"/> ">${reviewToUpdate.body}</textarea>
-                <input type="submit" class="leave-review-btn" value="<fmt:message key="leave.review"/> ">
+                <input type="submit" class="leave-review-btn" value="<fmt:message key="label.leave.review"/> ">
             </form>
         </c:if>
-        <c:remove var="reviewToUpdate"/>
-        <a href="${requestScope.previous_page}"><fmt:message key="back"/></a>
+        <c:remove var="reviewToUpdate"/>>
     </section>
 </section>
 </body>

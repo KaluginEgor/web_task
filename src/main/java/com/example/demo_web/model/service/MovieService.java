@@ -20,4 +20,6 @@ public interface MovieService {
     Movie update(int id, String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws ServiceException;
 
     boolean delete(int id) throws ServiceException;
+
+    List<Movie> findByNamePart(String title) throws ServiceException;
 }

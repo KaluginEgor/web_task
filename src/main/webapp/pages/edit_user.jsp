@@ -9,7 +9,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
-<fmt:setBundle basename="pagecontent" var="rb" />
+<fmt:setBundle basename="pagecontent"/>
 <c:set var="page" value="/pages/edit_user.jsp" scope="session"/>
 <jsp:useBean id="someUser" class="com.example.demo_web.model.entity.User" scope="session"/>
 <html>
@@ -17,7 +17,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/editPage.css" />
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Title</title>
+    <title><fmt:message key="label.edit.user"/></title>
 </head>
 <body class="home">
 <jsp:include page="/pages/module/header.jsp"/>
@@ -90,6 +90,4 @@
 </div>
 </body>
 </html>
-
-<c:remove var="someUser"/>
 <c:remove var="newPicture"/>

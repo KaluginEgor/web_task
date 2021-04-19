@@ -3,12 +3,13 @@ package com.example.demo_web.model.service.impl;
 import com.example.demo_web.controller.command.ErrorMessage;
 import com.example.demo_web.controller.command.RequestParameter;
 import com.example.demo_web.controller.command.SessionRequestContent;
-import com.example.demo_web.model.dao.MovieRatingDao;
-import com.example.demo_web.model.dao.MovieReviewDao;
-import com.example.demo_web.model.dao.UserDao;
-import com.example.demo_web.model.dao.impl.MovieRatingDaoImpl;
-import com.example.demo_web.model.dao.impl.MovieReviewDaoImpl;
-import com.example.demo_web.model.dao.impl.UserDaoImpl;
+import com.example.demo_web.model.dao.AbstractMovieRatingDao;
+import com.example.demo_web.model.dao.AbstractMovieReviewDao;
+import com.example.demo_web.model.dao.AbstractUserDao;
+import com.example.demo_web.model.dao.EntityTransaction;
+import com.example.demo_web.model.dao.impl.MovieRatingDao;
+import com.example.demo_web.model.dao.impl.MovieReviewDao;
+import com.example.demo_web.model.dao.impl.UserDao;
 import com.example.demo_web.model.entity.*;
 import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.exception.ServiceException;
@@ -38,20 +39,24 @@ public class UserServiceImpl implements UserService {
     private static final String USER_NOT_BLOCKED = "userNotBlocked";
     private static final String USER_NOT_DELETED = "userNotDeleted";
 
-    private final MovieRatingDao ratingDao = MovieRatingDaoImpl.getInstance();
-    private final MovieReviewDao reviewDao = MovieReviewDaoImpl.getInstance();
-    private final UserDao userDao = UserDaoImpl.getInstance();
+    private final AbstractMovieRatingDao ratingDao = MovieRatingDao.getInstance();
+    private final AbstractMovieReviewDao reviewDao = MovieReviewDao.getInstance();
+    private final AbstractUserDao abstractUserDao = UserDao.getInstance();
 
     public UserServiceImpl() {
     }
 
     @Override
     public Optional<User> login(String login, String password) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.init(abstractUserDao);
         Optional<User> foundUser = Optional.empty();
         try {
-            foundUser = userDao.findUserByLogin(login);
+            foundUser = abstractUserDao.findUserByLogin(login);
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } finally {
+            transaction.end();
         }
 
         return foundUser;
@@ -59,33 +64,43 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> register(String login, String email, String firstName, String secondName, String password) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.init(abstractUserDao);
         Optional<User> registeredUser = Optional.empty();
         User user = new User(login, email, firstName, secondName);
-
         try {
             String encryptedPassword = DigestUtils.md5Hex(password);
             setDefaultFields(user);
-            int userId = userDao.create(user, encryptedPassword);
+            int userId = abstractUserDao.create(user, encryptedPassword);
             user.setId(userId);
             registeredUser = Optional.of(user);
             logger.info("User {} created.", registeredUser);
         } catch (DaoException e) {
             throw new ServiceException(e.getMessage(), e);
+        } finally {
+            transaction.end();
         }
         return registeredUser;
     }
 
     @Override
     public boolean activateUser(int id) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.init(abstractUserDao);
         try {
-            return userDao.activateUser(id);
+            return abstractUserDao.activateUser(id);
         } catch (DaoException e) {
             throw new ServiceException(e);
+        } finally {
+            transaction.end();
         }
     }
 
     @Override
     public Optional<User> update(int id, String login, String email, String firstName, String secondName, String picture, String role, String state, String rating) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.initTransaction(abstractUserDao, reviewDao, ratingDao);
+
         User user = new User();
         user.setId(id);
         user.setLogin(login);
@@ -97,31 +112,41 @@ public class UserServiceImpl implements UserService {
         user.setState(UserState.valueOf(state));
         user.setRating(Integer.valueOf(rating));
         try {
-            userDao.update(user);
+            abstractUserDao.update(user);
             List<MovieReview> reviews = reviewDao.findByUserId(id);
             user.setMovieReviews(reviews);
             List<MovieRating> ratings = ratingDao.findByUserId(id);
             user.setMovieRatings(ratings);
+            transaction.commit();
             return Optional.of(user);
         } catch (DaoException e) {
+            transaction.rollback();
             throw new ServiceException(e);
+        } finally {
+            transaction.endTransaction();
         }
     }
 
     @Override
     public Optional<User> findById(int id) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.initTransaction(abstractUserDao, reviewDao, ratingDao);
         Optional<User> foundUser = Optional.empty();
         User user;
         try {
-            user = userDao.findEntityById(id);
+            user = abstractUserDao.findEntityById(id);
             List<MovieReview> reviews = reviewDao.findByUserId(id);
             user.setMovieReviews(reviews);
             List<MovieRating> ratings = ratingDao.findByUserId(id);
             user.setMovieRatings(ratings);
             foundUser = Optional.of(user);
             logger.info("User {} created.", foundUser);
+            transaction.commit();
         } catch (DaoException e) {
+            transaction.rollback();
             throw new ServiceException(e.getMessage(), e);
+        } finally {
+            transaction.endTransaction();
         }
         return foundUser;
     }
@@ -136,18 +161,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Boolean> defineIncorrectLoginData(String login, String password) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.init(abstractUserDao);
         Map<String, Boolean> validatedUsersData = UserValidator.validateData(login, password);
         try {
-            validatedUsersData.put(LOGIN_EXISTS, userDao.loginExists(login));
+            validatedUsersData.put(LOGIN_EXISTS, abstractUserDao.loginExists(login));
 
-            if (userDao.loginExists(login)) {
+            if (abstractUserDao.loginExists(login)) {
                 String encryptedPassword = DigestUtils.md5Hex(password);
-                Optional<String> passwordFromDB = userDao.findPasswordByLogin(login);
+                Optional<String> passwordFromDB = abstractUserDao.findPasswordByLogin(login);
                 boolean correctPassword = passwordFromDB.get().equals(encryptedPassword);
                 validatedUsersData.put(PASSWORD_IS_CORRECT, correctPassword);
 
                 if (correctPassword) {
-                    Optional<User> user = userDao.findUserByLogin(login);
+                    Optional<User> user = abstractUserDao.findUserByLogin(login);
                     UserState userState = user.get().getState();
                     validatedUsersData.put(USER_NOT_INACTIVE, !UserState.INACTIVE.equals(userState));
                     validatedUsersData.put(USER_NOT_BLOCKED, !UserState.BLOCKED.equals(userState));
@@ -156,6 +183,8 @@ public class UserServiceImpl implements UserService {
             }
         } catch (DaoException e) {
             throw new ServiceException(e);
+        } finally {
+            transaction.end();
         }
         return validatedUsersData;
     }
@@ -164,7 +193,7 @@ public class UserServiceImpl implements UserService {
     public Map<String, Boolean> defineIncorrectRegistrationData(String login, String email, String firstName, String secondName, String password) throws ServiceException {
         Map<String, Boolean> validatedUsersData = UserValidator.validateData(login, email, firstName, secondName, password);
         try {
-            validatedUsersData.put(LOGIN_IS_UNIQUE, userDao.findUserByLogin(login).isEmpty());
+            validatedUsersData.put(LOGIN_IS_UNIQUE, abstractUserDao.findUserByLogin(login).isEmpty());
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

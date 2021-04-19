@@ -101,9 +101,6 @@ body {
 
 .text-input {
     border-radius: 10px;
-    padding: 10px 10px;
-    margin-right: 5px;
-    margin-bottom: 15px;
     box-sizing: border-box;
     width: 350px;
 }

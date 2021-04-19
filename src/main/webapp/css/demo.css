@@ -98,6 +98,21 @@ body{
 	.menu { padding-top:40px; }
 }
 
+.text-input {
+	border-radius: 10px;
+	box-sizing: border-box;
+	width: 350px;
+}
+
+.find-btn {
+	background-color: #5e5e5e;
+	color: white;
+	font-size: 20px;
+	padding-top: 3px;
+	padding-bottom: 9px;
+	border-radius: 10px;
+}
+
 
 /* -- Demo ads -- */
 

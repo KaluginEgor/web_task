@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class ViewAllMediaPersonsTag extends TagSupport {
-    public static final int ACTORS_PER_PAGE_NUMBER = 5;
+    public static final int MEDIA_PERSONS_PER_PAGE_NUMBER = 4;
     @Override
     public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
@@ -24,7 +24,7 @@ public class ViewAllMediaPersonsTag extends TagSupport {
         createActors(writer, sessionRequestContent);
         int currentPage = (int) sessionRequestContent.getSessionAttribute(Attribute.ALL_ACTORS_CURRENT_PAGE);
         int moviesCount = (int) sessionRequestContent.getSessionAttribute(Attribute.ACTORS_COUNT);
-        int pagesCount = moviesCount % ACTORS_PER_PAGE_NUMBER == 0 ? (moviesCount / ACTORS_PER_PAGE_NUMBER) : (moviesCount / ACTORS_PER_PAGE_NUMBER + 1);
+        int pagesCount = moviesCount % MEDIA_PERSONS_PER_PAGE_NUMBER == 0 ? (moviesCount / MEDIA_PERSONS_PER_PAGE_NUMBER) : (moviesCount / MEDIA_PERSONS_PER_PAGE_NUMBER + 1);
         String command = CommandEnum.OPEN_ALL_MEDIA_PERSONS_PAGE.toString().toLowerCase();
         TagUtil.paginate(pageContext, currentPage, pagesCount, command);
         return SKIP_BODY;
@@ -44,7 +44,7 @@ public class ViewAllMediaPersonsTag extends TagSupport {
             String contextPath = pageContext.getServletContext().getContextPath();
             try {
                 writer.write("<ul>");
-                for (int i = 0; i < ACTORS_PER_PAGE_NUMBER; i++) {
+                for (int i = 0; i < MEDIA_PERSONS_PER_PAGE_NUMBER; i++) {
                     if (size > createdActorsCount) {
                         mediaPerson = allMediaPeople.get(createdActorsCount);
                         writer.write("<li>");
@@ -53,11 +53,11 @@ public class ViewAllMediaPersonsTag extends TagSupport {
                         writer.write("<h4 class=\"title\">" + mediaPerson.getFirstName() + " " + mediaPerson.getSecondName() + "</h4>");
                         writer.write("</a>");
                         writer.write("<div class=\"poster\">");
-                        writer.write("<a href=\"#\">");
-                        writer.write("<img src=\"" + contextPath + "/" + mediaPerson.getPicture() + "\" alt=\"" + mediaPerson.getFirstName() + " " + mediaPerson.getSecondName() + "\"/>");
+                        writer.write("<a href=\"controller?command=open_media_person_page&mediaPersonId=" + mediaPerson.getId() + "\">");
+                        writer.write("<img src=\"" + contextPath + "//picture?currentPicture=" + mediaPerson.getPicture() + "\" alt=\"" + mediaPerson.getFirstName() + " " + mediaPerson.getSecondName() + "\"/>");
                         writer.write("</a>");
                         writer.write("</div>");
-                        writer.write("<p class=\"description\">" + mediaPerson.getBio() + "</p>");
+                        writer.write("<p class=\"description\">" + mediaPerson.getOccupationType() + "</p>");
                         writer.write("</div>");
                         writer.write("</li>");
                         createdActorsCount++;

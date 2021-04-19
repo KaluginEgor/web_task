@@ -13,7 +13,7 @@ public class OpenMediaPersonPageCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
         try {
             Integer mediaPersonId = Integer.valueOf(sessionRequestContent.getRequestParameter((RequestParameter.MEDIA_PERSON_ID)));
             MediaPerson mediaPerson = mediaPersonService.findById(mediaPersonId);

@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class ViewAllMoviesTag extends TagSupport {
-    public static final int MOVIES_PER_PAGE_NUMBER = 10;
+    public static final int MOVIES_PER_PAGE_NUMBER = 4;
     @Override
     public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
@@ -53,11 +53,11 @@ public class ViewAllMoviesTag extends TagSupport {
                         writer.write("<h4 class=\"title\">" + movie.getTitle() + "</h4>");
                         writer.write("</a>");
                         writer.write("<div class=\"poster\">");
-                        writer.write("<a href=\"#\">");
-                        writer.write("<img src=\"" + contextPath + "/" + movie.getPicture() + "\" alt=\"" + movie.getTitle() + "\"/>");
+                        writer.write("<a href=\"controller?command=open_movie_page&movieId=" + movie.getId() + "\">");
+                        writer.write("<img src=\"" + contextPath + "/picture?currentPicture=" + movie.getPicture() + "\" alt=\"" + movie.getTitle() + "\"/>");
                         writer.write("</a>");
                         writer.write("</div>");
-                        writer.write("<p class=\"description\">" + movie.getDescription() + "</p>");
+                        writer.write("<p class=\"description\">" + movie.getAverageRating() + "</p>");
                         writer.write("</div>");
                         writer.write("</li>");
                         createdMoviesCount++;
