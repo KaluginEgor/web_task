@@ -15,7 +15,7 @@ class ConnectionFactory {
     private static Logger logger = LogManager.getLogger(ConnectionFactory.class.getName());
     private static final String CONNECTION_ERROR = "Failed to create a database connection";
     private static final String READ_ERROR ="Could not read the database property file ";
-    private static final String PROPERTIES_PATH = "/database.properties";
+    private static final String PROPERTIES_PATH = "/property/database.properties";
     private static final String URL = "db.url";
     private static final String USERNAME = "db.username";
     private static final String PASSWORD = "db.password";

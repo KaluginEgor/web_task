@@ -18,7 +18,7 @@ public class OpenAllMoviesPageCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
 
         Integer currentTablePage = (Integer) sessionRequestContent.getSessionAttribute(Attribute.ALL_MOVIES_CURRENT_PAGE);
         Optional<String> currentPage = Optional.ofNullable(sessionRequestContent.getRequestParameter(RequestParameter.NEW_PAGE));

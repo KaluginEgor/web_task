@@ -19,7 +19,7 @@ public class MailSender {
     private String mailSubject;
     private String mailText;
     private Properties properties;
-    private static final String MAIL_PROPERTIES = "/mail.properties";
+    private static final String MAIL_PROPERTIES = "/property/mail.properties";
     private static final Logger logger = LogManager.getLogger(MailSender.class);
 
     public MailSender() {

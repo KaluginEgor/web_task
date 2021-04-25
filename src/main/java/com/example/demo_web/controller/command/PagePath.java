@@ -14,6 +14,7 @@ public class PagePath {
     public static final String EDIT_MOVIE = "/pages/edit_movie.jsp";
     public static final String USER = "/pages/user.jsp";
     public static final String EDIT_USER = "/pages/edit_user.jsp";
+    public static final String ALL_USERS = "/pages/all_users.jsp";
 
     private PagePath() {}
 }

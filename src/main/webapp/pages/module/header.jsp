@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <fmt:setLocale value="${not empty sessionScope.lang ? sessionScope.lang : 'en_US'}" scope="session" />
-<fmt:setBundle basename="pagecontent"/>
+<fmt:setBundle basename="property/pagecontent"/>
 <jsp:useBean id="user" class="com.example.demo_web.model.entity.User" scope="session"/>
 <html>
 <head>
@@ -29,6 +29,14 @@
                         <button class="link"><fmt:message key="label.all.media.persons"/></button>
                     </form>
                 </li>
+                <c:if test="${user.role == 'ADMIN'}">
+                    <li>
+                        <form action="<c:url value="/controller"/>" method="POST" >
+                            <input type="hidden" name="command" value="open_all_users_page">
+                            <button class="link"><fmt:message key="label.all.users"/></button>
+                        </form>
+                    </li>
+                </c:if>
                 <li>
                     <form name="loginForm" method="POST" action="<c:url value="/controller"/>">
                         <input type="hidden" name="command" value="change_language">
@@ -58,20 +66,20 @@
                             <form action="<c:url value="/controller"/>" method="POST" >
                                 <input type="hidden" name="command" value="open_user_page">
                                 <input type="hidden" name="userId" value="${user.id}">
-                                <button class="link" class="highlight"><fmt:message key="label.open.profile"/></button>
+                                <button class="link"><fmt:message key="label.open.profile"/></button>
                             </form>
                         </li>
                         <c:if test="${user.role == 'ADMIN'}">
                             <li>
                                 <form action="<c:url value="/controller"/>" method="POST" >
                                     <input type="hidden" name="command" value="open_edit_media_person_page">
-                                    <button class="highlight"><fmt:message key="label.create.media.person"/></button>
+                                    <button class="link"><fmt:message key="label.create.media.person"/></button>
                                 </form>
                             </li>
                             <li>
                                 <form action="<c:url value="/controller"/>" method="POST" >
                                     <input type="hidden" name="command" value="open_edit_movie_page">
-                                    <button class="highlight"><fmt:message key="label.create.movie"/></button>
+                                    <button class="link"><fmt:message key="label.create.movie"/></button>
                                 </form>
                             </li>
                         </c:if>

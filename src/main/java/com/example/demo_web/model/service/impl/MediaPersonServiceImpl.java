@@ -56,18 +56,18 @@ public class MediaPersonServiceImpl implements MediaPersonService {
 
     @Override
     public int countMediaPersons() throws ServiceException {
-        int moviesCount;
+        int mediaPersonsCount;
         EntityTransaction transaction = new EntityTransaction();
         transaction.init(abstractMediaPersonDao);
         try {
-            moviesCount = abstractMediaPersonDao.countMediaPersons();
+            mediaPersonsCount = abstractMediaPersonDao.countMediaPersons();
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e);
         } finally {
             transaction.end();
         }
-        return moviesCount;
+        return mediaPersonsCount;
     }
 
     @Override

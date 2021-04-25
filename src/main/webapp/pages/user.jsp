@@ -12,7 +12,7 @@
 <jsp:useBean id="user" class="com.example.demo_web.model.entity.User" scope="session"/>
 <jsp:useBean id="someUser" scope="session" class="com.example.demo_web.model.entity.User"/>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
-<fmt:setBundle basename="pagecontent"/>
+<fmt:setBundle basename="property/pagecontent"/>
 <c:set var="page" value="/pages/user.jsp" scope="session"/>
 <head>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/moviePage.css" />
@@ -31,8 +31,17 @@
                 <input type="hidden" name="command" value="open_edit_user_page"/>
                 <input type="hidden" name="userId" value="${someUser.id}">
                 <div class="btn">
-                    <button class="edit-btn" id="${user.id}">
+                    <button class="edit-btn" id="${someUser.id}">
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                </div>
+            </form>
+            <form action="<c:url value="/controller"/>" method="POST" >
+                <input type="hidden" name="command" value="delete_user">
+                <input type="hidden" name="userId" value="${someUser.id}">
+                <input type="hidden" name="userRole" value="${user.role}">
+                <div class="btn">
+                    <button class="delete-btn"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                    </button>
                 </div>
             </form>
         </c:if>
@@ -160,7 +169,7 @@
                 <input type="submit" class="leave-review-btn" value="<fmt:message key="label.leave.review"/> ">
             </form>
         </c:if>
-        <c:remove var="reviewToUpdate"/>>
+        <c:remove var="reviewToUpdate"/>
     </section>
 </section>
 </body>

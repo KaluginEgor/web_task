@@ -46,6 +46,14 @@ public class SessionRequestContent {
         requestAttributes.clear();
     }
 
+    public String extractLocale() {
+        String currentLocale = (String) sessionAttributes.get(Attribute.LANG);
+        if (currentLocale == null) {
+            currentLocale = "en_US";
+        }
+        return currentLocale;
+    }
+
     public Object getRequestAttribute(String key) {
         return requestAttributes.get(key);
     }

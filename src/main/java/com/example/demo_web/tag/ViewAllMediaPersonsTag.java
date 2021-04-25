@@ -1,10 +1,9 @@
 package com.example.demo_web.tag;
 
-import com.example.demo_web.controller.command.CommandEnum;
+import com.example.demo_web.controller.command.CommandName;
 import com.example.demo_web.controller.command.Attribute;
 import com.example.demo_web.controller.command.SessionRequestContent;
 import com.example.demo_web.model.entity.MediaPerson;
-import com.example.demo_web.model.util.TagUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -21,12 +20,11 @@ public class ViewAllMediaPersonsTag extends TagSupport {
         JspWriter writer = pageContext.getOut();
         SessionRequestContent sessionRequestContent = new SessionRequestContent();
         sessionRequestContent.extractValues(request);
-        createActors(writer, sessionRequestContent);
-        int currentPage = (int) sessionRequestContent.getSessionAttribute(Attribute.ALL_ACTORS_CURRENT_PAGE);
-        int moviesCount = (int) sessionRequestContent.getSessionAttribute(Attribute.ACTORS_COUNT);
+        createMediaPersons(writer, sessionRequestContent);
+        int moviesCount = (int) sessionRequestContent.getSessionAttribute(Attribute.MEDIA_PERSONS_COUNT);
         int pagesCount = moviesCount % MEDIA_PERSONS_PER_PAGE_NUMBER == 0 ? (moviesCount / MEDIA_PERSONS_PER_PAGE_NUMBER) : (moviesCount / MEDIA_PERSONS_PER_PAGE_NUMBER + 1);
-        String command = CommandEnum.OPEN_ALL_MEDIA_PERSONS_PAGE.toString().toLowerCase();
-        TagUtil.paginate(pageContext, currentPage, pagesCount, command);
+        String command = CommandName.OPEN_ALL_MEDIA_PERSONS_PAGE.toString().toLowerCase();
+        TagHelper.paginate(pageContext, pagesCount, command);
         return SKIP_BODY;
     }
 
@@ -35,8 +33,8 @@ public class ViewAllMediaPersonsTag extends TagSupport {
         return EVAL_PAGE;
     }
 
-    private void createActors(JspWriter writer, SessionRequestContent sessionRequestContext) throws JspException {
-        List<MediaPerson> allMediaPeople = (List<MediaPerson>) sessionRequestContext.getSessionAttribute(Attribute.ALL_ACTORS_LIST);
+    private void createMediaPersons(JspWriter writer, SessionRequestContent sessionRequestContext) throws JspException {
+        List<MediaPerson> allMediaPeople = (List<MediaPerson>) sessionRequestContext.getSessionAttribute(Attribute.ALL_MEDIA_PERSONS_LIST);
         if (allMediaPeople != null) {
             int size = allMediaPeople.size();
             int createdActorsCount = 0;
@@ -49,11 +47,11 @@ public class ViewAllMediaPersonsTag extends TagSupport {
                         mediaPerson = allMediaPeople.get(createdActorsCount);
                         writer.write("<li>");
                         writer.write(" <div class=\"movie\">");
-                        writer.write("<a href=\"controller?command=open_media_person_page&mediaPersonId=" + mediaPerson.getId() + "\">");
+                        writer.write("<a href=\"" + contextPath + "/controller?command=open_media_person_page&mediaPersonId=" + mediaPerson.getId() + "\">");
                         writer.write("<h4 class=\"title\">" + mediaPerson.getFirstName() + " " + mediaPerson.getSecondName() + "</h4>");
                         writer.write("</a>");
                         writer.write("<div class=\"poster\">");
-                        writer.write("<a href=\"controller?command=open_media_person_page&mediaPersonId=" + mediaPerson.getId() + "\">");
+                        writer.write("<a href=\"" + contextPath + "/controller?command=open_media_person_page&mediaPersonId=" + mediaPerson.getId() + "\">");
                         writer.write("<img src=\"" + contextPath + "//picture?currentPicture=" + mediaPerson.getPicture() + "\" alt=\"" + mediaPerson.getFirstName() + " " + mediaPerson.getSecondName() + "\"/>");
                         writer.write("</a>");
                         writer.write("</div>");

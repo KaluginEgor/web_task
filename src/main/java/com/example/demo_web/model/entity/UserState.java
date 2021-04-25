@@ -6,6 +6,5 @@ import java.util.Optional;
 public enum UserState {
     ACTIVE,
     INACTIVE,
-    BLOCKED,
-    DELETED
+    BLOCKED
 }

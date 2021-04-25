@@ -15,25 +15,25 @@ public class OpenAllMediaPersonsPageCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
 
-        Integer currentTablePage = (Integer) sessionRequestContent.getSessionAttribute(Attribute.ALL_ACTORS_CURRENT_PAGE);
+        Integer currentTablePage = (Integer) sessionRequestContent.getSessionAttribute(Attribute.ALL_MEDIA_PERSONS_CURRENT_PAGE);
         Optional<String> currentPage = Optional.ofNullable(sessionRequestContent.getRequestParameter(RequestParameter.NEW_PAGE));
         if (currentPage.isEmpty() && currentTablePage == null) {
             currentTablePage = 1;
         } else if (currentPage.isPresent()) {
             currentTablePage = Integer.parseInt(currentPage.get());
         }
-        sessionRequestContent.setSessionAttribute(Attribute.ALL_ACTORS_CURRENT_PAGE, currentTablePage);
-        int actorsNumber = ViewAllMediaPersonsTag.MEDIA_PERSONS_PER_PAGE_NUMBER;
-        int start = (currentTablePage - 1) * actorsNumber;
-        int end = actorsNumber + start;
+        sessionRequestContent.setSessionAttribute(Attribute.ALL_MEDIA_PERSONS_CURRENT_PAGE, currentTablePage);
+        int mediaPersonsNumber = ViewAllMediaPersonsTag.MEDIA_PERSONS_PER_PAGE_NUMBER;
+        int start = (currentTablePage - 1) * mediaPersonsNumber;
+        int end = mediaPersonsNumber + start;
         MediaPersonService mediaPersonService = new MediaPersonServiceImpl();
         try {
             List<MediaPerson> allCurrentMediaPeople = mediaPersonService.findAllBetween(start, end);
-            sessionRequestContent.setSessionAttribute(Attribute.ALL_ACTORS_LIST, allCurrentMediaPeople);
+            sessionRequestContent.setSessionAttribute(Attribute.ALL_MEDIA_PERSONS_LIST, allCurrentMediaPeople);
             int actorsCount = mediaPersonService.countMediaPersons();
-            sessionRequestContent.setSessionAttribute(Attribute.ACTORS_COUNT, actorsCount);
+            sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PERSONS_COUNT, actorsCount);
             if (allCurrentMediaPeople.size() == 0) {
                 //sessionRequestContent.setRequestAttribute(RequestAttribute.CONFIRM_MESSAGE, FriendlyMessage.EMPTY_USER_LIST);
             }

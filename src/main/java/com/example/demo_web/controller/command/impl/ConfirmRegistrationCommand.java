@@ -14,11 +14,11 @@ public class ConfirmRegistrationCommand implements ActionCommand {
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
         commandResult.setTransitionType(TransitionType.FORWARD);
-        int userId = Integer.parseInt(sessionRequestContent.getRequestParameter(RequestParameter.ID));
-        int activationUserId = (Integer) sessionRequestContent.getSessionAttribute(Attribute.ACTIVATION_USER_ID);
+        String stringUserId = (String) sessionRequestContent.getRequestParameter(RequestParameter.ID);
+        String stringActivationUserId = (String) sessionRequestContent.getSessionAttribute(Attribute.ACTIVATION_USER_ID);
         try {
-            if (userId == activationUserId) {
-                userService.activateUser(activationUserId);
+            if (stringUserId.equals(stringActivationUserId)) {
+                userService.activateUser(stringActivationUserId);
                 sessionRequestContent.setSessionAttribute(Attribute.ACTIVATION_USER_ID, "");
                 commandResult.setPage(PagePath.MAIN);
             } else {

@@ -1,10 +1,9 @@
 package com.example.demo_web.tag;
 
-import com.example.demo_web.controller.command.CommandEnum;
+import com.example.demo_web.controller.command.CommandName;
 import com.example.demo_web.controller.command.Attribute;
 import com.example.demo_web.controller.command.SessionRequestContent;
 import com.example.demo_web.model.entity.Movie;
-import com.example.demo_web.model.util.TagUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -22,11 +21,10 @@ public class ViewAllMoviesTag extends TagSupport {
         SessionRequestContent sessionRequestContent = new SessionRequestContent();
         sessionRequestContent.extractValues(request);
         createMovies(writer, sessionRequestContent);
-        int currentPage = (int) sessionRequestContent.getSessionAttribute(Attribute.ALL_MOVIES_CURRENT_PAGE);
         int moviesCount = (int) sessionRequestContent.getSessionAttribute(Attribute.MOVIES_COUNT);
         int pagesCount = moviesCount % MOVIES_PER_PAGE_NUMBER == 0 ? (moviesCount / MOVIES_PER_PAGE_NUMBER) : (moviesCount / MOVIES_PER_PAGE_NUMBER + 1);
-        String command = CommandEnum.OPEN_ALL_MOVIES_PAGE.toString().toLowerCase();
-        TagUtil.paginate(pageContext, currentPage, pagesCount, command);
+        String command = CommandName.OPEN_ALL_MOVIES_PAGE.toString().toLowerCase();
+        TagHelper.paginate(pageContext, pagesCount, command);
         return SKIP_BODY;
     }
 
@@ -49,11 +47,11 @@ public class ViewAllMoviesTag extends TagSupport {
                         movie = allMovies.get(createdMoviesCount);
                         writer.write("<li>");
                         writer.write(" <div class=\"movie\">");
-                        writer.write("<a href=\"controller?command=open_movie_page&movieId=" + movie.getId() + "\">");
+                        writer.write("<a href=\"" + contextPath +"/controller?command=open_movie_page&movieId=" + movie.getId() + "\">");
                         writer.write("<h4 class=\"title\">" + movie.getTitle() + "</h4>");
                         writer.write("</a>");
                         writer.write("<div class=\"poster\">");
-                        writer.write("<a href=\"controller?command=open_movie_page&movieId=" + movie.getId() + "\">");
+                        writer.write("<a href=\"" + contextPath +"/controller?command=open_movie_page&movieId=" + movie.getId() + "\">");
                         writer.write("<img src=\"" + contextPath + "/picture?currentPicture=" + movie.getPicture() + "\" alt=\"" + movie.getTitle() + "\"/>");
                         writer.write("</a>");
                         writer.write("</div>");

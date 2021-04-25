@@ -10,7 +10,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="page" value="/pages/registration.jsp" scope="session"/>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
-<fmt:setBundle basename="pagecontent"/>
+<fmt:setBundle basename="property/pagecontent"/>
 
 <html>
 <head>

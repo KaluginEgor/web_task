@@ -61,17 +61,17 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
 
     @Override
     public int countMediaPersons() throws DaoException {
-        int actorsCount = 0;
+        int mediaPersonsCount = 0;
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_COUNT_MEDIA_PERSONS)) {
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    actorsCount = resultSet.getInt(1);
+                    mediaPersonsCount = resultSet.getInt(1);
                 }
             }
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return actorsCount;
+        return mediaPersonsCount;
     }
 
     @Override

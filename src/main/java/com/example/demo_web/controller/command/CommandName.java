@@ -8,7 +8,7 @@ import com.example.demo_web.controller.command.impl.page.*;
 import com.example.demo_web.controller.command.impl.user.*;
 import com.example.demo_web.controller.command.impl.*;
 
-public enum CommandEnum {
+public enum CommandName {
     LOGIN {
         {
             this.command = new LoginCommand();
@@ -52,6 +52,11 @@ public enum CommandEnum {
     OPEN_ALL_MEDIA_PERSONS_PAGE {
         {
             this.command = new OpenAllMediaPersonsPageCommand();
+        }
+    },
+    OPEN_ALL_USERS_PAGE {
+        {
+            this.command = new OpenAllUsersPageCommand();
         }
     },
     OPEN_MEDIA_PERSON_PAGE {
@@ -162,6 +167,21 @@ public enum CommandEnum {
     FIND_MOVIES_BY_TITLE {
         {
             this.command = new FindMoviesByTitleCommand();
+        }
+    },
+    DELETE_USER {
+        {
+            this.command = new DeleteUserCommand();
+        }
+    },
+    BLOCK_USER {
+        {
+            this.command = new BlockUserCommand();
+        }
+    },
+    ACTIVATE_USER {
+        {
+            this.command = new ActivateUserCommand();
         }
     };
     ActionCommand command;

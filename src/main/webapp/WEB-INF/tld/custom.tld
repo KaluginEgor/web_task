@@ -21,6 +21,12 @@
         <body-content>empty</body-content>
     </tag>
 
+    <tag>
+        <name>all_users</name>
+        <tag-class>com.example.demo_web.tag.ViewAllUsersTag</tag-class>
+        <body-content>empty</body-content>
+    </tag>
+
     <function>
         <name>containsGenreType</name>
         <function-class>com.example.demo_web.tag.ContainsFunction</function-class>
