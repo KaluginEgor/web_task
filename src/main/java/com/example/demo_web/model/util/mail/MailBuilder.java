@@ -1,4 +1,4 @@
-package com.example.demo_web.mail;
+package com.example.demo_web.model.util.mail;
 
 import com.example.demo_web.model.entity.User;
 
@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 public class MailBuilder {
     private static final String EMAIL_SUBJECT = "email.subject";
     private static final String EMAIL_BODY = "email.body";
-    private static final String RESOURCE_NAME = "pagecontent";
+    private static final String RESOURCE_NAME = "property/pagecontent";
     private static final Locale DEFAULT_LOCALE = new Locale("en_US");
 
     private static final String LINK_FOR_CONFIRMATION = "http://localhost:8080/demo_web_war_exploded" +

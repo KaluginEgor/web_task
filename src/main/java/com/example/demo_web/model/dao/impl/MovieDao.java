@@ -99,7 +99,6 @@ public class MovieDao extends AbstractMovieDao {
             preparedStatement.setString(2, movie.getDescription());
             preparedStatement.setDate(3, java.sql.Date.valueOf(movie.getReleaseDate()));
             preparedStatement.setString(4, movie.getPicture());
-            preparedStatement.executeUpdate();
             int id = executeUpdateAndGetGeneratedId(preparedStatement);
             movie.setId(id);
             return movie;

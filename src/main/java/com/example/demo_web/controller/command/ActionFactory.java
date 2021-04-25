@@ -1,6 +1,6 @@
 package com.example.demo_web.controller.command;
 
-import com.example.demo_web.controller.command.impl.EmptyCommand;
+import com.example.demo_web.controller.command.impl.common.EmptyCommand;
 
 public class ActionFactory {
     private static final String COMMAND = "command";

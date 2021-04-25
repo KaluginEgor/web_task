@@ -47,11 +47,6 @@ public class UserDao extends AbstractUserDao {
     }
 
     @Override
-    public List<User> findAll()  throws DaoException {
-        return new ArrayList<>();
-    }
-
-    @Override
     public User findEntityById(Integer id) throws DaoException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_USER_BY_ID)) {
             preparedStatement.setInt(1, id);
@@ -109,11 +104,6 @@ public class UserDao extends AbstractUserDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-    }
-
-    @Override
-    public User create(User user) throws DaoException {
-        return null;
     }
 
     @Override
@@ -244,6 +234,16 @@ public class UserDao extends AbstractUserDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public List<User> findAll()  throws DaoException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public User create(User user) throws DaoException {
+        throw new UnsupportedOperationException();
     }
 
     private User buildUser(ResultSet resultSet) throws SQLException {

@@ -180,7 +180,7 @@
             <c:set var="addedReview" value="false"/>
 
 
-            <c:if test="${user.id != 0 and user.state == active and not empty movie.reviews}">
+            <c:if test="${not empty movie.reviews}">
                 <p><strong><fmt:message key="label.reviews"/> : </strong></p>
                 <c:forEach var="review" items="${movie.reviews}">
                     <c:if test="${reviewToUpdate.id != review.id}">

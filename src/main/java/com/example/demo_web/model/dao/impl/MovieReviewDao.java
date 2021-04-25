@@ -32,11 +32,6 @@ public class MovieReviewDao extends AbstractMovieReviewDao {
     }
 
     @Override
-    public List<MovieReview> findAll() throws DaoException {
-        return null;
-    }
-
-    @Override
     public MovieReview findEntityById(Integer id) throws DaoException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_MOVIE_REVIEW_BY_ID)) {
             MovieReview movieReview = new MovieReview();
@@ -71,7 +66,6 @@ public class MovieReviewDao extends AbstractMovieReviewDao {
             preparedStatement.setDate(3, java.sql.Date.valueOf(movieReview.getCreationDate()));
             preparedStatement.setInt(4, movieReview.getMovieId());
             preparedStatement.setInt(5, movieReview.getUserId());
-            preparedStatement.executeUpdate();
             int id = executeUpdateAndGetGeneratedId(preparedStatement);
             movieReview.setId(id);
             return movieReview;
@@ -128,6 +122,11 @@ public class MovieReviewDao extends AbstractMovieReviewDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public List<MovieReview> findAll() throws DaoException {
+        throw new UnsupportedOperationException();
     }
 
     public MovieReview buildMovieReview(ResultSet resultSet) throws SQLException {

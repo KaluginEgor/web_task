@@ -31,6 +31,7 @@ public class ViewAllUsersTag extends TagSupport {
     private static final String OPERATION = "label.operation";
     private static final String USER_BLOCK_BUTTON_BUNDLE = "label.block.user";
     private static final String USER_ACTIVATE_BUTTON_BUNDLE = "label.activate.user";
+    private static final String OPEN_PROFILE_BUNDLE = "label.open.profile";
 
     @Override
     public int doStartTag() throws JspException {
@@ -76,6 +77,7 @@ public class ViewAllUsersTag extends TagSupport {
             String userType = resourceBundle.getString(USER_ROLE_BUNDLE);
             String userStatus = resourceBundle.getString(USER_STATUS_BUNDLE);
             String operation = resourceBundle.getString(OPERATION);
+            String open = resourceBundle.getString(OPEN_PROFILE_BUNDLE);
             writer.write("<thead><tr>");
             writer.write("<th><span style=\"font-weight: bold\">№</span></th>");
             TagHelper.createTableHeadItem(writer, userId);
@@ -86,6 +88,7 @@ public class ViewAllUsersTag extends TagSupport {
             TagHelper.createTableHeadItem(writer, userType);
             TagHelper.createTableHeadItem(writer, userStatus);
             TagHelper.createTableHeadItem(writer, operation);
+            TagHelper.createTableHeadItem(writer, open);
             writer.write("</tr></thead>");
         } catch (IOException e) {
             throw new JspException(e);
@@ -115,10 +118,13 @@ public class ViewAllUsersTag extends TagSupport {
                         writer.write("<td>" + userState + "</td>");
                         writer.write("<td>");
                         if ((userState == UserState.ACTIVE) && (user.getRole() != UserRole.ADMIN)) {
-                            TagHelper.createChangeUserStateButton(writer, CommandName.BLOCK_USER.name(), pageContext, user.getId(), resourceBundle.getString(USER_BLOCK_BUTTON_BUNDLE));
+                            TagHelper.createUserButton(writer, CommandName.BLOCK_USER.name(), pageContext, user.getId(), resourceBundle.getString(USER_BLOCK_BUTTON_BUNDLE));
                         } else if (userState == UserState.BLOCKED) {
-                            TagHelper.createChangeUserStateButton(writer, CommandName.ACTIVATE_USER.name(), pageContext, user.getId(), resourceBundle.getString(USER_ACTIVATE_BUTTON_BUNDLE));
+                            TagHelper.createUserButton(writer, CommandName.ACTIVATE_USER.name(), pageContext, user.getId(), resourceBundle.getString(USER_ACTIVATE_BUTTON_BUNDLE));
                         }
+                        writer.write("</td>");
+                        writer.write("<td>");
+                        TagHelper.createUserButton(writer, CommandName.OPEN_USER_PAGE.name(), pageContext, user.getId(), resourceBundle.getString(OPEN_PROFILE_BUNDLE));
                         writer.write("</td>");
                     }
                     writer.write("</tr>");

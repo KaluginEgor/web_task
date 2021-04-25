@@ -17,7 +17,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
     private static final Logger logger = LogManager.getLogger(ConnectionPool.class.getName());
-    private static final String THREAD_ERROR = "Thread operation error: cause ";
 
     private static final int MAX_POOL_SIZE = 8;
     private static final int MIN_POOL_SIZE = 2;
@@ -33,7 +32,6 @@ public class ConnectionPool {
     private Queue<ProxyConnection> givenAwayConnections;
     public static final AtomicBoolean isNull = new AtomicBoolean(true);
     private static final Lock LOCK = new ReentrantLock();
-    private final Lock connectionLock = new ReentrantLock();
     private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
 
@@ -44,15 +42,15 @@ public class ConnectionPool {
     }
 
     private void initializePool() {
-        Connection connection;
+        ProxyConnection proxyConnection;
         ConnectionPoolCleaner cleaner = new ConnectionPoolCleaner();
         for (int i = 0; i < MIN_POOL_SIZE; i++) {
             try {
-                connection = factory.createConnection();
-                ProxyConnection proxyConnection = new ProxyConnection(connection);
-                availableConnections.add(proxyConnection);
+                proxyConnection = new ProxyConnection(factory.createConnection());
+                availableConnections.offer(proxyConnection);
             } catch (ConnectionException e) {
-                logger.error(e);
+                logger.fatal(e);
+                throw new RuntimeException(e);
             }
         }
         executorService.scheduleAtFixedRate(cleaner, 0, CLEAR_PERIOD_IN_MINUTES, TimeUnit.MINUTES);
@@ -74,52 +72,35 @@ public class ConnectionPool {
     }
 
     public Connection getConnection() throws ConnectionException {
-        ProxyConnection connection;
-        logger.info("getting connection started");
-        if (!availableConnections.isEmpty() || detectPoolSize().get() == MAX_POOL_SIZE) { //todo: mb synchronized?
+        ProxyConnection proxyConnection = null;
+        if (!availableConnections.isEmpty() || detectPoolSize().get() == MAX_POOL_SIZE) {
             try {
-                connectionLock.lock();
-                connection = availableConnections.take();
-                givenAwayConnections.offer(connection);
-            } catch (InterruptedException e) {
-                logger.error("Get connection error");
-                throw new ConnectionException(THREAD_ERROR, e);
-            } finally {
-                connectionLock.unlock();
+                proxyConnection = availableConnections.take();
+                givenAwayConnections.offer(proxyConnection);
                 logger.info("Connection given from available connections");
+            } catch (InterruptedException e) {
+                logger.error(e);
+                Thread.currentThread().interrupt();
             }
         } else {
-            try {
-                connectionLock.lock();
-                connection = new ProxyConnection(factory.createConnection());
-                givenAwayConnections.offer(connection);
-            } finally {
-                connectionLock.unlock();
-                logger.info("Connection created and given");
-            }
+            proxyConnection = new ProxyConnection(factory.createConnection());
+            givenAwayConnections.offer(proxyConnection);
+            logger.info("Connection created and given");
         }
         givenPerPeriodConnections.incrementAndGet();
-        logger.info("getting connection ended");
-        return connection;
+        return proxyConnection;
     }
 
     public void returnConnection(ProxyConnection connection) throws ConnectionException {
-        logger.info("returning connection started");
-        try {
-            connectionLock.lock();
-            if (connection instanceof ProxyConnection) {
-                if (givenAwayConnections.contains(connection)) {
-                    availableConnections.offer(connection);
-                    givenAwayConnections.remove(connection);
-                }
-            } else {
-                logger.error("error: not proxy connection");
-                throw new ConnectionException("Not proxy connection.");
+        if (connection instanceof ProxyConnection) {
+            if (givenAwayConnections.contains(connection)) {
+                availableConnections.offer(connection);
+                givenAwayConnections.remove(connection);
             }
-        } finally {
-            connectionLock.unlock();
+        } else {
+            logger.error("Error: not proxy connection");
+            throw new ConnectionException("Not proxy connection.");
         }
-        logger.info("returning connection ended");
     }
 
     private AtomicInteger detectPoolSize() {
@@ -130,13 +111,17 @@ public class ConnectionPool {
         int removedConnections = 0;
         if (givenPerPeriodConnections.get() < VALUE_TO_DECREASE_POOL_PER_PERIOD) {
             int connectionsToRemoveCount = DECREASE_POOL_SIZE_NUMBER;
-            while (connectionsToRemoveCount-- != 0 && !availableConnections.isEmpty()) {
+            while (connectionsToRemoveCount != 0 && !availableConnections.isEmpty()) {
                 try {
                     ProxyConnection proxyConnectionToClose = availableConnections.take();
                     proxyConnectionToClose.reallyClose();
                     removedConnections++;
-                } catch (InterruptedException | SQLException exception) {
-                    logger.error(exception.getMessage());
+                    connectionsToRemoveCount--;
+                } catch (SQLException e) {
+                    logger.error(e);
+                } catch (InterruptedException e) {
+                    logger.error(e);
+                    Thread.currentThread().interrupt();
                 }
             }
         }
@@ -149,19 +134,21 @@ public class ConnectionPool {
             try {
                 DriverManager.deregisterDriver(driver);
             } catch (SQLException e) {
-                logger.error("Failed to deregister driver", e);
+                logger.error(e);
             }
         });
     }
 
-    public void destroyPool() {
+    public void destroyPool() throws ConnectionException {
         for (int i = 0; i < detectPoolSize().get(); i++) {
             try {
                 availableConnections.take().reallyClose();
             } catch (SQLException e) {
                 logger.error(e);
+                throw new ConnectionException(e);
             } catch (InterruptedException e) {
                 logger.error(e);
+                Thread.currentThread().interrupt();
             }
         }
         deregisterDrivers();

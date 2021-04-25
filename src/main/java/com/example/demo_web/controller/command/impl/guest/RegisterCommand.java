@@ -1,4 +1,4 @@
-package com.example.demo_web.controller.command.impl;
+package com.example.demo_web.controller.command.impl.guest;
 
 
 import com.example.demo_web.controller.command.*;

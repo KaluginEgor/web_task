@@ -1,5 +1,6 @@
 package com.example.demo_web.controller;
 
+import com.example.demo_web.exception.ConnectionException;
 import com.example.demo_web.model.pool.ConnectionPool;
 import com.example.demo_web.controller.command.*;
 
@@ -55,6 +56,10 @@ public class Controller extends HttpServlet {
     @Override
     public void destroy() {
         super.destroy();
-        ConnectionPool.getInstance().destroyPool();
+        try {
+            ConnectionPool.getInstance().destroyPool();
+        } catch (ConnectionException e) {
+
+        }
     }
 }

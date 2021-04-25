@@ -1,4 +1,4 @@
-package com.example.demo_web.controller.command.impl.user;
+package com.example.demo_web.controller.command.impl.common;
 
 import com.example.demo_web.controller.command.*;
 import com.example.demo_web.exception.ServiceException;
@@ -12,7 +12,7 @@ public class OpenUserPageCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.FORWARD);
+        commandResult.setTransitionType(TransitionType.REDIRECT);
 
         try {
             Integer someUserID = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.USER_ID));

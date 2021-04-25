@@ -43,7 +43,7 @@ class TagHelper {
         }
     }
 
-    static void createChangeUserStateButton(JspWriter writer, String command, PageContext pageContext, int userId, String buttonText) throws IOException {
+    static void createUserButton(JspWriter writer, String command, PageContext pageContext, int userId, String buttonText) throws IOException {
         String contextPath = pageContext.getServletContext().getContextPath();
         writer.write("<form method=\"post\" action=\"" + contextPath + "/controller\">");
         writer.write("<input type=\"hidden\" name=\"command\" value=\"" + command + "\"/>");

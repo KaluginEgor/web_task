@@ -29,16 +29,6 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
     }
 
     @Override
-    public List<MovieRating> findAll() throws DaoException {
-        return null;
-    }
-
-    @Override
-    public MovieRating findEntityById(Integer id) throws DaoException {
-        return null;
-    }
-
-    @Override
     public boolean delete(Integer id) throws DaoException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_MOVIE_RATING)) {
             preparedStatement.setInt(1, id);
@@ -55,7 +45,6 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
             preparedStatement.setFloat(1, movieRating.getValue());
             preparedStatement.setInt(2, movieRating.getMovieId());
             preparedStatement.setInt(3, movieRating.getUserId());
-            preparedStatement.executeUpdate();
             int id = executeUpdateAndGetGeneratedId(preparedStatement);
             movieRating.setId(id);
             return movieRating;
@@ -110,6 +99,16 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public List<MovieRating> findAll() throws DaoException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public MovieRating findEntityById(Integer id) throws DaoException {
+        throw new UnsupportedOperationException();
     }
 
     private MovieRating buildMovieRating(ResultSet resultSet) throws SQLException {
