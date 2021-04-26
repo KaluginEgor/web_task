@@ -20,6 +20,7 @@ public class MovieRatingServiceImpl implements MovieRatingService {
 
     private AbstractMovieRatingDao abstractMovieRatingDao = MovieRatingDao.getInstance();
     private AbstractUserDao abstractUserDao = UserDao.getInstance();
+    private AbstractMovieDao movieDao = MovieDao.getInstance();
 
     @Override
     public MovieRating create(int movieId, int userId, float value) throws ServiceException {
@@ -31,6 +32,7 @@ public class MovieRatingServiceImpl implements MovieRatingService {
             if (MovieValidator.isMovieRatingValid(movieRating)) {
                 createdMovieRating = abstractMovieRatingDao.create(movieRating);
                 updateUserRating(movieRating);
+                updateMovieRating(movieRating, movieRating.getValue());
             }
             return createdMovieRating;
         } catch (DaoException e) {
@@ -45,11 +47,13 @@ public class MovieRatingServiceImpl implements MovieRatingService {
         EntityTransaction transaction = new EntityTransaction();
         transaction.init(abstractMovieRatingDao);
         try {
+            MovieRating oldMovieRating = abstractMovieRatingDao.findEntityById(movieRatingId);
             MovieRating movieRating = convertToMovieRating(movieId, userId,value);
             movieRating.setId(movieRatingId);
             MovieRating updatedMovieRating = new MovieRating();
             if (MovieValidator.isMovieRatingValid(movieRating)) {
                 updatedMovieRating = abstractMovieRatingDao.update(movieRating);
+                updateMovieRating(movieRating, movieRating.getValue() - oldMovieRating.getValue());
                 //updateUserRating(movieRating); //todo
             }
             return updatedMovieRating;
@@ -65,7 +69,9 @@ public class MovieRatingServiceImpl implements MovieRatingService {
         EntityTransaction transaction = new EntityTransaction();
         transaction.init(abstractMovieRatingDao);
         try {
+            MovieRating movieRating = abstractMovieRatingDao.findEntityById(id);
             abstractMovieRatingDao.delete(id);
+            updateMovieRating(movieRating, -movieRating.getValue());
             return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -74,8 +80,26 @@ public class MovieRatingServiceImpl implements MovieRatingService {
         }
     }
 
-    private void updateMovieRating(MovieRating movieRating) throws ServiceException {
-
+    private void updateMovieRating(MovieRating movieRating, float difference) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        transaction.initTransaction(movieDao, abstractMovieRatingDao);
+        try {
+            float averageRating = movieDao.findRatingById(movieRating.getMovieId());
+            int movieRatingsCount = abstractMovieRatingDao.countRatingsByMovieId(movieRating.getMovieId());
+            int ratingPoints = Math.round(averageRating * movieRatingsCount);
+            ratingPoints += difference;
+            if (movieRatingsCount != 0) {
+                averageRating = ratingPoints / movieRatingsCount;
+            } else {
+                averageRating = 0;
+            }
+            movieDao.updateRatingById(averageRating, movieRating.getMovieId());
+        } catch (DaoException e) {
+            transaction.rollback();
+            throw new ServiceException(e);
+        } finally {
+            transaction.endTransaction();
+        }
     }
 
     private void updateUserRating(MovieRating movieRating) throws ServiceException {

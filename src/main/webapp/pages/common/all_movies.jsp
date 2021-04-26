@@ -9,7 +9,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<c:set var="page" value="/pages/all_movies.jsp" scope="session"/>
+<c:set var="page" value="/pages/common/all_movies.jsp" scope="session"/>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="property/pagecontent"/>
 <html>

@@ -10,7 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="property/pagecontent"/>
-<c:set var="page" value="/pages/edit_media_person.jsp" scope="session"/>
+<c:set var="page" value="/pages/admin/edit_media_person.jsp" scope="session"/>
 <jsp:useBean id="mediaPerson" class="com.example.demo_web.model.entity.MediaPerson" scope="session"/>
 <html>
 <head>

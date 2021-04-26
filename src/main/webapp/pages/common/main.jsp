@@ -10,7 +10,7 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="property/pagecontent"/>
-<c:set var="page" value="/pages/main.jsp" scope="session"/>
+<c:set var="page" value="/pages/common/main.jsp" scope="session"/>
 <html>
 <head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
@@ -32,28 +32,30 @@
             </c:choose>
         </h2>
     </div>
-    <section class="section-movies">
-        <c:forEach var="movie" items="${sessionScope.movies}">
-            <ul>
-                <li>
-                    <div class="movie">
-                        <a href="${pageContext.request.contextPath}/controller?command=open_movie_page&movieId=${movie.id}">
-                            <h4 class="title"><c:out value="${movie.title}"/></h4>
-                        </a>
-
-                        <div class="poster">
+    <c:if test="${not empty sessionScope.movies}">
+        <section class="section-movies">
+            <c:forEach var="movie" items="${sessionScope.movies}">
+                <ul>
+                    <li>
+                        <div class="movie">
                             <a href="${pageContext.request.contextPath}/controller?command=open_movie_page&movieId=${movie.id}">
-                                <img src="${pageContext.request.contextPath}/picture?currentPicture=${movie.picture}"
-                                     alt="${movie.title}"/>
+                                <h4 class="title"><c:out value="${movie.title}"/></h4>
                             </a>
-                        </div>
 
-                        <p class="description"><c:out value="${movie.averageRating}"/></p>
-                    </div>
-                </li>
-            </ul>
-        </c:forEach>
-    </section>
+                            <div class="poster">
+                                <a href="${pageContext.request.contextPath}/controller?command=open_movie_page&movieId=${movie.id}">
+                                    <img src="${pageContext.request.contextPath}/picture?currentPicture=${movie.picture}"
+                                         alt="${movie.title}"/>
+                                </a>
+                            </div>
+
+                            <p class="description"><c:out value="${movie.averageRating}"/></p>
+                        </div>
+                    </li>
+                </ul>
+            </c:forEach>
+        </section>
+    </c:if>
 </section>
 </body>
 </html>

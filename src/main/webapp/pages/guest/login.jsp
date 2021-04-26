@@ -10,7 +10,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="property/pagecontent"/>
-<c:set var="page" value="/pages/login.jsp" scope="session"/>
+<c:set var="page" value="/pages/guest/login.jsp" scope="session"/>
 <html>
 <head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/core.css">

@@ -29,8 +29,9 @@ public class LoginCommand implements ActionCommand {
             if (!usersDataValidations.containsValue(Boolean.FALSE)) {
                 user = userService.login(login, password);
                 if (user.isPresent()) {
-                    commandResult.setPage(PagePath.ALL_MOVIES);
+                    commandResult.setPage(PagePath.USER);
                     sessionRequestContent.setSessionAttribute(Attribute.USER, user.get());
+                    sessionRequestContent.setSessionAttribute(Attribute.SOME_USER, user.get());
                 }
             } else {
                 userService.defineErrorMessageFromDataValidations(sessionRequestContent, usersDataValidations);

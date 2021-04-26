@@ -9,184 +9,202 @@ import com.example.demo_web.controller.command.impl.common.page.*;
 import com.example.demo_web.controller.command.impl.guest.RegisterCommand;
 import com.example.demo_web.controller.command.impl.guest.LoginCommand;
 import com.example.demo_web.controller.command.impl.user.*;
+import com.example.demo_web.model.entity.UserRole;
+
+import java.util.EnumSet;
+import java.util.List;
 
 public enum CommandName {
-    LOGIN {
+    LOGIN(new LoginCommand()) {
         {
-            this.command = new LoginCommand();
+            setAllowedUserRoles(UserRole.values());
         }
     },
-    LOGOUT {
+    LOGOUT(new LogoutCommand()) {
         {
-            this.command = new LogoutCommand();
+            setAllowedUserRoles(UserRole.values());
         }
     },
-    REGISTER {
+    REGISTER(new RegisterCommand()) {
         {
-            this.command = new RegisterCommand();
+            setAllowedUserRoles(UserRole.GUEST);
         }
     },
-    OPEN_REGISTRATION_PAGE {
+    OPEN_REGISTRATION_PAGE(new OpenRegistrationPageCommand()) {
         {
-            this.command = new OpenRegistrationPageCommand();
+            setAllowedUserRoles(UserRole.GUEST);
         }
     },
-    OPEN_LOGIN_PAGE {
+    OPEN_LOGIN_PAGE(new OpenLoginPageCommand()) {
         {
-            this.command = new OpenLoginPageCommand();
+            setAllowedUserRoles(UserRole.GUEST);
         }
     },
-    CHANGE_LANGUAGE {
+    CHANGE_LANGUAGE(new ChangeLocaleCommand()) {
         {
-            this.command = new ChangeLocaleCommand();
+            setAllowedUserRoles(UserRole.values());
         }
     },
-    CONFIRM_REGISTRATION {
+    CONFIRM_REGISTRATION(new ConfirmRegistrationCommand()) {
         {
-            this.command = new ConfirmRegistrationCommand();
+            setAllowedUserRoles(UserRole.USER);
         }
     },
-    OPEN_ALL_MOVIES_PAGE {
+    OPEN_ALL_MOVIES_PAGE(new OpenAllMoviesPageCommand()) {
         {
-            this.command = new OpenAllMoviesPageCommand();
+            setAllowedUserRoles(UserRole.values());
         }
     },
-    OPEN_ALL_MEDIA_PERSONS_PAGE {
+    OPEN_ALL_MEDIA_PERSONS_PAGE(new OpenAllMediaPersonsPageCommand()) {
         {
-            this.command = new OpenAllMediaPersonsPageCommand();
+            setAllowedUserRoles(UserRole.values());
         }
     },
-    OPEN_ALL_USERS_PAGE {
+    OPEN_ALL_USERS_PAGE(new OpenAllUsersPageCommand()) {
         {
-            this.command = new OpenAllUsersPageCommand();
+            setAllowedUserRoles(UserRole.ADMIN);
         }
     },
-    OPEN_MEDIA_PERSON_PAGE {
+    OPEN_MEDIA_PERSON_PAGE(new OpenMediaPersonPageCommand()) {
         {
-            this.command = new OpenMediaPersonPageCommand();
+            setAllowedUserRoles(UserRole.values());
         }
     },
-    OPEN_MOVIE_PAGE {
+    OPEN_MOVIE_PAGE(new OpenMoviePageCommand()) {
         {
-            this.command = new OpenMoviePageCommand();
+            setAllowedUserRoles(UserRole.values());
         }
     },
-    OPEN_EDIT_MEDIA_PERSON_PAGE {
+    OPEN_EDIT_MEDIA_PERSON_PAGE(new OpenMediaPersonPageCommand()) {
         {
-            this.command = new OpenEditMediaPersonPageCommand();
+            setAllowedUserRoles(UserRole.values());
         }
     },
-    UPDATE_MEDIA_PERSON {
+    UPDATE_MEDIA_PERSON(new UpdateMediaPersonCommand()) {
         {
-            this.command = new UpdateMediaPersonCommand();
+            setAllowedUserRoles(UserRole.ADMIN);
         }
     },
-    CREATE_MEDIA_PERSON {
+    CREATE_MEDIA_PERSON(new CreateMediaPersonCommand()) {
         {
-            this.command = new CreateMediaPersonCommand();
+            setAllowedUserRoles(UserRole.ADMIN);
         }
     },
-    DELETE_MEDIA_PERSON {
+    DELETE_MEDIA_PERSON(new DeleteMediaPersonCommand()) {
         {
-            this.command = new DeleteMediaPersonCommand();
+            setAllowedUserRoles(UserRole.ADMIN);
         }
     },
-    CREATE_MOVIE {
+    CREATE_MOVIE(new CreateMovieCommand()) {
         {
-            this.command = new CreateMovieCommand();
+            setAllowedUserRoles(UserRole.ADMIN);
         }
     },
-    UPDATE_MOVIE {
+    UPDATE_MOVIE(new UpdateMovieCommand()) {
         {
-            this.command = new UpdateMovieCommand();
+            setAllowedUserRoles(UserRole.ADMIN);
         }
     },
-    DELETE_MOVIE {
+    DELETE_MOVIE(new DeleteMovieCommand()) {
         {
-            this.command = new DeleteMovieCommand();
+            setAllowedUserRoles(UserRole.ADMIN);
         }
     },
-    CREATE_MOVIE_RATING {
+    CREATE_MOVIE_RATING(new CreateMovieRatingCommand()) {
         {
-            this.command = new CreateMovieRatingCommand();
+            setAllowedUserRoles(UserRole.ADMIN, UserRole.USER);
         }
     },
-    UPDATE_MOVIE_RATING {
+    UPDATE_MOVIE_RATING(new UpdateMovieRatingCommand()) {
         {
-            this.command = new UpdateMovieRatingCommand();
+            setAllowedUserRoles(UserRole.ADMIN, UserRole.USER);
         }
     },
-    DELETE_MOVIE_RATING {
+    DELETE_MOVIE_RATING(new DeleteMovieRatingCommand()) {
         {
-            this.command = new DeleteMovieRatingCommand();
+            setAllowedUserRoles(UserRole.ADMIN, UserRole.USER);
         }
     },
-    CREATE_MOVIE_REVIEW {
+    CREATE_MOVIE_REVIEW(new CreateMovieReviewCommand()) {
         {
-            this.command = new CreateMovieReviewCommand();
+            setAllowedUserRoles(UserRole.ADMIN, UserRole.USER);
         }
     },
-    PREPARE_MOVIE_REVIEW_UPDATE {
+    PREPARE_MOVIE_REVIEW_UPDATE(new PrepareMovieReviewUpdateCommand()) {
         {
-            this.command = new PrepareMovieReviewUpdateCommand();
+            setAllowedUserRoles(UserRole.ADMIN, UserRole.USER);
         }
     },
-    UPDATE_MOVIE_REVIEW {
+    UPDATE_MOVIE_REVIEW(new UpdateMovieReviewCommand()) {
         {
-            this.command = new UpdateMovieReviewCommand();
+            setAllowedUserRoles(UserRole.ADMIN, UserRole.USER);
         }
     },
-    DELETE_MOVIE_REVIEW {
+    DELETE_MOVIE_REVIEW(new DeleteMovieReviewCommand()) {
         {
-            this.command = new DeleteMovieReviewCommand();
+            setAllowedUserRoles(UserRole.ADMIN, UserRole.USER);
         }
     },
-    OPEN_EDIT_MOVIE_PAGE {
+    OPEN_EDIT_MOVIE_PAGE(new OpenEditMoviePageCommand()) {
         {
-            this.command = new OpenEditMoviePageCommand();
+            setAllowedUserRoles(UserRole.ADMIN);
         }
     },
-    OPEN_USER_PAGE {
+    OPEN_USER_PAGE(new OpenUserPageCommand()) {
         {
-            this.command = new OpenUserPageCommand();
+            setAllowedUserRoles(UserRole.values());
         }
     },
-    OPEN_EDIT_USER_PAGE {
+    OPEN_EDIT_USER_PAGE(new OpenEditUserPageCommand()) {
         {
-            this.command = new OpenEditUserPageCommand();
+            setAllowedUserRoles(UserRole.ADMIN, UserRole.USER);
         }
     },
-    UPDATE_USER {
+    UPDATE_USER(new UpdateUserCommand()) {
         {
-            this.command = new UpdateUserCommand();
+            setAllowedUserRoles(UserRole.ADMIN, UserRole.USER);
         }
     },
-    UPLOAD_PICTURE {
+    UPLOAD_PICTURE(new UploadPictureCommand()) {
         {
-            this.command = new UploadPictureCommand();
+            setAllowedUserRoles(UserRole.ADMIN, UserRole.USER);
         }
     },
-    FIND_MOVIES_BY_TITLE {
+    FIND_MOVIES_BY_TITLE(new FindMoviesByTitleCommand()) {
         {
-            this.command = new FindMoviesByTitleCommand();
+            setAllowedUserRoles(UserRole.values());
         }
     },
-    DELETE_USER {
+    DELETE_USER(new DeleteUserCommand()) {
         {
-            this.command = new DeleteUserCommand();
+            setAllowedUserRoles(UserRole.ADMIN, UserRole.USER);
         }
     },
-    BLOCK_USER {
+    BLOCK_USER(new BlockUserCommand()) {
         {
-            this.command = new BlockUserCommand();
+            setAllowedUserRoles(UserRole.ADMIN);
         }
     },
-    ACTIVATE_USER {
+    ACTIVATE_USER(new ActivateUserCommand()) {
         {
-            this.command = new ActivateUserCommand();
+            setAllowedUserRoles(UserRole.ADMIN);
         }
     };
-    ActionCommand command;
+    private ActionCommand command;
+    private EnumSet<UserRole> allowedUserRoles = EnumSet.noneOf(UserRole.class);
+
+    CommandName(ActionCommand command) {
+        this.command = command;
+    }
+
+    public void setAllowedUserRoles(UserRole... userRoles) {
+        allowedUserRoles.addAll(List.of(userRoles));
+    }
+
+    public boolean isRoleAllowed(UserRole userRole) {
+        return allowedUserRoles.contains(userRole);
+    }
+
     public ActionCommand getCurrentCommand() {
         return command;
     }

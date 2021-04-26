@@ -13,7 +13,7 @@
 <jsp:useBean id="someUser" scope="session" class="com.example.demo_web.model.entity.User"/>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="property/pagecontent"/>
-<c:set var="page" value="/pages/user.jsp" scope="session"/>
+<c:set var="page" value="/pages/common/user.jsp" scope="session"/>
 <head>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/moviePage.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -26,7 +26,7 @@
     <div class="section-title">
         <h2>${someUser.login}</h2>
         <c:set var="admin" value="ADMIN"/>
-        <c:if test="${user.id == someUser.id or user.role == admin}">
+        <c:if test="${user.id == someUser.id or (user.role == admin and someUser.role != admin)}">
             <form action="<c:url value="/controller"/>" method="POST" >
                 <input type="hidden" name="command" value="open_edit_user_page"/>
                 <input type="hidden" name="userId" value="${someUser.id}">

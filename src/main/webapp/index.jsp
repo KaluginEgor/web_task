@@ -12,6 +12,6 @@
     <title>Index</title>
 </head>
 <body>
-    <jsp:forward page="controller?command=open_all_movies_page"/>
+    <jsp:forward page="/pages/common/main.jsp"/>
 </body>
 </html>

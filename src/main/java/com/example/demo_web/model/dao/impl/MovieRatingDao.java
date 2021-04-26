@@ -20,6 +20,10 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
 
     private static final String SQL_DELETE_MOVIE_RATING = "DELETE FROM movie_ratings MR WHERE MR.rating_id = ?;";
 
+    private static final String SQL_COUNT_RATING_BY_MOVIE_ID = "SELECT COUNT(*) AS movie_ratings_count FROM movie_ratings WHERE movie_id = ?;";
+
+    private static final String SQL_SELECT_MOVIE_RATINGS_BY_ID = "SELECT MR.rating_id, MR.rating_value, MR.movie_id, MR.user_id, M.movie_title FROM movie_ratings MR INNER JOIN movies M on MR.movie_id = M.movie_id WHERE MR.rating_id = ?;";
+
     private static AbstractMovieRatingDao instance = new MovieRatingDao();
 
     private MovieRatingDao(){}
@@ -102,12 +106,39 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
     }
 
     @Override
-    public List<MovieRating> findAll() throws DaoException {
-        throw new UnsupportedOperationException();
+    public int countRatingsByMovieId(Integer movieId) throws DaoException {
+        int ratingsCount = 0;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_COUNT_RATING_BY_MOVIE_ID)) {
+            preparedStatement.setInt(1, movieId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    ratingsCount = resultSet.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return ratingsCount;
     }
 
     @Override
     public MovieRating findEntityById(Integer id) throws DaoException {
+        MovieRating movieRating = new MovieRating();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_MOVIE_RATINGS_BY_ID)) {
+            preparedStatement.setInt(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    movieRating = buildMovieRating(resultSet);
+                }
+            }
+            return movieRating;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<MovieRating> findAll() throws DaoException {
         throw new UnsupportedOperationException();
     }
 

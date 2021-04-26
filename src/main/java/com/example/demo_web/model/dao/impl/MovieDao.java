@@ -40,6 +40,10 @@ public class MovieDao extends AbstractMovieDao {
 
     private static final String SQL_SELECT_MOVIES_BY_TITLE_PART = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M WHERE UPPER(M.movie_title) LIKE ?;";
 
+    private static final String SQL_SELECT_RATING_BY_ID = "SELECT M.movie_rating FROM movies M WHERE M.movie_id = ?;";
+
+    private static final String SQL_UPDATE_RATING_BY_ID = "UPDATE movies M SET M.movie_rating = ? WHERE M.movie_id = ?;";
+
     private static AbstractMovieDao instance = new MovieDao();
 
     private MovieDao(){}
@@ -250,6 +254,34 @@ public class MovieDao extends AbstractMovieDao {
                 }
             }
             return movieList;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public float findRatingById(Integer movieId) throws DaoException {
+        float rating = 0;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_RATING_BY_ID)) {
+            preparedStatement.setInt(1, movieId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    rating = resultSet.getFloat(MoviesColumn.RATING);
+                }
+            }
+            return rating;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public boolean updateRatingById(float rating, Integer movieId) throws DaoException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_RATING_BY_ID)) {
+            preparedStatement.setFloat(1, rating);
+            preparedStatement.setInt(2, movieId);
+            preparedStatement.executeUpdate();
+            return true;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
