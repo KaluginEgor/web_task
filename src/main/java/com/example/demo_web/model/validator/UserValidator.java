@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class UserValidator {
+    private static final String DIGIT_PATTERN = "\\d+";
     private static final String LOGIN_PATTERN = "[A-Za-zА-Яа-яЁё0-9]{4,}";
     private static final String NAME_PATTERN = "[A-Za-zА-Яа-яЁё0]{4,}";
     private static final String EMAIL_PATTERN = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$";
@@ -15,6 +16,10 @@ public class UserValidator {
     private static final String PASSWORD = "password";
 
     private UserValidator() {}
+
+    public static boolean isValidId(String id) {
+        return id.matches(DIGIT_PATTERN);
+    }
 
     public static boolean isValidLogin(String login) {
         return login.matches(LOGIN_PATTERN);

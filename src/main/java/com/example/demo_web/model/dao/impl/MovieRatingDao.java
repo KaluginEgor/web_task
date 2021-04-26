@@ -24,7 +24,7 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
 
     private static final String SQL_SELECT_MOVIE_RATINGS_BY_ID = "SELECT MR.rating_id, MR.rating_value, MR.movie_id, MR.user_id, M.movie_title FROM movie_ratings MR INNER JOIN movies M on MR.movie_id = M.movie_id WHERE MR.rating_id = ?;";
 
-    private static AbstractMovieRatingDao instance = new MovieRatingDao();
+    private static final AbstractMovieRatingDao instance = new MovieRatingDao();
 
     private MovieRatingDao(){}
 

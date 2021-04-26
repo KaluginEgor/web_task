@@ -11,7 +11,7 @@ import com.example.demo_web.model.service.impl.MediaPersonServiceImpl;
 import java.time.LocalDate;
 
 public class CreateMediaPersonCommand implements ActionCommand {
-    private MediaPersonService mediaPersonService = new MediaPersonServiceImpl();
+    private MediaPersonService mediaPersonService = MediaPersonServiceImpl.getInstance();
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
@@ -31,7 +31,7 @@ public class CreateMediaPersonCommand implements ActionCommand {
             sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PERSON, mediaPerson);
             commandResult.setPage(PagePath.MEDIA_PERSON);
         } catch (ServiceException e) {
-            commandResult.setPage(PagePath.ERROR);
+            commandResult.setPage(PagePath.ERROR_404);
         }
         return commandResult;
     }

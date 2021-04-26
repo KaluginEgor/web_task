@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class UploadPictureCommand implements ActionCommand {
-    private MovieService movieService = new MovieServiceImpl();
-    private UserService userService = new UserServiceImpl();
-    private MediaPersonService mediaPersonService = new MediaPersonServiceImpl();
+    private MovieService movieService = MovieServiceImpl.getInstance();
+    private UserService userService = UserServiceImpl.getInstance();
+    private MediaPersonService mediaPersonService = MediaPersonServiceImpl.getInstance();
     private static final String UPLOAD_PICTURE_DIRECTORY = "C:/Epam/pictures";
     private static final char FILE_FORMAT_SEPARATOR = '.';
 
@@ -29,35 +29,6 @@ public class UploadPictureCommand implements ActionCommand {
         String page = (String)sessionRequestContent.getSessionAttribute(Attribute.PAGE);
         List<Part> fileParts = sessionRequestContent.getFileParts();
         String fileName = null;
-        try {
-            if (sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID) != null) {
-                sessionRequestContent.setSessionAttribute(Attribute.GENRE_TYPES, GenreType.values());
-                List<MediaPerson> mediaPeople = mediaPersonService.finaAll();
-                sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PEOPLE, mediaPeople);
-                int movieId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID));
-                if (movieId != 0) {
-                    Movie movie = movieService.findById(movieId);
-                    sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie);
-                }
-            }
-            if (sessionRequestContent.getRequestParameter(RequestParameter.USER_ID) != null) {
-                int userId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.USER_ID));
-                User someUser = userService.findById(userId).get();
-                sessionRequestContent.setSessionAttribute(Attribute.SOME_USER, someUser);
-            }
-            if (sessionRequestContent.getRequestParameter(RequestParameter.MEDIA_PERSON_ID) != null) {
-                sessionRequestContent.setSessionAttribute(Attribute.OCCUPATION_TYPES, OccupationType.values());
-                List<Movie> foundMovies = movieService.findAll();
-                sessionRequestContent.setSessionAttribute(Attribute.MOVIES, foundMovies);
-                int mediaPersonId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MEDIA_PERSON_ID));
-                if (mediaPersonId != 0) {
-                    MediaPerson mediaPerson = mediaPersonService.findById(mediaPersonId);
-                    sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PERSON, mediaPerson);
-                }
-            }
-        } catch (ServiceException e) {
-
-        }
 
         try {
             for (Part part : fileParts) {

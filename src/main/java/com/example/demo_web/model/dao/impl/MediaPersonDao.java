@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MediaPersonDao extends AbstractMediaPersonDao {
-    private static AbstractMediaPersonDao instance = new MediaPersonDao();
+    private static final AbstractMediaPersonDao instance = new MediaPersonDao();
 
     private static final String SQL_SELECT_ALL_MEDIA_PERSONS_WITH_LIMIT = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id ORDER BY MP.media_person_second_name LIMIT ?, ?;";
 
@@ -33,6 +33,8 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
     private static final String SQL_SELECT_ALL_MOVIES = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id ORDER BY MP.media_person_second_name;";
 
     private static final String SQL_DELETE_MEDIA_PERSON = "DELETE FROM media_persons MP WHERE MP.media_person_id = ?;";
+
+    private static final String SQL_EXISTS_ID = "SELECT EXISTS (SELECT media_person_id FROM media_persons WHERE media_person_id = ?) AS media_person_existence;";
 
     private MediaPersonDao(){}
 
@@ -57,6 +59,11 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public boolean idExists(int id) throws DaoException {
+        return idExists(id, SQL_EXISTS_ID);
     }
 
     @Override

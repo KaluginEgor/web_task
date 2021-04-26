@@ -5,13 +5,15 @@ import com.example.demo_web.exception.ServiceException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public interface MovieService {
     List<Movie> findAllBetween(int begin, int end) throws ServiceException;
 
     int countMovies() throws ServiceException;
 
-    Movie findById(Integer id) throws ServiceException;
+    Map.Entry<Optional<Movie>, Optional<String>> findById(String stringMovieId) throws ServiceException;
 
     List<Movie> findAll() throws ServiceException;
 
@@ -21,5 +23,5 @@ public interface MovieService {
 
     boolean delete(int id) throws ServiceException;
 
-    List<Movie> findByNamePart(String title) throws ServiceException;
+    Map.Entry<List<Movie>, Optional<String>> findByNamePart(String title) throws ServiceException;
 }

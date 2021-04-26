@@ -6,12 +6,13 @@ import com.example.demo_web.model.entity.User;
 import com.example.demo_web.exception.ServiceException;
 import com.example.demo_web.model.service.UserService;
 import com.example.demo_web.model.service.impl.UserServiceImpl;
+import com.example.demo_web.model.util.message.ErrorMessage;
 
 import java.util.Map;
 import java.util.Optional;
 
 public class RegisterCommand implements ActionCommand {
-    private UserService userService = new UserServiceImpl();
+    private UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
@@ -40,7 +41,7 @@ public class RegisterCommand implements ActionCommand {
                     sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE, ErrorMessage.CONFIRM_MESSAGE_SENT);
                 }
             } catch (ServiceException e) {
-                commandResult.setPage(PagePath.ERROR);
+                commandResult.setPage(PagePath.ERROR_404);
             }
         } else {
             sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE, ErrorMessage.REPEAT_PASSWORD_INCORRECT_MESSAGE);

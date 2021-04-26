@@ -6,6 +6,7 @@ import com.example.demo_web.controller.command.PagePath;
 import com.example.demo_web.controller.command.RequestParameter;
 import com.example.demo_web.model.entity.User;
 import com.example.demo_web.model.entity.UserRole;
+import com.example.demo_web.model.util.message.ErrorMessage;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -32,21 +33,21 @@ public class CommandAccessFilter implements Filter {
         CommandName commandName;
         try {
             if (command == null) {
-                //httpRequest.setAttribute(RequestAttribute.ERROR_MESSAGE, ErrorMessage.ERROR_COMMAND);
-                RequestDispatcher dispatcher = httpRequest.getRequestDispatcher(PagePath.ERROR);
+                httpRequest.setAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.ERROR_COMMAND);
+                RequestDispatcher dispatcher = httpRequest.getRequestDispatcher(PagePath.ERROR_404);
                 dispatcher.forward(httpRequest, httpResponse);
                 return;
             }
             commandName = CommandName.valueOf(command.toUpperCase());
         } catch (IllegalArgumentException e) {
-            //httpRequest.setAttribute(RequestAttribute.ERROR_MESSAGE, ErrorMessage.ERROR_COMMAND);
-            RequestDispatcher dispatcher = httpRequest.getRequestDispatcher(PagePath.ERROR);
+            httpRequest.setAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.ERROR_COMMAND);
+            RequestDispatcher dispatcher = httpRequest.getRequestDispatcher(PagePath.ERROR_404);
             dispatcher.forward(httpRequest, httpResponse);
             return;
         }
         if (!commandName.isRoleAllowed(userRole)) {
-            //httpRequest.setAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.ERROR_ACCESS);
-            RequestDispatcher dispatcher = httpRequest.getRequestDispatcher(PagePath.ERROR);
+            httpRequest.setAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.ERROR_ACCESS);
+            RequestDispatcher dispatcher = httpRequest.getRequestDispatcher(PagePath.ERROR_404);
             dispatcher.forward(httpRequest, httpResponse);
             return;
         }

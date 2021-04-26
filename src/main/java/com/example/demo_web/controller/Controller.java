@@ -1,8 +1,11 @@
 package com.example.demo_web.controller;
 
+import com.example.demo_web.exception.CommandException;
 import com.example.demo_web.exception.ConnectionException;
 import com.example.demo_web.model.pool.ConnectionPool;
 import com.example.demo_web.controller.command.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,6 +19,7 @@ import java.io.IOException;
 @WebServlet(name = "controller", urlPatterns = {"/controller"})
 @MultipartConfig(maxFileSize = 1024 * 1024 * 4, maxRequestSize = 1024 * 1024 * 8)
 public class Controller extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,16 +32,19 @@ public class Controller extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page;
-        CommandResult commandResult;
-
         SessionRequestContent sessionRequestContent = new SessionRequestContent();
         sessionRequestContent.extractValues(request);
 
-        ActionFactory client = new ActionFactory();
-        ActionCommand command = client.defineCommand(sessionRequestContent);
-
-        commandResult = command.execute(sessionRequestContent);
+        CommandName commandName = CommandName.valueOf(request.getParameter(RequestParameter.COMMAND).toUpperCase());
+        ActionCommand command = commandName.getCurrentCommand();
+        CommandResult commandResult;
+        try {
+            commandResult = command.execute(sessionRequestContent);
+        } catch (CommandException e) {
+            logger.error(e);
+            request.getSession().setAttribute(Attribute.ERROR_MESSAGE, e);
+            commandResult = new CommandResult(PagePath.ERROR_500, TransitionType.REDIRECT);
+        }
         sessionRequestContent.insertAttributes(request);
 
         if (commandResult.getPage() != null) {
@@ -48,7 +55,7 @@ public class Controller extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + commandResult.getPage());
             }
         } else {
-            page = PagePath.INDEX;
+            String page = PagePath.INDEX;
             response.sendRedirect(request.getContextPath() + page);
         }
     }
@@ -59,7 +66,7 @@ public class Controller extends HttpServlet {
         try {
             ConnectionPool.getInstance().destroyPool();
         } catch (ConnectionException e) {
-
+            logger.error(e);
         }
     }
 }

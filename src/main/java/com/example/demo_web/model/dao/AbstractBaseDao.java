@@ -65,29 +65,18 @@ public abstract class AbstractBaseDao<K, T extends Entity> {
         }
     }
 
-    protected boolean updateEntity(PreparedStatement statement) throws DaoException {
-        try {
-            int updatedRows = statement.executeUpdate();
-            if (updatedRows != 1) {
-                return false;
+    protected boolean idExists(Integer value, String sqlQuery) throws DaoException {
+        boolean result;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
+            preparedStatement.setInt(1, value);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                resultSet.next();
+                result = resultSet.getInt(1) != 0;
             }
         } catch (SQLException e) {
-            throw new DaoException("Updating entity error", e);
+            throw new DaoException(e);
         }
-        return true;
-    }
-
-    protected boolean updateEntityById(int id, String sqlQuery) throws DaoException {
-        try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            statement.setInt(1, id);
-            int updatedRows = statement.executeUpdate();
-            if (updatedRows != 1) {
-                return false;
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Updating entity by id error", e);
-        }
-        return true;
+        return result;
     }
 
 }

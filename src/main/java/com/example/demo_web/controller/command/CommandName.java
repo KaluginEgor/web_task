@@ -4,7 +4,7 @@ package com.example.demo_web.controller.command;
 import com.example.demo_web.controller.command.impl.admin.*;
 import com.example.demo_web.controller.command.impl.common.ChangeLocaleCommand;
 import com.example.demo_web.controller.command.impl.common.FindMoviesByTitleCommand;
-import com.example.demo_web.controller.command.impl.common.OpenUserPageCommand;
+import com.example.demo_web.controller.command.impl.common.page.OpenUserPageCommand;
 import com.example.demo_web.controller.command.impl.common.page.*;
 import com.example.demo_web.controller.command.impl.guest.RegisterCommand;
 import com.example.demo_web.controller.command.impl.guest.LoginCommand;

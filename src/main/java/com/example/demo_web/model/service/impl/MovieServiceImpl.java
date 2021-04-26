@@ -10,28 +10,40 @@ import com.example.demo_web.exception.DaoException;
 import com.example.demo_web.exception.ServiceException;
 import com.example.demo_web.model.entity.*;
 import com.example.demo_web.model.service.MovieService;
+import com.example.demo_web.model.util.message.ErrorMessage;
+import com.example.demo_web.model.validator.MediaPersonValidator;
+import com.example.demo_web.model.validator.MovieValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class MovieServiceImpl implements MovieService {
+    private static final MovieService instance = new MovieServiceImpl();
     private static final Logger logger = LogManager.getLogger(MovieServiceImpl.class);
-    private AbstractMovieDao abstractMovieDao = MovieDao.getInstance();
-    private AbstractMediaPersonDao abstractMediaPersonDao = MediaPersonDao.getInstance();
+    private AbstractMovieDao movieDao = MovieDao.getInstance();
+    private AbstractMediaPersonDao mediaPersonDao = MediaPersonDao.getInstance();
     private AbstractMovieReviewDao reviewDao = MovieReviewDao.getInstance();
     private AbstractMovieRatingDao ratingDao = MovieRatingDao.getInstance();
     private static final String DEFAULT_MOVIE_PICTURE = "C:/Epam/pictures/movie.jpg";
 
+    private MovieServiceImpl() {}
+
+    public static MovieService getInstance() {
+        return instance;
+    }
+
     @Override
     public List<Movie> findAllBetween(int begin, int end) throws ServiceException {
         EntityTransaction transaction = new EntityTransaction();
-        transaction.init(abstractMovieDao);
+        transaction.init(movieDao);
         List<Movie> allUsers;
         try {
-            allUsers = new ArrayList<>(abstractMovieDao.findAllBetween(begin, end));
+            allUsers = new ArrayList<>(movieDao.findAllBetween(begin, end));
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e);
@@ -45,9 +57,9 @@ public class MovieServiceImpl implements MovieService {
     public int countMovies() throws ServiceException {
         int moviesCount;
         EntityTransaction transaction = new EntityTransaction();
-        transaction.init(abstractMovieDao);
+        transaction.init(movieDao);
         try {
-            moviesCount = abstractMovieDao.countMovies();
+            moviesCount = movieDao.countMovies();
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e);
@@ -58,38 +70,48 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Movie findById(Integer id) throws ServiceException {
+    public Map.Entry<Optional<Movie>, Optional<String>> findById(String stringMovieId) throws ServiceException {
         EntityTransaction transaction = new EntityTransaction();
-        transaction.initTransaction(abstractMovieDao, abstractMediaPersonDao, reviewDao, ratingDao);
-        Movie movie;
-        try {
-            movie = abstractMovieDao.findEntityById(id);
-            List<GenreType> genreTypes = abstractMovieDao.findGenreTypesByMovieId(id);
-            movie.setGenres(genreTypes);
-            List<MediaPerson> crew = abstractMediaPersonDao.findByMovieId(id);
-            movie.setCrew(crew);
-            List<MovieReview> movieReviews = reviewDao.findByMovieId(id);
-            movie.setReviews(movieReviews);
-            List<MovieRating> ratingList = ratingDao.findByMovieId(id);
-            movie.setRatingList(ratingList);
-            transaction.commit();
-            return movie;
-        } catch (DaoException e) {
-            transaction.rollback();
-            throw new ServiceException(e);
-        } finally {
-            transaction.endTransaction();
+        Optional<Movie> movie = Optional.empty();
+        Optional<String> errorMessage = Optional.empty();
+        if (!MediaPersonValidator.isValidId(stringMovieId)) {
+            errorMessage = Optional.of(ErrorMessage.INCORRECT_FIND_MOVIE_PARAMETERS);
+        } else {
+            try {
+                transaction.initTransaction(movieDao, mediaPersonDao, reviewDao, ratingDao);
+                int movieId = Integer.valueOf(stringMovieId);
+                if (movieDao.idExists(movieId)) {
+                    movie = Optional.of(movieDao.findEntityById(movieId));
+                    List<GenreType> genreTypes = movieDao.findGenreTypesByMovieId(movieId);
+                    movie.get().setGenres(genreTypes);
+                    List<MediaPerson> crew = mediaPersonDao.findByMovieId(movieId);
+                    movie.get().setCrew(crew);
+                    List<MovieReview> movieReviews = reviewDao.findByMovieId(movieId);
+                    movie.get().setReviews(movieReviews);
+                    List<MovieRating> ratingList = ratingDao.findByMovieId(movieId);
+                    movie.get().setRatingList(ratingList);
+                } else {
+                    errorMessage = Optional.of(ErrorMessage.TRY_FIND_NOT_EXISTING_MOVIE);
+                }
+                transaction.commit();
+            } catch (DaoException e) {
+                transaction.rollback();
+                throw new ServiceException(e);
+            } finally {
+                transaction.endTransaction();
+            }
         }
+        return Map.entry(movie, errorMessage);
     }
 
 
     @Override
     public List<Movie> findAll() throws ServiceException {
         EntityTransaction transaction = new EntityTransaction();
-        transaction.init(abstractMovieDao);
+        transaction.init(movieDao);
         List<Movie> movies = new ArrayList<>();
         try {
-            movies = abstractMovieDao.findAll();
+            movies = movieDao.findAll();
             return movies;
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -101,20 +123,20 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie create(String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws ServiceException {
         EntityTransaction transaction = new EntityTransaction();
-        transaction.initTransaction(abstractMovieDao, reviewDao, ratingDao);
+        transaction.initTransaction(movieDao, reviewDao, ratingDao);
         try {
             if (picture.isEmpty()) {
                 picture = DEFAULT_MOVIE_PICTURE;
             }
             Movie movieToCreate = convertToMovie(title, description, releaseDate, picture, stringGenres, stringMediaPersonsId);
-            Movie createdMovie = abstractMovieDao.create(movieToCreate);
+            Movie createdMovie = movieDao.create(movieToCreate);
             createdMovie.setGenres(movieToCreate.getGenres());
             createdMovie.setCrew(movieToCreate.getCrew());
             for (GenreType genre : createdMovie.getGenres()) {
-                abstractMovieDao.insertMovieGenre(createdMovie.getId(), genre.ordinal());
+                movieDao.insertMovieGenre(createdMovie.getId(), genre.ordinal());
             }
             for (MediaPerson mediaPerson : createdMovie.getCrew()) {
-                abstractMovieDao.insertMovieMediaPerson(createdMovie.getId(), mediaPerson.getId());
+                movieDao.insertMovieMediaPerson(createdMovie.getId(), mediaPerson.getId());
             }
             List<MovieReview> movieReviews = reviewDao.findByMovieId(createdMovie.getId());
             createdMovie.setReviews(movieReviews);
@@ -133,21 +155,21 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie update(int id, String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws ServiceException {
         EntityTransaction transaction = new EntityTransaction();
-        transaction.initTransaction(abstractMovieDao, reviewDao, ratingDao);
+        transaction.initTransaction(movieDao, reviewDao, ratingDao);
         try {
             if (picture.isEmpty()) {
                 picture = DEFAULT_MOVIE_PICTURE;
             }
             Movie movieToUpdate = convertToMovie(title, description, releaseDate, picture, stringGenres, stringMediaPersonsId);
             movieToUpdate.setId(id);
-            abstractMovieDao.update(movieToUpdate);
-            abstractMovieDao.deleteMovieGenres(movieToUpdate.getId());
+            movieDao.update(movieToUpdate);
+            movieDao.deleteMovieGenres(movieToUpdate.getId());
             for (GenreType genre : movieToUpdate.getGenres()) {
-                abstractMovieDao.insertMovieGenre(movieToUpdate.getId(), genre.ordinal());
+                movieDao.insertMovieGenre(movieToUpdate.getId(), genre.ordinal());
             }
-            abstractMovieDao.deleteMovieCrew(movieToUpdate.getId());
+            movieDao.deleteMovieCrew(movieToUpdate.getId());
             for (MediaPerson mediaPerson : movieToUpdate.getCrew()) {
-                abstractMovieDao.insertMovieMediaPerson(movieToUpdate.getId(), mediaPerson.getId());
+                movieDao.insertMovieMediaPerson(movieToUpdate.getId(), mediaPerson.getId());
             }
             List<MovieReview> movieReviews = reviewDao.findByMovieId(movieToUpdate.getId());
             movieToUpdate.setReviews(movieReviews);
@@ -166,9 +188,9 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public boolean delete(int id) throws ServiceException {
         EntityTransaction transaction = new EntityTransaction();
-        transaction.init(abstractMovieDao);
+        transaction.init(movieDao);
         try {
-            abstractMovieDao.delete(id);
+            movieDao.delete(id);
             return true;
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -178,16 +200,23 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> findByNamePart(String title) throws ServiceException {
+    public Map.Entry<List<Movie>, Optional<String>> findByNamePart(String title) throws ServiceException {
         EntityTransaction transaction = new EntityTransaction();
-        transaction.init(abstractMovieDao);
-        try {
-            return abstractMovieDao.findByTitlePart(title);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        } finally {
-            transaction.end();
+        List<Movie> movies = new ArrayList<>();
+        Optional<String> errorMessage = Optional.empty();
+        if (!MovieValidator.isTitleValid(title)) {
+            errorMessage = Optional.of(ErrorMessage.INCORRECT_FIND_MOVIE_PARAMETERS);
+        } else {
+            try {
+                transaction.init(movieDao);
+                movies = movieDao.findByTitlePart(title);
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            } finally {
+                transaction.end();
+            }
         }
+        return Map.entry(movies, errorMessage);
     }
 
     private Movie convertToMovie(String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws DaoException {
@@ -207,7 +236,7 @@ public class MovieServiceImpl implements MovieService {
         List<MediaPerson> mediaPersons = new ArrayList<>();
         if (stringMediaPersonsId != null) {
             for (String stringId : stringMediaPersonsId) {
-                MediaPerson mediaPerson = abstractMediaPersonDao.findEntityById(Integer.valueOf(stringId));
+                MediaPerson mediaPerson = mediaPersonDao.findEntityById(Integer.valueOf(stringId));
                 mediaPersons.add(mediaPerson);
             }
         }

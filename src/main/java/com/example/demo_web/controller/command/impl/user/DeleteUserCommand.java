@@ -2,13 +2,11 @@ package com.example.demo_web.controller.command.impl.user;
 
 import com.example.demo_web.controller.command.*;
 import com.example.demo_web.exception.ServiceException;
-import com.example.demo_web.model.entity.Movie;
-import com.example.demo_web.model.entity.User;
 import com.example.demo_web.model.service.UserService;
 import com.example.demo_web.model.service.impl.UserServiceImpl;
 
 public class DeleteUserCommand implements ActionCommand {
-    UserService userService = new UserServiceImpl();
+    UserService userService = UserServiceImpl.getInstance();
     private static final String USER = "USER";
 
     @Override
@@ -26,7 +24,7 @@ public class DeleteUserCommand implements ActionCommand {
                 commandResult.setPage(PagePath.LOGIN);
             }
         } catch (ServiceException e) {
-            commandResult.setPage(PagePath.ERROR);
+            commandResult.setPage(PagePath.ERROR_404);
         }
         return commandResult;
     }

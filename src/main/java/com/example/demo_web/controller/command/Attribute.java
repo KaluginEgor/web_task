@@ -24,6 +24,8 @@ public class Attribute {
     public static final String PAGE = "page";
     public static final String NEW_PICTURE = "newPicture";
     public static final String QUERY_NAME = "queryName";
+    public static final String ERROR_MESSAGE = "errorMessage";
+    public static final String CONFIRM_MESSAGE = "confirmMessage";
 
     private Attribute(){}
 }

@@ -9,7 +9,7 @@ public class ChangeLocaleCommand implements ActionCommand {
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
         String page = sessionRequestContent.getRequestParameter(RequestParameter.CURRENT_PAGE);
         String lang = sessionRequestContent.getRequestParameter(RequestParameter.LANG);
-        sessionRequestContent.setSessionAttribute(RequestParameter.LANG, lang);
+        sessionRequestContent.setSessionAttribute(Attribute.LANG, lang);
         CommandResult commandResult = new CommandResult(page, TransitionType.FORWARD);
         return commandResult;
     }

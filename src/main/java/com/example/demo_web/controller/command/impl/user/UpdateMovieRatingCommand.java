@@ -10,8 +10,8 @@ import com.example.demo_web.model.service.impl.MovieServiceImpl;
 
 public class UpdateMovieRatingCommand implements ActionCommand {
 
-    private MovieRatingService movieRatingService = new MovieRatingServiceImpl();
-    private MovieService movieService = new MovieServiceImpl();
+    private MovieRatingService movieRatingService = MovieRatingServiceImpl.getInstance();
+    private MovieService movieService = MovieServiceImpl.getInstance();
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
@@ -24,11 +24,11 @@ public class UpdateMovieRatingCommand implements ActionCommand {
             int userId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.USER_ID));
             float value = Float.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_RATING_VALUE));
             movieRatingService.update(movieRatingId, movieId, userId, value);
-            Movie movie = movieService.findById(Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID)));
+            Movie movie = movieService.findById(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID)).getKey().get();
             sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie);
             commandResult.setPage(PagePath.MOVIE);
         } catch (ServiceException e) {
-            commandResult.setPage(PagePath.ERROR);
+            commandResult.setPage(PagePath.ERROR_404);
         }
 
         return commandResult;

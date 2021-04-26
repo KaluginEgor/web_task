@@ -19,7 +19,8 @@ public class PagePath {
     public static final String EDIT_MOVIE = "/pages/admin/edit_movie.jsp";
     public static final String ALL_USERS = "/pages/admin/all_users.jsp";
 
-    public static final String ERROR = "/pages/error/error.jsp";
+    public static final String ERROR_404 = "/pages/error/404.jsp";
+    public static final String ERROR_500 = "/pages/error/500.jsp";
 
     public static final String ADMIN_URL_PART = "pages/admin";
     public static final String GUEST_URL_PART = "pages/guest";

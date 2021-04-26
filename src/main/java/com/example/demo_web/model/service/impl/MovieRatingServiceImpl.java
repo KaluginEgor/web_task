@@ -17,10 +17,16 @@ import com.example.demo_web.model.util.evaluator.UserRatingEvaluator;
 import com.example.demo_web.model.validator.MovieValidator;
 
 public class MovieRatingServiceImpl implements MovieRatingService {
-
+    private static final MovieRatingService instance = new MovieRatingServiceImpl();
     private AbstractMovieRatingDao abstractMovieRatingDao = MovieRatingDao.getInstance();
     private AbstractUserDao abstractUserDao = UserDao.getInstance();
     private AbstractMovieDao movieDao = MovieDao.getInstance();
+
+    private MovieRatingServiceImpl() {};
+
+    public static MovieRatingService getInstance() {
+        return instance;
+    }
 
     @Override
     public MovieRating create(int movieId, int userId, float value) throws ServiceException {

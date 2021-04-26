@@ -44,7 +44,9 @@ public class MovieDao extends AbstractMovieDao {
 
     private static final String SQL_UPDATE_RATING_BY_ID = "UPDATE movies M SET M.movie_rating = ? WHERE M.movie_id = ?;";
 
-    private static AbstractMovieDao instance = new MovieDao();
+    private static final String SQL_EXISTS_ID = "SELECT EXISTS (SELECT movie_id FROM movies WHERE movie_id = ?) AS movie_existence;";
+
+    private static final AbstractMovieDao instance = new MovieDao();
 
     private MovieDao(){}
 
@@ -67,6 +69,11 @@ public class MovieDao extends AbstractMovieDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public boolean idExists(int id) throws DaoException {
+        return idExists(id, SQL_EXISTS_ID);
     }
 
     @Override

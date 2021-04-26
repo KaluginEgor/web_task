@@ -11,4 +11,5 @@ public abstract class AbstractMediaPersonDao extends AbstractBaseDao<Integer, Me
     public abstract List<MediaPerson> findByMovieId(Integer id) throws DaoException;
     public abstract boolean insertMediaPersonMovie(Integer mediaPersonId, Integer movieId) throws DaoException;
     public abstract boolean deleteMediaPersonMovies(Integer mediaPersonId) throws DaoException;
+    public abstract boolean idExists(int id) throws DaoException;
 }

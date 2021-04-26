@@ -23,7 +23,7 @@ public class MovieReviewDao extends AbstractMovieReviewDao {
 
     private static final String SQL_SELECT_MOVIE_REVIEW_BY_ID = "SELECT MR.review_id, MR.review_title, MR.review_body, MR.review_creation_date, MR.movie_id, MR.user_id, M.movie_title, U.user_login FROM movie_reviews MR INNER JOIN users U on MR.user_id = u.user_id INNER JOIN movies M on MR.movie_id = M.movie_id WHERE MR.review_id = ?;";
 
-    private static AbstractMovieReviewDao instance = new MovieReviewDao();
+    private static final AbstractMovieReviewDao instance = new MovieReviewDao();
 
     private MovieReviewDao(){}
 

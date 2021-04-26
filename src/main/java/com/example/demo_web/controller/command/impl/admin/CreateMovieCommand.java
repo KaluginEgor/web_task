@@ -9,7 +9,7 @@ import com.example.demo_web.model.service.impl.MovieServiceImpl;
 import java.time.LocalDate;
 
 public class CreateMovieCommand implements ActionCommand {
-    private MovieService movieService = new MovieServiceImpl();
+    private MovieService movieService = MovieServiceImpl.getInstance();
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
@@ -28,7 +28,7 @@ public class CreateMovieCommand implements ActionCommand {
             sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie);
             commandResult.setPage(PagePath.MOVIE);
         } catch (ServiceException e) {
-            commandResult.setPage(PagePath.ERROR);
+            commandResult.setPage(PagePath.ERROR_404);
         }
         return commandResult;
     }

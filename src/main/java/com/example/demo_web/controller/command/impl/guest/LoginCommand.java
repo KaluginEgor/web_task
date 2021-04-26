@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class LoginCommand implements ActionCommand {
-    private final UserService userService = new UserServiceImpl();
+    private final UserService userService = UserServiceImpl.getInstance();
 
 
     @Override
@@ -38,7 +38,7 @@ public class LoginCommand implements ActionCommand {
                 commandResult.setPage(PagePath.LOGIN);
             }
         } catch (ServiceException e) {
-            commandResult.setPage(PagePath.ERROR);
+            commandResult.setPage(PagePath.ERROR_404);
         }
         return commandResult;
     }

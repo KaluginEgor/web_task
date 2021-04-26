@@ -38,7 +38,9 @@ public class UserDao extends AbstractUserDao {
 
     private static final String SQL_SELECT_USER_STATUS_BY_ID = "SELECT US.user_state_name FROM users U INNER JOIN user_states US ON U.user_state_id = US.user_state_id WHERE U.user_id = ?;";
 
-    private static AbstractUserDao instance = new UserDao();
+    private static final String SQL_EXISTS_ID = "SELECT EXISTS (SELECT user_id FROM users WHERE user_id = ?) AS user_existence;";
+
+    private static final AbstractUserDao instance = new UserDao();
 
     private UserDao(){}
 
@@ -207,9 +209,9 @@ public class UserDao extends AbstractUserDao {
 
     @Override
     public boolean blockUser(int id) throws DaoException {
-        try (PreparedStatement statement = connection.prepareStatement(SQL_BLOCK_USER)) {
-            statement.setInt(1, id);
-            return (statement.executeUpdate() == 1);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_BLOCK_USER)) {
+            preparedStatement.setInt(1, id);
+            return (preparedStatement.executeUpdate() == 1);
         } catch (SQLException e) {
             throw new DaoException(e);
         }
@@ -217,12 +219,17 @@ public class UserDao extends AbstractUserDao {
 
     @Override
     public boolean activateUser(int id) throws DaoException {
-        try (PreparedStatement statement = connection.prepareStatement(SQL_ACTIVATE_USER)) {
-            statement.setInt(1, id);
-            return (statement.executeUpdate() == 1);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_ACTIVATE_USER)) {
+            preparedStatement.setInt(1, id);
+            return (preparedStatement.executeUpdate() == 1);
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public boolean idExists(int id) throws DaoException {
+        return idExists(id, SQL_EXISTS_ID);
     }
 
     @Override

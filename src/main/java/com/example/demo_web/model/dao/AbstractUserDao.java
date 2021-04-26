@@ -26,5 +26,7 @@ public abstract class AbstractUserDao extends AbstractBaseDao<Integer, User> {
 
     public abstract boolean loginExists(String login) throws DaoException;
 
+    public abstract boolean idExists(int id) throws DaoException;
+
     public abstract void updateUserRating(int userId, int newUserRating) throws DaoException;
 }

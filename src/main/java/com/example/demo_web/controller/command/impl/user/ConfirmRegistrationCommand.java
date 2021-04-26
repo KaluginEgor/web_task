@@ -8,7 +8,7 @@ import com.example.demo_web.model.service.impl.UserServiceImpl;
 
 public class ConfirmRegistrationCommand implements ActionCommand {
 
-    private final UserService userService = new UserServiceImpl();
+    private final UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
@@ -18,14 +18,14 @@ public class ConfirmRegistrationCommand implements ActionCommand {
         String stringActivationUserId = (String) sessionRequestContent.getSessionAttribute(Attribute.ACTIVATION_USER_ID);
         try {
             if (stringUserId.equals(stringActivationUserId)) {
-                userService.activateUser(stringActivationUserId);
+                userService.activate(stringActivationUserId);
                 sessionRequestContent.setSessionAttribute(Attribute.ACTIVATION_USER_ID, "");
                 commandResult.setPage(PagePath.ALL_MOVIES);
             } else {
-                commandResult.setPage(PagePath.ERROR);
+                commandResult.setPage(PagePath.ERROR_404);
             }
         } catch (ServiceException e) {
-            commandResult.setPage(PagePath.ERROR);
+            commandResult.setPage(PagePath.ERROR_404);
         }
         return commandResult;
     }

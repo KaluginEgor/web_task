@@ -18,15 +18,15 @@ public interface UserService {
 
     Optional<User> register(String login, String email, String firstName, String secondName, String password) throws ServiceException;
 
-    Optional<User> findById(int id) throws ServiceException;
+    Map.Entry<Optional<User>, Optional<String>> findById(String stringUserId) throws ServiceException;
 
-    boolean activateUser(String stringId) throws ServiceException;
+    Optional<String> activate(String stringId) throws ServiceException;
 
     Optional<User> update(int id, String login, String email, String firstName, String secondName, String picture, String role, String state, String rating) throws ServiceException;
 
     boolean delete(String stringId) throws ServiceException;
 
-    boolean block(String stringId) throws ServiceException;
+    Optional<String> block(String stringId) throws ServiceException;
 
     UserState detectStateById(int id) throws ServiceException;
 

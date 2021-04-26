@@ -2,20 +2,16 @@ package com.example.demo_web.controller.command.impl.admin;
 
 import com.example.demo_web.controller.command.*;
 import com.example.demo_web.exception.ServiceException;
-import com.example.demo_web.model.entity.MediaPerson;
 import com.example.demo_web.model.entity.User;
-import com.example.demo_web.model.service.MediaPersonService;
 import com.example.demo_web.model.service.UserService;
-import com.example.demo_web.model.service.impl.MediaPersonServiceImpl;
 import com.example.demo_web.model.service.impl.UserServiceImpl;
-import com.example.demo_web.tag.ViewAllMediaPersonsTag;
 import com.example.demo_web.tag.ViewAllUsersTag;
 
 import java.util.List;
 import java.util.Optional;
 
 public class OpenAllUsersPageCommand implements ActionCommand {
-    private UserService userService = new UserServiceImpl();
+    private UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
@@ -43,7 +39,7 @@ public class OpenAllUsersPageCommand implements ActionCommand {
             }
             commandResult.setPage(PagePath.ALL_USERS);
         } catch (ServiceException e) {
-            commandResult.setPage(PagePath.ERROR);
+            commandResult.setPage(PagePath.ERROR_404);
         }
         return commandResult;
     }

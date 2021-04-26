@@ -6,7 +6,7 @@ import com.example.demo_web.model.service.MediaPersonService;
 import com.example.demo_web.model.service.impl.MediaPersonServiceImpl;
 
 public class DeleteMediaPersonCommand implements ActionCommand {
-    private MediaPersonService mediaPersonService = new MediaPersonServiceImpl();
+    private MediaPersonService mediaPersonService = MediaPersonServiceImpl.getInstance();
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
@@ -17,7 +17,7 @@ public class DeleteMediaPersonCommand implements ActionCommand {
             mediaPersonService.delete(mediaPersonId);
             commandResult.setPage(PagePath.INDEX);
         } catch (ServiceException e) {
-            commandResult.setPage(PagePath.ERROR);
+            commandResult.setPage(PagePath.ERROR_404);
         }
         return commandResult;
     }

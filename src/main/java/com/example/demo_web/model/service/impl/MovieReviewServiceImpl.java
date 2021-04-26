@@ -12,7 +12,14 @@ import com.example.demo_web.model.validator.MovieValidator;
 import java.time.LocalDate;
 
 public class MovieReviewServiceImpl implements MovieReviewService {
+    private static final MovieReviewService instance = new MovieReviewServiceImpl();
     private AbstractMovieReviewDao abstractMovieReviewDao = MovieReviewDao.getInstance();
+
+    private MovieReviewServiceImpl() {}
+
+    public static MovieReviewService getInstance() {
+        return instance;
+    }
 
     @Override
     public MovieReview create(String reviewTitle, String reviewBody, int movieId, int userId) throws ServiceException {

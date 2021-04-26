@@ -13,9 +13,9 @@ import com.example.demo_web.model.service.impl.MovieServiceImpl;
 import com.example.demo_web.model.service.impl.UserServiceImpl;
 
 public class PrepareMovieReviewUpdateCommand implements ActionCommand {
-    private MovieReviewService movieReviewService = new MovieReviewServiceImpl();
-    private MovieService movieService = new MovieServiceImpl();
-    private UserService userService = new UserServiceImpl();
+    private MovieReviewService movieReviewService = MovieReviewServiceImpl.getInstance();
+    private MovieService movieService = MovieServiceImpl.getInstance();
+    private UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
@@ -27,18 +27,16 @@ public class PrepareMovieReviewUpdateCommand implements ActionCommand {
             MovieReview reviewToUpdate = movieReviewService.findById(reviewId);
             sessionRequestContent.setSessionAttribute(Attribute.REVIEW_TO_UPDATE, reviewToUpdate);
             if (sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID) != null) {
-                int movieId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID));
-                Movie movie = movieService.findById(movieId);
+                Movie movie = movieService.findById(sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID)).getKey().get();
                 sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie);
             }
             if (sessionRequestContent.getRequestParameter(RequestParameter.USER_ID) != null) {
-                int userId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.USER_ID));
-                User someUser = userService.findById(userId).get();
+                User someUser = userService.findById(sessionRequestContent.getRequestParameter(RequestParameter.USER_ID)).getKey().get();
                 sessionRequestContent.setSessionAttribute(Attribute.SOME_USER, someUser);
             }
             commandResult.setPage(page);
         } catch (ServiceException e) {
-            commandResult.setPage(PagePath.ERROR);
+            commandResult.setPage(PagePath.ERROR_404);
         }
         return commandResult;
     }

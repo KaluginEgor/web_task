@@ -7,7 +7,7 @@ import com.example.demo_web.model.service.UserService;
 import com.example.demo_web.model.service.impl.UserServiceImpl;
 
 public class UpdateUserCommand implements ActionCommand {
-    private UserService userService = new UserServiceImpl();
+    private UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
@@ -27,7 +27,7 @@ public class UpdateUserCommand implements ActionCommand {
             sessionRequestContent.setSessionAttribute(Attribute.SOME_USER, someUser);
             commandResult.setPage(PagePath.USER);
         } catch (ServiceException e) {
-            commandResult.setPage(PagePath.ERROR);
+            commandResult.setPage(PagePath.ERROR_404);
         }
         return commandResult;
     }

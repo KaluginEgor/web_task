@@ -14,8 +14,8 @@ import com.example.demo_web.model.service.impl.MovieServiceImpl;
 import java.util.List;
 
 public class OpenEditMediaPersonPageCommand implements ActionCommand {
-    private MediaPersonService mediaPersonService = new MediaPersonServiceImpl();
-    private MovieService movieService = new MovieServiceImpl();
+    private MediaPersonService mediaPersonService = MediaPersonServiceImpl.getInstance();
+    private MovieService movieService = MovieServiceImpl.getInstance();
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
@@ -27,12 +27,12 @@ public class OpenEditMediaPersonPageCommand implements ActionCommand {
             sessionRequestContent.setSessionAttribute(Attribute.MOVIES, foundMovies);
             sessionRequestContent.removeSessionAttribute(Attribute.MEDIA_PERSON);
             if (sessionRequestContent.getRequestParameter((RequestParameter.MEDIA_PERSON_ID)) != null) {
-                MediaPerson mediaPerson = mediaPersonService.findById(Integer.valueOf(sessionRequestContent.getRequestParameter((RequestParameter.MEDIA_PERSON_ID))));
+                MediaPerson mediaPerson = mediaPersonService.findById(sessionRequestContent.getRequestParameter((RequestParameter.MEDIA_PERSON_ID))).getKey().get();
                 sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PERSON, mediaPerson);
             }
             commandResult.setPage(PagePath.EDIT_MEDIA_PERSON);
         } catch (ServiceException e) {
-            commandResult.setPage(PagePath.ERROR);
+            commandResult.setPage(PagePath.ERROR_404);
         }
         return commandResult;
     }

@@ -1,6 +1,5 @@
 package com.example.demo_web.model.service.impl;
 
-import com.example.demo_web.controller.command.ErrorMessage;
 import com.example.demo_web.controller.command.RequestParameter;
 import com.example.demo_web.controller.command.SessionRequestContent;
 import com.example.demo_web.model.dao.AbstractMovieRatingDao;
@@ -16,6 +15,8 @@ import com.example.demo_web.exception.ServiceException;
 import com.example.demo_web.model.util.mail.MailBuilder;
 import com.example.demo_web.model.util.mail.MailSender;
 import com.example.demo_web.model.service.UserService;
+import com.example.demo_web.model.util.message.ErrorMessage;
+import com.example.demo_web.model.validator.MediaPersonValidator;
 import com.example.demo_web.model.validator.UserValidator;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
+    private static final UserService instance = new UserServiceImpl();
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
     private static final String LOGIN_IS_UNIQUE = "loginIsUnique";
     private static final String LOGIN_EXISTS = "loginExists";
@@ -43,7 +45,10 @@ public class UserServiceImpl implements UserService {
     private final AbstractMovieReviewDao reviewDao = MovieReviewDao.getInstance();
     private final AbstractUserDao userDao = UserDao.getInstance();
 
-    public UserServiceImpl() {
+    private UserServiceImpl() {}
+
+    public static UserService getInstance() {
+        return instance;
     }
 
     @Override
@@ -84,17 +89,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean activateUser(String stringId) throws ServiceException {
+    public Optional<String> activate(String stringId) throws ServiceException {
         EntityTransaction transaction = new EntityTransaction();
-        transaction.init(userDao);
-        int id = Integer.valueOf(stringId);
-        try {
-            return userDao.activateUser(id);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        } finally {
-            transaction.end();
+        Optional<String> errorMessage = Optional.empty();
+        if (!UserValidator.isValidId(stringId)) {
+            errorMessage = Optional.of(ErrorMessage.INCORRECT_ACTIVATE_USER_PARAMETERS);
+        } else {
+            try {
+                transaction.init(userDao);
+                int id = Integer.valueOf(stringId);
+                if (userDao.idExists(id)) {
+                    userDao.activateUser(id);
+                } else {
+                    errorMessage = Optional.of(ErrorMessage.TRY_ACTIVATE_NOT_EXISTING_USER);
+                }
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            } finally {
+                transaction.end();
+            }
         }
+        return errorMessage;
     }
 
     @Override
@@ -160,17 +175,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean block(String stringId) throws ServiceException {
+    public Optional<String> block(String stringId) throws ServiceException {
         EntityTransaction transaction = new EntityTransaction();
-        transaction.init(userDao);
-        int id = Integer.valueOf(stringId);
-        try {
-            return userDao.blockUser(id);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        } finally {
-            transaction.end();
+        Optional<String> errorMessage = Optional.empty();
+        if (!UserValidator.isValidId(stringId)) {
+            errorMessage = Optional.of(ErrorMessage.INCORRECT_BLOCK_USER_PARAMETERS);
+        } else {
+            try {
+                transaction.init(userDao);
+                int id = Integer.valueOf(stringId);
+                if (userDao.idExists(id)) {
+                    userDao.blockUser(id);
+                } else {
+                    errorMessage = Optional.of(ErrorMessage.TRY_BLOCK_NOT_EXISTING_USER);
+                }
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            } finally {
+                transaction.end();
+            }
         }
+        return errorMessage;
     }
 
     @Override
@@ -190,27 +215,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(int id) throws ServiceException {
+    public Map.Entry<Optional<User>, Optional<String>> findById(String stringUserId) throws ServiceException {
         EntityTransaction transaction = new EntityTransaction();
-        transaction.initTransaction(userDao, reviewDao, ratingDao);
-        Optional<User> foundUser = Optional.empty();
-        User user;
-        try {
-            user = userDao.findEntityById(id);
-            List<MovieReview> reviews = reviewDao.findByUserId(id);
-            user.setMovieReviews(reviews);
-            List<MovieRating> ratings = ratingDao.findByUserId(id);
-            user.setMovieRatings(ratings);
-            foundUser = Optional.of(user);
-            logger.info("User {} created.", foundUser);
-            transaction.commit();
-        } catch (DaoException e) {
-            transaction.rollback();
-            throw new ServiceException(e.getMessage(), e);
-        } finally {
-            transaction.endTransaction();
+        Optional<User> user = Optional.empty();
+        Optional<String> errorMessage = Optional.empty();
+        if (!MediaPersonValidator.isValidId(stringUserId)) {
+            errorMessage = Optional.of(ErrorMessage.INCORRECT_FIND_USER_PARAMETERS);
+        } else {
+            try {
+                transaction.initTransaction(userDao, reviewDao, ratingDao);
+                int userId = Integer.valueOf(stringUserId);
+                if (userDao.idExists(userId)) {
+                    user = Optional.of(userDao.findEntityById(userId));
+                    List<MovieReview> reviews = reviewDao.findByUserId(userId);
+                    user.get().setMovieReviews(reviews);
+                    List<MovieRating> ratings = ratingDao.findByUserId(userId);
+                    user.get().setMovieRatings(ratings);
+                } else {
+                    errorMessage = Optional.of(ErrorMessage.TRY_FIND_NOT_EXISTING_USER);
+                }
+                transaction.commit();
+            } catch (DaoException e) {
+                transaction.rollback();
+                throw new ServiceException(e);
+            } finally {
+                transaction.endTransaction();
+            }
         }
-        return foundUser;
+        return Map.entry(user, errorMessage);
     }
 
     @Override

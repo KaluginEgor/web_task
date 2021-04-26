@@ -9,11 +9,11 @@
     </welcome-file-list>
     <error-page>
     <error-code>404</error-code>
-        <location>/pages/error/error.jsp</location>
+        <location>/pages/error/404.jsp</location>
     </error-page>
     <error-page>
         <exception-type>java.lang.RuntimeException</exception-type>
-        <location>/pages/error/error.jsp</location>
+        <location>/pages/error/404.jsp</location>
     </error-page>
 
     <filter-mapping>

@@ -7,7 +7,7 @@ import com.example.demo_web.model.service.UserService;
 import com.example.demo_web.model.service.impl.UserServiceImpl;
 
 public class OpenEditUserPageCommand implements ActionCommand {
-    private UserService userService = new UserServiceImpl();
+    private UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
@@ -15,13 +15,12 @@ public class OpenEditUserPageCommand implements ActionCommand {
         commandResult.setTransitionType(TransitionType.REDIRECT);
         try {
             if (sessionRequestContent.getRequestParameter(RequestParameter.USER_ID) != null) {
-                int userId = Integer.valueOf(sessionRequestContent.getRequestParameter(RequestParameter.USER_ID));
-                User someUser = userService.findById(userId).get();
+                User someUser = userService.findById(sessionRequestContent.getRequestParameter(RequestParameter.USER_ID)).getKey().get();
                 sessionRequestContent.setSessionAttribute(Attribute.SOME_USER, someUser);
             }
             commandResult.setPage(PagePath.EDIT_USER);
         } catch (ServiceException e) {
-            commandResult.setPage(PagePath.ERROR);
+            commandResult.setPage(PagePath.ERROR_404);
         }
         return commandResult;
     }

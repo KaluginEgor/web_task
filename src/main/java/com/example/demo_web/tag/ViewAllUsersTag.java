@@ -98,7 +98,7 @@ public class ViewAllUsersTag extends TagSupport {
     private void createLines(JspWriter writer, SessionRequestContent sessionRequestContent, List<User> allUsers) throws JspException {
         String lang = sessionRequestContent.extractLocale();
         ResourceBundle resourceBundle = TagHelper.getLocalizeText(lang);
-        UserService userService = new UserServiceImpl();
+        UserService userService = UserServiceImpl.getInstance();
         try {
             if (allUsers != null) {
                 int size = allUsers.size();

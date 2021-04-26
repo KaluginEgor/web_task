@@ -18,4 +18,5 @@ public abstract class AbstractMovieDao extends AbstractBaseDao<Integer, Movie> {
     public abstract List<Movie> findByTitlePart(String movieTitle) throws DaoException;
     public abstract float findRatingById(Integer movieId) throws DaoException;
     public abstract boolean updateRatingById(float rating, Integer movieId) throws DaoException;
+    public abstract boolean idExists(int id) throws DaoException;
 }
