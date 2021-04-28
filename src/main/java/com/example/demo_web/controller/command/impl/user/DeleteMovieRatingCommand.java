@@ -42,6 +42,7 @@ public class DeleteMovieRatingCommand implements ActionCommand {
                 List<String> errorMessages = movieRatingService.validateData(stringMovieId, stringUserId, RATING_VALUE);
                 if (!errorMessages.isEmpty()) {
                     sessionRequestContent.setSessionAttribute(Attribute.VALIDATION_ERRORS, errorMessages);
+                    commandResult.setPage(PagePath.MAIN);
                 } else {
                     User currentUser = (User) sessionRequestContent.getSessionAttribute(Attribute.USER);
                     if (UserRole.ADMIN.equals(currentUser.getRole()) || Integer.valueOf(stringUserId).equals(currentUser.getId())) {

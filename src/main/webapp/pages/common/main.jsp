@@ -27,11 +27,19 @@
                      ${sessionScope.queryName}:
                 </c:when>
                 <c:otherwise>
-                    <fmt:message key="label.found.movies"/>
+                    MovieRating
                 </c:otherwise>
             </c:choose>
         </h2>
     </div>
+    <br/>
+    <c:forEach var="validationException" items="${sessionScope.validationErrors}">
+        <h4>${validationException}</h4>
+    </c:forEach>
+
+    <c:if test="${not empty sessionScope.errorMessage}">
+        <h4>${sessionScope.errorMessage}</h4>
+    </c:if>
     <c:if test="${not empty sessionScope.foundMovies}">
         <section class="section-movies">
             <c:forEach var="movie" items="${sessionScope.foundMovies}">

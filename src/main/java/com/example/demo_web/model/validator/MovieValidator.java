@@ -91,14 +91,12 @@ public class MovieValidator {
         return validations;
     }
 
-    public static boolean isMovieReviewValid(MovieReview review) {
-        return isTitleValid(review.getTitle()) && isTextBodyValid(review.getBody());
+    public static Map<String, Boolean> validateMovieReviewData(String title, String body, String stringMovieId, String stringUserId) {
+        Map<String, Boolean> validations = new LinkedHashMap<>();
+        validations.put(Attribute.MOVIE_REVIEW_TITLE, isTitleValid(title));
+        validations.put(Attribute.MOVIE_REVIEW_BODY, isTextBodyValid(body));
+        validations.put(Attribute.MOVIE_ID, isValidId(stringMovieId));
+        validations.put(Attribute.USER_ID, isValidId(stringUserId));
+        return validations;
     }
-
-    public static boolean isMovieRatingValid(MovieRating movieRating) {
-        float value = movieRating.getValue();
-        return (value >= 0 && value <= 10);
-    }
-
-
 }

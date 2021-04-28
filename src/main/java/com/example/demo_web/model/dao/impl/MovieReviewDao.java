@@ -23,6 +23,10 @@ public class MovieReviewDao extends AbstractMovieReviewDao {
 
     private static final String SQL_SELECT_MOVIE_REVIEW_BY_ID = "SELECT MR.review_id, MR.review_title, MR.review_body, MR.review_creation_date, MR.movie_id, MR.user_id, M.movie_title, U.user_login FROM movie_reviews MR INNER JOIN users U on MR.user_id = u.user_id INNER JOIN movies M on MR.movie_id = M.movie_id WHERE MR.review_id = ?;";
 
+    private static final String SQL_MOVIE_REVIEW_IS_UNIQUE = "SELECT EXISTS (SELECT review_id FROM movie_reviews WHERE movie_id = ? AND user_id = ?) AS movie_review_existence;";
+
+    private static final String SQL_EXISTS = "SELECT EXISTS (SELECT review_id FROM movie_reviews WHERE review_id = ? AND movie_id = ? AND user_id = ?) AS movie_review_existence;";
+
     private static final AbstractMovieReviewDao instance = new MovieReviewDao();
 
     private MovieReviewDao(){}
@@ -122,6 +126,39 @@ public class MovieReviewDao extends AbstractMovieReviewDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public boolean isUnique(int movieId, int userId) throws DaoException {
+        boolean result;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_MOVIE_REVIEW_IS_UNIQUE)) {
+            preparedStatement.setInt(1, movieId);
+            preparedStatement.setInt(2, userId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                resultSet.next();
+                result = resultSet.getInt(1) == 0;
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean exists(int reviewId, int movieId, int userId) throws DaoException {
+        boolean result;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_EXISTS)) {
+            preparedStatement.setInt(1, reviewId);
+            preparedStatement.setInt(2, movieId);
+            preparedStatement.setInt(3, userId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                resultSet.next();
+                result = resultSet.getInt(1) == 1;
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return result;
     }
 
     @Override

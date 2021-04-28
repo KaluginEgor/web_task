@@ -30,11 +30,13 @@ public class UpdateMovieRatingCommand implements ActionCommand {
         String stringUserId = sessionRequestContent.getRequestParameter(RequestParameter.USER_ID);
         String stringValue = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_RATING_VALUE);
         if (stringMovieId == null || stringUserId == null || stringValue == null) {
-            sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_CREATE_MOVIE_RATING_PARAMETERS);
+            sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_UPDATE_MOVIE_RATING_PARAMETERS);
+            commandResult.setPage(PagePath.MAIN);
         } else {
             List<String> errorMessages = movieRatingService.validateData(stringMovieId, stringUserId, stringValue);
             if (!errorMessages.isEmpty()) {
                 sessionRequestContent.setSessionAttribute(Attribute.VALIDATION_ERRORS, errorMessages);
+                commandResult.setPage(PagePath.MAIN);
             } else {
                 User currentUser = (User) sessionRequestContent.getSessionAttribute(Attribute.USER);
                 if (UserRole.ADMIN.equals(currentUser.getRole()) || Integer.valueOf(stringUserId).equals(currentUser.getId())) {

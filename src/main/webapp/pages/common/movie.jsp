@@ -193,7 +193,7 @@
             <c:if test="${not empty movie.reviews}">
                 <p><strong><fmt:message key="label.reviews"/> : </strong></p>
                 <c:forEach var="review" items="${movie.reviews}">
-                    <c:if test="${reviewToUpdate.id != review.id}">
+                    <c:if test="${reviewToUpdate.id != review.id and sessionScope.movieReviewId != review.id}">
                         <div class="review">
                             <form action="<c:url value="/controller"/>" method="POST" >
                                 <input type="hidden" name="command" value="open_user_page"/>
@@ -208,6 +208,7 @@
                                         <input type="hidden" name="command" value="prepare_movie_review_update"/>
                                         <input type="hidden" name="movieReviewId" value="${review.id}"/>
                                         <input type="hidden" name="movieId" value="${movie.id}"/>
+                                        <input type="hidden" name="userId" value="${user.id}"/>
                                         <div class="btn">
                                             <button class="edit-btn" id="${review.id}">
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
@@ -218,6 +219,7 @@
                                         <input type="hidden" name="command" value="delete_movie_review"/>
                                         <input type="hidden" name="movieReviewId" value="${review.id}"/>
                                         <input type="hidden" name="movieId" value="${movie.id}"/>
+                                        <input type="hidden" name="userId" value="${user.id}"/>
                                         <div class="btn">
                                             <button class="delete-btn"><i class="fa fa-trash-o" aria-hidden="true"></i>
                                             </button>
@@ -242,28 +244,41 @@
                 </c:forEach>
             </c:if>
 
-            <c:forEach var="validationException" items="${requestScope.validationExceptions}">
-                <h4>${validationException}</h4>
-            </c:forEach>
 
-
-            <c:if test="${user.id != 0 and user.state == active and (not addedReview or reviewToUpdate.id != 0)}">
+            <c:if test="${user.id != 0 and user.state == active and (not addedReview or reviewToUpdate.id != 0 or not empty sessionScope.movieReviewTitle or not empty sessionScope.movieReviewBody)}">
                 <form action="<c:url value="/controller"/>" method="POST">
                     <c:choose>
-                        <c:when test="${reviewToUpdate.id == 0}">
+                        <c:when test="${reviewToUpdate.id == 0 and empty sessionScope.movieReviewId}">
                             <input type="hidden" name="command" value="create_movie_review"/>
                         </c:when>
                         <c:otherwise>
-                            <input type="hidden" name="movieReviewId" value="${reviewToUpdate.id}"/>
+                            <input type="hidden" name="movieReviewId"
+                                    <c:choose>
+                                        <c:when test="${not empty sessionScope.movieReviewId}">
+                                            value="${sessionScope.movieReviewId}"
+                                        </c:when>
+                                        <c:when test="${not empty reviewToUpdate.id}">
+                                            value="${reviewToUpdate.id}"
+                                        </c:when>
+                                    </c:choose>
+                            />
                             <input type="hidden" name="command" value="update_movie_review"/>
                         </c:otherwise>
                     </c:choose>
                     <input type="hidden" name="userId" value="${user.id}"/>
                     <input type="hidden" name="movieId" value="${movie.id}"/>
-                    <input type="text" required name="movieReviewTitle" class="review-title-input" value="${reviewToUpdate.title}"
-                           placeholder="<fmt:message key="review.title"/>"/>
+                    <input type="text" required name="movieReviewTitle" class="review-title-input" placeholder="<fmt:message key="review.title"/>"
+                            <c:choose>
+                                <c:when test="${not empty sessionScope.movieReviewTitle}">
+                                    value="${sessionScope.movieReviewTitle}"
+                                </c:when>
+                                <c:when test="${not empty reviewToUpdate.title}">
+                                    value="${reviewToUpdate.title}"
+                                </c:when>
+                            </c:choose>
+                    />
                     <textarea required cols="60" rows="5" name="movieReviewBody" class="review-body-input"
-                              placeholder="<fmt:message key="review.body"/> ">${reviewToUpdate.body}</textarea>
+                              placeholder="<fmt:message key="review.body"/> "><c:choose><c:when test="${not empty sessionScope.movieReviewBody}">${sessionScope.movieReviewBody}</c:when><c:when test="${not empty reviewToUpdate.body}">${reviewToUpdate.body}</c:when></c:choose></textarea>
                     <input type="submit" class="leave-review-btn" value="<fmt:message key="label.leave.review"/> ">
                 </form>
             </c:if>
@@ -275,3 +290,6 @@
 </html>
 <c:remove var="validationErrors"/>
 <c:remove var="errorMessage"/>
+<c:remove var="movieReviewTitle"/>
+<c:remove var="movieReviewBody"/>
+<c:remove var="movieReviewId"/>

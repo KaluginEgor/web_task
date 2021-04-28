@@ -44,7 +44,7 @@ public class RegisterCommand implements ActionCommand {
                 commandResult.setPage(PagePath.ERROR_404);
             }
         } else {
-            sessionRequestContent.setRequestAttribute(RequestParameter.ERROR_MESSAGE, ErrorMessage.REPEAT_PASSWORD_INCORRECT_MESSAGE);
+            sessionRequestContent.setRequestAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.REPEAT_PASSWORD_INCORRECT_MESSAGE);
             commandResult.setPage(PagePath.REGISTRATION);
         }
 

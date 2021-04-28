@@ -24,7 +24,7 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
 
     private static final String SQL_SELECT_MOVIE_RATINGS_BY_ID = "SELECT MR.rating_id, MR.rating_value, MR.movie_id, MR.user_id, M.movie_title FROM movie_ratings MR INNER JOIN movies M on MR.movie_id = M.movie_id WHERE MR.rating_id = ?;";
 
-    private static final String SQL_EXISTS = "SELECT EXISTS (SELECT rating_id FROM movie_ratings WHERE rating_id = ? AND movie_id = ? AND user_id = ?) AS movie_existence;";
+    private static final String SQL_EXISTS = "SELECT EXISTS (SELECT rating_id FROM movie_ratings WHERE rating_id = ? AND movie_id = ? AND user_id = ?) AS movie_rating_existence;";
 
     private static final String SQL_MOVIE_RATING_IS_UNIQUE = "SELECT EXISTS (SELECT rating_id FROM movie_ratings WHERE movie_id = ? AND user_id = ?) AS movie_rating_existence;";
 

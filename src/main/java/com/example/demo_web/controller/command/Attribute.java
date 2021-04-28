@@ -45,6 +45,9 @@ public class Attribute {
     public static final String MOVIE_ID = "movieId";
     public static final String USER_ID = "userId";
     public static final String MOVIE_RATING_VALUE = "movieRatingValue";
+    public static final String MOVIE_REVIEW_ID = "movieReviewId";
+    public static final String MOVIE_REVIEW_TITLE = "movieReviewTitle";
+    public static final String MOVIE_REVIEW_BODY = "movieReviewBody";
 
     private Attribute(){}
 }
