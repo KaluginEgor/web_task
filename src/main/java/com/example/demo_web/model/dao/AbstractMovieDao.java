@@ -4,6 +4,7 @@ import com.example.demo_web.model.entity.GenreType;
 import com.example.demo_web.model.entity.Movie;
 import com.example.demo_web.exception.DaoException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public abstract class AbstractMovieDao extends AbstractBaseDao<Integer, Movie> {
@@ -19,4 +20,5 @@ public abstract class AbstractMovieDao extends AbstractBaseDao<Integer, Movie> {
     public abstract float findRatingById(Integer movieId) throws DaoException;
     public abstract boolean updateRatingById(float rating, Integer movieId) throws DaoException;
     public abstract boolean idExists(int id) throws DaoException;
+    public abstract boolean isUnique(String title, LocalDate releaseDate) throws DaoException;
 }

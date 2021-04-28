@@ -22,18 +22,19 @@
 <jsp:include page="/pages/module/header.jsp"/>
 <body class="home">
 <div class="edit-page">
-    <div class="greeting">
-        <h2>Edit media person</h2>
-    </div>
 
-    <c:forEach var="validationException" items="${requestScope.validationExceptions}">
+    <br/>
+    <c:forEach var="validationException" items="${sessionScope.validationErrors}">
         <h4>${validationException}</h4>
     </c:forEach>
+
+    <c:if test="${not empty sessionScope.errorMessage}">
+        <h4>${sessionScope.errorMessage}</h4>
+    </c:if>
 
 
     <form action="<c:url value="/controller"/>" enctype="multipart/form-data" method="POST">
         <input type="hidden" name="command" value="upload_picture">
-        <input type="hidden" name="mediaPersonId" value="${mediaPerson.id}">
         <input type="file" accept="image/*" name="content" height="130">
         <input type="submit" value="Upload File">
     </form>
@@ -65,20 +66,38 @@
         </c:choose>
 
         <div class="block">
-            <label for="firstName">First name</label><br/>
-            <input type="text" required id="firstName" class="first-name" name="firstName" pattern="[A-Za-zА-Яа-яЁё]{1,20}"
-                   placeholder="<fmt:message key="user.name.first"/>" value="${mediaPerson.firstName}">
+            <label for="firstName"><fmt:message key="user.name.first"/></label><br/>
+            <input type="text" required id="firstName" class="first-name" name="firstName" pattern="[A-Za-zА-Яа-яЁё]{1,40}"
+                   placeholder="<fmt:message key="user.name.first"/>"
+                <c:choose>
+                    <c:when test="${not empty sessionScope.secondName}">
+                        value="${sessionScope.secondName}"
+                    </c:when>
+                    <c:when test="${not empty mediaPerson.secondName}">
+                        value="${mediaPerson.secondName}"
+                    </c:when>
+                </c:choose>
+            />
         </div>
 
         <div class="block">
-            <label for="secondName">Second name</label><br/>
-            <input type="text" required id="secondName" class="last-name" name="secondName" pattern="[A-Za-zА-Яа-яЁё]{1,20}"
-                   placeholder="<fmt:message key="user.name.second"/>" value="${mediaPerson.secondName}"/>
+            <label for="secondName"><fmt:message key="user.name.second"/></label><br/>
+            <input type="text" required id="secondName" class="last-name" name="secondName" pattern="[A-Za-zА-Яа-яЁё]{1,40}"
+                   placeholder="<fmt:message key="user.name.second"/>"
+                <c:choose>
+                    <c:when test="${not empty sessionScope.secondName}">
+                        value="${sessionScope.secondName}"
+                    </c:when>
+                    <c:when test="${not empty mediaPerson.secondName}">
+                        value="${mediaPerson.secondName}"
+                    </c:when>
+                </c:choose>
+            />
         </div>
 
         <div class="block">
             <label for="bio"><fmt:message key="media.person.bio"/></label><br/>
-            <textarea id="bio" name="bio" cols="40" rows="5">${mediaPerson.bio}</textarea>
+            <textarea id="bio" name="bio" cols="40" rows="5"><c:choose><c:when test="${not empty sessionScope.bio}">${sessionScope.bio}</c:when><c:when test="${not empty mediaPerson.bio}">${mediaPerson.bio}</c:when></c:choose></textarea>
         </div>
 
         <div class="block occupation">
@@ -87,13 +106,21 @@
                 <c:forEach var="occupation" items="${sessionScope.occupationTypes}">
                     <div class="block-div">
                         <c:choose>
-                            <c:when test="${mediaPerson.occupationType == occupation}">
+                            <c:when test="${sessionScope.occupationType == occupation}">
                                 <input type="radio" id="${occupation}" name="occupationType" checked="checked"
-                                       value="${occupation}"/>
+                                       value="${occupation.ordinal()}"/>
                             </c:when>
                             <c:otherwise>
-                                <input type="radio" id="${occupation}" name="occupationType"
-                                       value="${occupation}"/>
+                                <c:choose>
+                                    <c:when test="${mediaPerson.occupationType == occupation}">
+                                        <input type="radio" id="${occupation}" name="occupationType" checked="checked"
+                                               value="${occupation.ordinal()}"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <input type="radio" id="${occupation}" name="occupationType"
+                                               value="${occupation.ordinal()}"/>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:otherwise>
                         </c:choose>
                         <label for="${occupation}">${occupation}</label>
@@ -104,7 +131,16 @@
 
         <div class="block">
             <label for="birthday"><fmt:message key="media.person.birthday"/></label><br/>
-            <input type="date" id="birthday" name="birthday" value="${mediaPerson.birthday}"/>
+            <input type="date" id="birthday" name="birthday"
+                <c:choose>
+                    <c:when test="${not empty sessionScope.birthday}">
+                        value="${sessionScope.birthday}"
+                    </c:when>
+                    <c:when test="${not empty mediaPerson.birthday}">
+                        value="${mediaPerson.birthday}"
+                    </c:when>
+                </c:choose>
+            />
         </div>
 
         <div class="block occupation">
@@ -113,13 +149,21 @@
                 <c:forEach var="movie" items="${sessionScope.movies}">
                     <div class="block-div">
                         <c:choose>
-                            <c:when test="${mediaPerson.movies.contains(movie)}">
+                            <c:when test="${sessionScope.mediaPersonMovies.contains(movie.id)}">
                                 <input type="checkbox" id="${movie.id}" name="mediaPersonMovies" checked="checked"
                                        value="${movie.id}"/>
                             </c:when>
                             <c:otherwise>
-                                <input type="checkbox" id="${movie.id}" name="mediaPersonMovies"
-                                       value="${movie.id}"/>
+                                <c:choose>
+                                    <c:when test="${mediaPerson.movies.contains(movie)}">
+                                        <input type="checkbox" id="${movie.id}" name="mediaPersonMovies" checked="checked"
+                                               value="${movie.id}"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <input type="checkbox" id="${movie.id}" name="mediaPersonMovies"
+                                               value="${movie.id}"/>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:otherwise>
                         </c:choose>
                         <label for="${movie}">${movie.title}</label>
@@ -146,5 +190,14 @@
 </body>
 </html>
 <c:remove var="newPicture"/>
+<c:remove var="firstName"/>
+<c:remove var="secondName"/>
+<c:remove var="bio"/>
+<c:remove var="occupationType"/>
+<c:remove var="birthday"/>
+<c:remove var="mediaPersonMovies"/>
+<c:remove var="validationErrors"/>
+<c:remove var="errorMessage"/>
+
 
 

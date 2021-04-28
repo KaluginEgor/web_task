@@ -36,6 +36,8 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
 
     private static final String SQL_EXISTS_ID = "SELECT EXISTS (SELECT media_person_id FROM media_persons WHERE media_person_id = ?) AS media_person_existence;";
 
+    private static final String SQL_MEDIA_PERSON_IS_UNIQUE = "SELECT EXISTS (SELECT media_person_id FROM media_persons WHERE media_person_first_name = ? AND media_person_second_name = ? AND media_person_birthday = ?) AS media_person_existence;";
+
     private MediaPersonDao(){}
 
     public static AbstractMediaPersonDao getInstance() {
@@ -198,6 +200,23 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public boolean isUnique(String firstName, String secondName, LocalDate birthday) throws DaoException {
+        boolean result;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_MEDIA_PERSON_IS_UNIQUE)) {
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, secondName);
+            preparedStatement.setDate(3, java.sql.Date.valueOf(birthday));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                resultSet.next();
+                result = resultSet.getInt(1) == 0;
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return result;
     }
 
     private MediaPerson buildMediaPerson(ResultSet resultSet) throws SQLException {

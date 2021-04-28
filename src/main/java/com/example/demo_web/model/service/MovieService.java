@@ -17,11 +17,18 @@ public interface MovieService {
 
     List<Movie> findAll() throws ServiceException;
 
-    Movie create(String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws ServiceException;
+    Map.Entry<Optional<Movie>, Optional<String>> create(String title, String description, String stringReleaseDate,
+                                                        String picture, String[] stringGenres,
+                                                        String[] stringMediaPersonsId) throws ServiceException;
 
-    Movie update(int id, String title, String description, LocalDate releaseDate, String picture, String[] stringGenres, String[] stringMediaPersonsId) throws ServiceException;
+    Map.Entry<Optional<Movie>, Optional<String>> update(String stringId, String title, String description, String releaseDate,
+                                                        String picture, String[] stringGenres,
+                                                        String[] stringMediaPersonsId) throws ServiceException;
 
-    boolean delete(int id) throws ServiceException;
+    Optional<String> delete(String stringId) throws ServiceException;
 
     Map.Entry<List<Movie>, Optional<String>> findByNamePart(String title) throws ServiceException;
+
+    Map.Entry<List<String>, List<String>> validateData(String title, String description, String stringReleaseDate,
+                                                       String[] stringGenresId, String[] stringMediaPersonsId);
 }

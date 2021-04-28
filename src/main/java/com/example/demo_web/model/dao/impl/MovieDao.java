@@ -46,6 +46,8 @@ public class MovieDao extends AbstractMovieDao {
 
     private static final String SQL_EXISTS_ID = "SELECT EXISTS (SELECT movie_id FROM movies WHERE movie_id = ?) AS movie_existence;";
 
+    private static final String SQL_MOVIE_IS_UNIQUE = "SELECT EXISTS (SELECT movie_id FROM movies WHERE movie_title = ? AND movie_release_date = ?) AS movie_existence;";
+
     private static final AbstractMovieDao instance = new MovieDao();
 
     private MovieDao(){}
@@ -292,6 +294,22 @@ public class MovieDao extends AbstractMovieDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public boolean isUnique(String title, LocalDate releaseDate) throws DaoException {
+        boolean result;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_MOVIE_IS_UNIQUE)) {
+            preparedStatement.setString(1, title);
+            preparedStatement.setDate(2, java.sql.Date.valueOf(releaseDate));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                resultSet.next();
+                result = resultSet.getInt(1) == 0;
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return result;
     }
 
     private Movie buildMovie(ResultSet resultSet) throws SQLException {

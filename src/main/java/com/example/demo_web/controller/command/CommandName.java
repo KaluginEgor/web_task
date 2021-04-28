@@ -47,7 +47,7 @@ public enum CommandName {
     },
     CONFIRM_REGISTRATION(new ConfirmRegistrationCommand()) {
         {
-            setAllowedUserRoles(UserRole.USER);
+            setAllowedUserRoles(UserRole.GUEST);
         }
     },
     OPEN_ALL_MOVIES_PAGE(new OpenAllMoviesPageCommand()) {
@@ -75,9 +75,9 @@ public enum CommandName {
             setAllowedUserRoles(UserRole.values());
         }
     },
-    OPEN_EDIT_MEDIA_PERSON_PAGE(new OpenMediaPersonPageCommand()) {
+    OPEN_EDIT_MEDIA_PERSON_PAGE(new OpenEditMediaPersonPageCommand()) {
         {
-            setAllowedUserRoles(UserRole.values());
+            setAllowedUserRoles(UserRole.ADMIN);
         }
     },
     UPDATE_MEDIA_PERSON(new UpdateMediaPersonCommand()) {

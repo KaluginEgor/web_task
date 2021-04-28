@@ -60,7 +60,8 @@
         <c:choose>
             <c:when test="${user.state == 'ACTIVE'}">
                 <div class="header-user-menu">
-                    <img src="${pageContext.request.contextPath}/pictures/dude.jpg" alt="User Image"/>
+                    <img src="${pageContext.request.contextPath}/picture?currentPicture=${user.picture}"
+                         alt="${user.login}"/>
                     <ul>
                         <li>
                             <form action="<c:url value="/controller"/>" method="POST" >

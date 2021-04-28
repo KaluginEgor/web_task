@@ -23,7 +23,8 @@ public class OpenMediaPersonPageCommand implements ActionCommand {
         CommandResult commandResult = new CommandResult(PagePath.MEDIA_PERSON, TransitionType.REDIRECT);
         String stringMediaPersonId = sessionRequestContent.getRequestParameter(RequestParameter.MEDIA_PERSON_ID);
         if (stringMediaPersonId == null) {
-            sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_MEDIA_PERSON_PARAMETERS);
+            sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_OPEN_MEDIA_PERSON_PARAMETERS);
+            commandResult.setPage(PagePath.MAIN);
         } else {
             Optional<String> errorMessage;
             Optional<MediaPerson> mediaPerson;
@@ -34,6 +35,7 @@ public class OpenMediaPersonPageCommand implements ActionCommand {
                 errorMessage = findResult.getValue();
                 if (errorMessage.isPresent()) {
                     sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, errorMessage.get());
+                    commandResult.setPage(PagePath.MAIN);
                 } else {
                     if (mediaPerson.isPresent()) {
                         sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PERSON, mediaPerson.get());

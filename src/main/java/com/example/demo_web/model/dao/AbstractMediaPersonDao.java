@@ -3,6 +3,7 @@ package com.example.demo_web.model.dao;
 import com.example.demo_web.model.entity.MediaPerson;
 import com.example.demo_web.exception.DaoException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public abstract class AbstractMediaPersonDao extends AbstractBaseDao<Integer, MediaPerson> {
@@ -12,4 +13,5 @@ public abstract class AbstractMediaPersonDao extends AbstractBaseDao<Integer, Me
     public abstract boolean insertMediaPersonMovie(Integer mediaPersonId, Integer movieId) throws DaoException;
     public abstract boolean deleteMediaPersonMovies(Integer mediaPersonId) throws DaoException;
     public abstract boolean idExists(int id) throws DaoException;
+    public abstract boolean isUnique(String firstName, String secondName, LocalDate birthday) throws DaoException;
 }

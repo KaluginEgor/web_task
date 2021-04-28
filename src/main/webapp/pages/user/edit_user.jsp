@@ -26,13 +26,12 @@
         <h2>Edit user</h2>
     </div>
 
-    <c:forEach var="validationException" items="${requestScope.validationExceptions}">
-        <h4>${validationException}</h4>
+    <c:forEach var="validationError" items="${requestScope.validationErrors}">
+        <h4>${validationError}</h4>
     </c:forEach>
 
     <form action="<c:url value="/controller"/>" enctype="multipart/form-data" method="POST">
         <input type="hidden" name="command" value="upload_picture">
-        <input type="hidden" name="userId" value="${someUser.id}">
         <input type="file" accept="image/*" name="content" height="130">
         <input type="submit" value="Upload File">
     </form>

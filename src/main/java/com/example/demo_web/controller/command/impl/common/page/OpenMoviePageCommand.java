@@ -3,7 +3,6 @@ package com.example.demo_web.controller.command.impl.common.page;
 
 import com.example.demo_web.controller.command.*;
 import com.example.demo_web.exception.CommandException;
-import com.example.demo_web.model.entity.MediaPerson;
 import com.example.demo_web.model.entity.Movie;
 import com.example.demo_web.exception.ServiceException;
 import com.example.demo_web.model.service.MovieService;
@@ -24,7 +23,8 @@ public class OpenMoviePageCommand implements ActionCommand {
         CommandResult commandResult = new CommandResult(PagePath.MOVIE, TransitionType.REDIRECT);
         String stringMovieId = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID);
         if (stringMovieId == null) {
-            sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_MOVIE_PARAMETERS);
+            sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_OPEN_MOVIE_PARAMETERS);
+            commandResult.setPage(PagePath.MAIN);
         } else {
             Optional<String> errorMessage;
             Optional<Movie> movie;
@@ -35,6 +35,7 @@ public class OpenMoviePageCommand implements ActionCommand {
                 errorMessage = findResult.getValue();
                 if (errorMessage.isPresent()) {
                     sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, errorMessage.get());
+                    commandResult.setPage(PagePath.MAIN);
                 } else {
                     if (movie.isPresent()) {
                         sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie.get());

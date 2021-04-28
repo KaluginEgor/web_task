@@ -9,6 +9,9 @@ import com.example.demo_web.model.service.UserService;
 import com.example.demo_web.model.service.impl.MediaPersonServiceImpl;
 import com.example.demo_web.model.service.impl.MovieServiceImpl;
 import com.example.demo_web.model.service.impl.UserServiceImpl;
+import com.example.demo_web.model.util.message.ErrorMessage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.Part;
 import java.io.IOException;
@@ -16,17 +19,14 @@ import java.util.List;
 import java.util.UUID;
 
 public class UploadPictureCommand implements ActionCommand {
-    private MovieService movieService = MovieServiceImpl.getInstance();
-    private UserService userService = UserServiceImpl.getInstance();
-    private MediaPersonService mediaPersonService = MediaPersonServiceImpl.getInstance();
+    private static final Logger logger = LogManager.getLogger();
     private static final String UPLOAD_PICTURE_DIRECTORY = "C:/Epam/pictures";
     private static final char FILE_FORMAT_SEPARATOR = '.';
 
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) {
-        CommandResult commandResult = new CommandResult();
-        commandResult.setTransitionType(TransitionType.REDIRECT);
         String page = (String)sessionRequestContent.getSessionAttribute(Attribute.PAGE);
+        CommandResult commandResult = new CommandResult(page, TransitionType.REDIRECT);
         List<Part> fileParts = sessionRequestContent.getFileParts();
         String fileName = null;
 
@@ -39,18 +39,17 @@ public class UploadPictureCommand implements ActionCommand {
                 }
             }
         } catch (IOException e) {
-            //logger.error(e);
+            logger.error(e);
         }
         if (fileName == null) {
             commandResult.setPage(page);
-            //requestContext.setRequestAttribute(RequestAttribute.ERROR_MESSAGE, EMPTY_UPLOAD_FILE_PARAMETERS);
+            sessionRequestContent.setRequestAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_UPLOAD_FILE_PARAMETERS);
         } else {
             if (!fileName.isEmpty()) {
                 sessionRequestContent.setSessionAttribute(Attribute.NEW_PICTURE, fileName);
                 commandResult.setPage(page);
-                //logger.info("User -> {}, change avatar", user);
             } else {
-                //requestContext.setRequestAttribute(RequestAttribute.ERROR_MESSAGE, ErrorMessage.ERROR_WITH_UPLOAD);
+                sessionRequestContent.setRequestAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.ERROR_WITH_UPLOAD);
                 commandResult.setPage(page);
             }
         }

@@ -2,6 +2,7 @@ package com.example.demo_web.controller.filter;
 
 import com.example.demo_web.controller.command.Attribute;
 import com.example.demo_web.controller.command.PagePath;
+import com.example.demo_web.controller.command.RequestParameter;
 import com.example.demo_web.model.entity.MediaPerson;
 import com.example.demo_web.model.entity.Movie;
 import com.example.demo_web.model.entity.User;
@@ -61,13 +62,13 @@ public class JspAccessFilter implements Filter {
         } else if (uri.contains(PagePath.ALL_USERS) && users == null) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + page);
             return;
-        } else if ((uri.contains(PagePath.EDIT_MOVIE) || uri.contains(PagePath.MOVIE)) && movie == null) {
+        } else if (uri.contains(PagePath.MOVIE) && movie == null) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + page);
             return;
-        } else if ((uri.contains(PagePath.EDIT_MEDIA_PERSON) || uri.contains(PagePath.MEDIA_PERSON)) && mediaPerson == null) {
+        } else if (uri.contains(PagePath.MEDIA_PERSON) && mediaPerson == null) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + page);
             return;
-        } else if ((uri.contains(PagePath.EDIT_USER) || uri.contains(PagePath.USER)) && someUser == null) {
+        } else if ((uri.contains(PagePath.USER) || uri.contains(PagePath.EDIT_USER)) && someUser == null) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + page);
             return;
         }

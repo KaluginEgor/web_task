@@ -35,6 +35,8 @@
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
                 </div>
             </form>
+        </c:if>
+        <c:if test="${(user.id == someUser.id and user.role != admin) or (user.role == admin and someUser.role != admin)}">
             <form action="<c:url value="/controller"/>" method="POST" >
                 <input type="hidden" name="command" value="delete_user">
                 <input type="hidden" name="userId" value="${someUser.id}">

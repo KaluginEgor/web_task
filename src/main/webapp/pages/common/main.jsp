@@ -32,9 +32,9 @@
             </c:choose>
         </h2>
     </div>
-    <c:if test="${not empty sessionScope.movies}">
+    <c:if test="${not empty sessionScope.foundMovies}">
         <section class="section-movies">
-            <c:forEach var="movie" items="${sessionScope.movies}">
+            <c:forEach var="movie" items="${sessionScope.foundMovies}">
                 <ul>
                     <li>
                         <div class="movie">
@@ -59,3 +59,4 @@
 </section>
 </body>
 </html>
+<c:remove var="foundMovies"/>

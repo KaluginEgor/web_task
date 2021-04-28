@@ -24,7 +24,8 @@ public class FindMoviesByTitleCommand implements ActionCommand {
 
         String movieTitle = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_TO_FIND);
         if (movieTitle == null) {
-            sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_MOVIE_PARAMETERS);
+            sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_OPEN_MOVIE_PARAMETERS);
+            commandResult.setPage(PagePath.MAIN);
         } else {
             Optional<String> errorMessage;
             List<Movie> movies;
@@ -35,9 +36,10 @@ public class FindMoviesByTitleCommand implements ActionCommand {
                 errorMessage = findResult.getValue();
                 if (errorMessage.isPresent()) {
                     sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, errorMessage.get());
+                    commandResult.setPage(PagePath.MAIN);
                 } else {
                     sessionRequestContent.setSessionAttribute(Attribute.QUERY_NAME, movieTitle);
-                    sessionRequestContent.setSessionAttribute(Attribute.MOVIES, movies);
+                    sessionRequestContent.setSessionAttribute(Attribute.FOUND_MOVIES, movies);
                 }
             } catch (ServiceException e) {
                 logger.error(e);

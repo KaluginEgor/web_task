@@ -24,6 +24,7 @@ public class OpenUserPageCommand implements ActionCommand {
         String stringUserId = sessionRequestContent.getRequestParameter(RequestParameter.USER_ID);
         if (stringUserId == null) {
             sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_USER_PARAMETERS);
+            commandResult.setPage(PagePath.MAIN);
         } else {
             Optional<String> errorMessage;
             Optional<User> user;
@@ -34,6 +35,7 @@ public class OpenUserPageCommand implements ActionCommand {
                 errorMessage = findResult.getValue();
                 if (errorMessage.isPresent()) {
                     sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, errorMessage.get());
+                    commandResult.setPage(PagePath.MAIN);
                 } else {
                     if (user.isPresent()) {
                         sessionRequestContent.setSessionAttribute(Attribute.SOME_USER, user.get());

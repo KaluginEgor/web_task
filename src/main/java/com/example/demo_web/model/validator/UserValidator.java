@@ -5,10 +5,10 @@ import java.util.Map;
 
 public class UserValidator {
     private static final String DIGIT_PATTERN = "\\d+";
-    private static final String LOGIN_PATTERN = "[A-Za-zА-Яа-яЁё0-9]{4,}";
-    private static final String NAME_PATTERN = "[A-Za-zА-Яа-яЁё0]{4,}";
+    private static final String LOGIN_PATTERN = "[A-Za-zА-Яа-яЁё0-9]{1,40}";
+    private static final String NAME_PATTERN = "[A-Za-zА-Яа-яЁё]{1,40}";
     private static final String EMAIL_PATTERN = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$";
-    private static final String PASSWORD_PATTERN = ".{8,}";
+    private static final String PASSWORD_PATTERN = ".{8,100}";
     private static final String LOGIN = "login";
     private static final String EMAIL = "email";
     private static final String FIRST_NAME = "firstName";

@@ -19,13 +19,28 @@ public class Attribute {
     public static final String OCCUPATION_TYPES = "occupationTypes";
     public static final String GENRE_TYPES = "genreTypes";
     public static final String MOVIES = "movies";
-    public static final String MEDIA_PEOPLE = "mediaPeople";
+    public static final String FOUND_MOVIES = "foundMovies";
+    public static final String MEDIA_PERSONS = "mediaPeople";
     public static final String REVIEW_TO_UPDATE = "reviewToUpdate";
     public static final String PAGE = "page";
     public static final String NEW_PICTURE = "newPicture";
     public static final String QUERY_NAME = "queryName";
     public static final String ERROR_MESSAGE = "errorMessage";
     public static final String CONFIRM_MESSAGE = "confirmMessage";
+    public static final String VALIDATION_ERRORS = "validationErrors";
+
+    public static final String FIRST_NAME = "firstName";
+    public static final String SECOND_NAME = "secondName";
+    public static final String BIO = "bio";
+    public static final String MEDIA_PERSON_OCCUPATION_TYPE = "occupationType";
+    public static final String MEDIA_PERSON_BIRTHDAY = "birthday";
+    public static final String PICTURE = "picture";
+    public static final String MEDIA_PERSON_MOVIES = "mediaPersonMovies";
+    public static final String MOVIE_TITLE = "movieTitle";
+    public static final String MOVIE_DESCRIPTION = "movieDescription";
+    public static final String MOVIE_RELEASE_DATE = "movieReleaseDate";
+    public static final String MOVIE_GENRE = "movieGenre";
+    public static final String MOVIE_CREW = "movieCrew";
 
     private Attribute(){}
 }

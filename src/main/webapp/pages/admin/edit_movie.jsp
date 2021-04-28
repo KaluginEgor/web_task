@@ -22,17 +22,18 @@
 <jsp:include page="/pages/module/header.jsp"/>
 <body class="home">
 <div class="edit-page">
-    <div class="greeting">
-        <h2>Edit movie</h2>
-    </div>
 
-    <c:forEach var="validationException" items="${requestScope.validationExceptions}">
+    <br/>
+    <c:forEach var="validationException" items="${sessionScope.validationErrors}">
         <h4>${validationException}</h4>
     </c:forEach>
 
+    <c:if test="${not empty sessionScope.errorMessage}">
+        <h4>${sessionScope.errorMessage}</h4>
+    </c:if>
+
     <form action="<c:url value="/controller"/>" enctype="multipart/form-data" method="POST">
         <input type="hidden" name="command" value="upload_picture">
-        <input type="hidden" name="movieId" value="${movie.id}">
         <input type="file" accept="image/*" name="content" height="130">
         <input type="submit" value="Upload File">
     </form>
@@ -65,18 +66,36 @@
 
         <div class="block">
             <label for="title"><fmt:message key="movie.title"/></label><br>
-            <input type="text" required id="title" class="title" name="movieTitle" value="${movie.title}"/>
+            <input type="text" required id="title" class="title" name="movieTitle" placeholder="<fmt:message key="movie.title"/>"
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.movieTitle}">
+                            value="${sessionScope.movieTitle}"
+                        </c:when>
+                        <c:when test="${not empty movie.title}">
+                            value="${movie.title}"
+                        </c:when>
+                    </c:choose>
+            />
         </div>
 
         <div class="block">
             <label for="release-date"><fmt:message key="movie.release.date"/></label><br>
-            <input type="date" id="release-date" name="movieReleaseDate" value="${movie.releaseDate}"/>
+            <input type="date" id="release-date" name="movieReleaseDate"
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.movieReleaseDate}">
+                            value="${sessionScope.movieReleaseDate}"
+                        </c:when>
+                        <c:when test="${not empty movie.releaseDate}">
+                            value="${movie.releaseDate}"
+                        </c:when>
+                    </c:choose>
+            />
         </div>
 
         <div class="block">
             <label for="description"><fmt:message key="movie.description"/></label><br/>
             <textarea id="description" name="movieDescription" cols="40"
-                      rows="5">${movie.description}</textarea>
+                      rows="5"><c:choose><c:when test="${not empty sessionScope.movieDescription}">${sessionScope.movieDescription}</c:when><c:when test="${not empty movie.description}">${movie.description}</c:when></c:choose></textarea>
         </div>
 
         <div class="block genre">
@@ -85,13 +104,21 @@
                 <c:forEach var="genre" items="${sessionScope.genreTypes}">
                     <div class="block-div">
                         <c:choose>
-                            <c:when test="${not empty movie.genres and movie.genres.contains(genre)}">
+                            <c:when test="${not empty sessionScope.movieGenre and sessionScope.movieGenre.contains(genre.ordinal())}">
                                 <input type="checkbox" id="${genre}" name="movieGenre" checked="checked"
-                                       value="${genre}"/>
+                                       value="${genre.ordinal()}"/>
                             </c:when>
                             <c:otherwise>
-                                <input type="checkbox" id="${genre}" name="movieGenre"
-                                       value="${genre}"/>
+                                <c:choose>
+                                    <c:when test="${not empty movie.genres and movie.genres.contains(genre)}">
+                                        <input type="checkbox" id="${genre}" name="movieGenre" checked="checked"
+                                               value="${genre.ordinal()}"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <input type="checkbox" id="${genre}" name="movieGenre"
+                                               value="${genre.ordinal()}"/>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:otherwise>
                         </c:choose>
                         <label for="${genre}">${genre}</label>
@@ -106,13 +133,21 @@
                 <c:forEach var="mediaPerson" items="${sessionScope.mediaPeople}">
                     <div class="block-div">
                         <c:choose>
-                            <c:when test="${not empty movie.crew and movie.crew.contains(mediaPerson)}">
+                            <c:when test="${not empty sessionScope.movieCrew and sessionScope.movieCrew.contains(mediaPerson.id)}">
                                 <input type="checkbox" id="${mediaPerson.id}" name="movieCrew" checked="checked"
                                        value="${mediaPerson.id}"/>
                             </c:when>
                             <c:otherwise>
-                                <input type="checkbox" id="${mediaPerson.id}" name="movieCrew"
-                                       value="${mediaPerson.id}"/>
+                                <c:choose>
+                                    <c:when test="${not empty movie.crew and movie.crew.contains(mediaPerson)}">
+                                        <input type="checkbox" id="${mediaPerson.id}" name="movieCrew" checked="checked"
+                                               value="${mediaPerson.id}"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <input type="checkbox" id="${mediaPerson.id}" name="movieCrew"
+                                               value="${mediaPerson.id}"/>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:otherwise>
                         </c:choose>
                         <label for="${mediaPerson.id}">${mediaPerson.firstName} ${mediaPerson.secondName}</label>
@@ -139,3 +174,8 @@
 </body>
 </html>
 <c:remove var="newPicture"/>
+<c:remove var="movieTitle"/>
+<c:remove var="movieReleaseDate"/>
+<c:remove var="movieDescription"/>
+<c:remove var="movieCrew"/>
+<c:remove var="movieGenre"/>
