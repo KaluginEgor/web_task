@@ -179,3 +179,5 @@
 <c:remove var="movieDescription"/>
 <c:remove var="movieCrew"/>
 <c:remove var="movieGenre"/>
+<c:remove var="validationErrors"/>
+<c:remove var="errorMessage"/>

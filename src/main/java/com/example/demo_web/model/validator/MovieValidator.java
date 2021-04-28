@@ -13,8 +13,9 @@ import java.util.Map;
 
 public class MovieValidator {
     private static final String DIGIT_PATTERN = "\\d+";
-    private static final String TITLE_PATTERN = "[A-Za-zА-Яа-яЁё0-9\\s?!.,]{1,1000}";
-    private static final String TEXT_BODY_PATTERN = "[A-Za-zА-Яа-яЁё0-9\\s?!.,]{1,10000}";
+    private static final String RATING_PATTEN = "[1-9]|10";
+    private static final String TITLE_PATTERN = "[A-Za-zА-Яа-яЁё0-9\\s?!.,-]{1,1000}";
+    private static final String TEXT_BODY_PATTERN = "[A-Za-zА-Яа-яЁё0-9\\s?!.,-]{1,10000}";
     private static final String PICTURE_PATTERN = "[^\\s]+(.*?)\\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$";
     private static final String GENRE_PATTERN = "[0-" + (GenreType.values().length - 1) + "]";
 
@@ -67,6 +68,10 @@ public class MovieValidator {
         return true;
     }
 
+    public static boolean isRatingValueValid(String stringValue) {
+        return stringValue.matches(RATING_PATTEN);
+    }
+
     public static Map<String, Boolean> validateMovieData(String title, String description, String stringReleaseDate,
                                                   String[] stringGenresId, String[] stringMediaPeopleId) {
         Map<String, Boolean> validations = new LinkedHashMap<>();
@@ -75,6 +80,14 @@ public class MovieValidator {
         validations.put(Attribute.MOVIE_RELEASE_DATE, isReleaseDateValid(stringReleaseDate));
         validations.put(Attribute.MOVIE_GENRE, areGenresValid(stringGenresId));
         validations.put(Attribute.MOVIE_CREW, areMediaPersonsIdValid(stringMediaPeopleId));
+        return validations;
+    }
+
+    public static Map<String, Boolean> validateMovieRatingData(String stringMovieId, String stringUserId, String stringValue) {
+        Map<String, Boolean> validations = new LinkedHashMap<>();
+        validations.put(Attribute.MOVIE_ID, isValidId(stringMovieId));
+        validations.put(Attribute.USER_ID, isValidId(stringUserId));
+        validations.put(Attribute.MOVIE_RATING_VALUE, isRatingValueValid(stringValue));
         return validations;
     }
 

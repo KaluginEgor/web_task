@@ -38,7 +38,7 @@ public class ErrorMessage {
     public static final String TRY_FIND_NOT_EXISTING_MOVIE = "try find not existing movie";
     public static final String TRY_DELETE_NOT_EXISTING_MOVIE = "try find not existing movie";
     public static final String TRY_UPDATE_NOT_EXISTING_MOVIE = "try update not existing movie";
-    public static final String INCORRECT_MOVIE_ID_PARAMETER = "incorrect find movie parameters";
+    public static final String INCORRECT_MOVIE_ID_PARAMETER = "incorrect movie id parameter";
     public static final String INCORRECT_DELETE_MOVIE_PARAMETERS = "incorrect delete movie parameters";
     public static final String MOVIE_IS_NOT_UNIQUE = "Movie already exists";
 
@@ -46,6 +46,8 @@ public class ErrorMessage {
     public static final String EMPTY_EDIT_USER_PARAMETERS = "Empty edit user parameters";
     public static final String TRY_FIND_NOT_EXISTING_USER = "try find not existing user";
     public static final String INCORRECT_FIND_USER_PARAMETERS = "incorrect find user parameters";
+
+    public static final String EMPTY_CREATE_MOVIE_RATING_PARAMETERS = "Empty create movie rating parameters";
 
     public static final String ERROR_COMMAND = "Command not found";
     public static final String ERROR_ACCESS = "You are not allowed to access that command";
@@ -66,9 +68,20 @@ public class ErrorMessage {
     public static final String NOT_VALID_RELEASE_DATE = "Release date is not valid";
     public static final String NOT_VALID_GENRES_ID = "Genres id are not valid";
     public static final String NOT_VALID_MEDIA_PERSONS_ID = "Media persons id are not valid";
+    public static final String NOT_VALID_MOVIE_ID = "Movie id is not valid";
+    public static final String NOT_VALID_USER_ID = "User id is not valid";
+    public static final String NOT_VALID_RATING_VALUE = "Rating value is not valid";
 
     public static final String SOME_MOVIES_ID_NOT_EXIST = "Some of movie id do not exist";
     public static final String SOME_MEDIA_PERSONS_ID_NOT_EXIST = "Some of media persons id do not exist";
+    public static final String MOVIE_ID_NOT_EXIST = "Movie id does not exist";
+    public static final String USER_ID_NOT_EXIST = "User id does not exist";
+    public static final String MOVIE_RATING_IS_NOT_UNIQUE = "Movie rating is not unique";
+    public static final String INCORRECT_UPDATE_MOVIE_RATING_ID_PARAMETER = "incorrect update movie rating id parameter";
+    public static final String INCORRECT_DELETE_MOVIE_RATING_ID_PARAMETER = "incorrect delete movie rating id parameter";
+    public static final String TRY_UPDATE_NOT_EXISTING_MOVIE_RATING = "try update not existing movie rating";
+    public static final String TRY_DELETE_NOT_EXISTING_MOVIE_RATING = "try delete not existing movie rating";
+    public static final String EMPTY_DELETE_MOVIE_RATING_PARAMETERS = "Empty delete movie rating parameters";
 
     private ErrorMessage() {}
 }

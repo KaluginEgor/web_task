@@ -13,7 +13,7 @@ import java.util.Map;
 public class MediaPersonValidator {
     private static final String DIGIT_PATTERN = "\\d+";
     private static final String NAME_PATTERN = "[A-Za-zА-Яа-яЁё]{1,40}";
-    private static final String BIO_PATTERN = "[A-Za-zА-Яа-яЁё0-9\\s?!.,]{1,10000}";
+    private static final String BIO_PATTERN = "[A-Za-zА-Яа-яЁё0-9\\s?!.,-]{1,10000}";
     private static final String OCCUPATION_ID_PATTERN = "[0-" + (OccupationType.values().length - 1) + "]";
     private static final String PICTURE_PATTERN = "[^\\s]+(.*?)\\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$";
 

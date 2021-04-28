@@ -2,7 +2,7 @@ package com.example.demo_web.model.entity;
 
 public class MovieRating extends Entity {
     private int id;
-    private float value;
+    private int value;
     private int movieId;
     private int userId;
     private String movieTitle;
@@ -15,11 +15,11 @@ public class MovieRating extends Entity {
         this.id = id;
     }
 
-    public float getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(int value) {
         this.value = value;
     }
 

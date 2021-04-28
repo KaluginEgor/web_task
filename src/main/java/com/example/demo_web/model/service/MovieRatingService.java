@@ -1,11 +1,14 @@
 package com.example.demo_web.model.service;
 
-import com.example.demo_web.model.entity.MovieRating;
 import com.example.demo_web.exception.ServiceException;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface MovieRatingService {
 
-    MovieRating create(int movieId, int userId, float value) throws ServiceException;
-    MovieRating update(int movieRatingId, int movieId, int userId, float value) throws ServiceException;
-    boolean delete(int id) throws ServiceException;
+    Optional<String> create(String stringMovieId, String stringUserId, String stringValue) throws ServiceException;
+    Optional<String> update(String stringRatingId, String stringMovieId, String stringUserId, String stringValue) throws ServiceException;
+    Optional<String> delete(String stringRatingId, String stringMovieId, String stringUserId) throws ServiceException;
+    List<String> validateData(String stringMovieId, String stringUserId, String stringValue);
 }

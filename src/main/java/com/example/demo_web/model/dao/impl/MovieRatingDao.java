@@ -24,6 +24,10 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
 
     private static final String SQL_SELECT_MOVIE_RATINGS_BY_ID = "SELECT MR.rating_id, MR.rating_value, MR.movie_id, MR.user_id, M.movie_title FROM movie_ratings MR INNER JOIN movies M on MR.movie_id = M.movie_id WHERE MR.rating_id = ?;";
 
+    private static final String SQL_EXISTS = "SELECT EXISTS (SELECT rating_id FROM movie_ratings WHERE rating_id = ? AND movie_id = ? AND user_id = ?) AS movie_existence;";
+
+    private static final String SQL_MOVIE_RATING_IS_UNIQUE = "SELECT EXISTS (SELECT rating_id FROM movie_ratings WHERE movie_id = ? AND user_id = ?) AS movie_rating_existence;";
+
     private static final AbstractMovieRatingDao instance = new MovieRatingDao();
 
     private MovieRatingDao(){}
@@ -138,6 +142,39 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
     }
 
     @Override
+    public boolean exists(int ratingId, int movieId, int userId) throws DaoException {
+        boolean result;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_EXISTS)) {
+            preparedStatement.setInt(1, ratingId);
+            preparedStatement.setInt(2, movieId);
+            preparedStatement.setInt(3, userId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                resultSet.next();
+                result = resultSet.getInt(1) == 1;
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean isUnique(int movieId, int userId) throws DaoException {
+        boolean result;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_MOVIE_RATING_IS_UNIQUE)) {
+            preparedStatement.setInt(1, movieId);
+            preparedStatement.setInt(2, userId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                resultSet.next();
+                result = resultSet.getInt(1) == 0;
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return result;
+    }
+
+    @Override
     public List<MovieRating> findAll() throws DaoException {
         throw new UnsupportedOperationException();
     }
@@ -149,7 +186,7 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
         MovieRating movieRating = new MovieRating();
         Integer movieRatingId = resultSet.getInt(MovieRatingsColumn.ID);
         movieRating.setId(movieRatingId);
-        Float movieRatingValue = resultSet.getFloat(MovieRatingsColumn.VALUE);
+        Integer movieRatingValue = resultSet.getInt(MovieRatingsColumn.VALUE);
         movieRating.setValue(movieRatingValue);
         Integer movieId = resultSet.getInt(MovieRatingsColumn.MOVIE_ID);
         movieRating.setMovieId(movieId);

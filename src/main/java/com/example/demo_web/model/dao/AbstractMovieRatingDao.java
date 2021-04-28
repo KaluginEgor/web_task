@@ -9,4 +9,6 @@ public abstract class AbstractMovieRatingDao extends AbstractBaseDao<Integer, Mo
     public abstract List<MovieRating> findByMovieId(Integer id) throws DaoException;
     public abstract List<MovieRating> findByUserId(Integer id) throws DaoException;
     public abstract int countRatingsByMovieId(Integer movieId) throws DaoException;
+    public abstract boolean exists(int ratingId, int movieId, int userId) throws DaoException;
+    public abstract boolean isUnique(int movieId, int userId) throws DaoException;
 }

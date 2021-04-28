@@ -42,5 +42,9 @@ public class Attribute {
     public static final String MOVIE_GENRE = "movieGenre";
     public static final String MOVIE_CREW = "movieCrew";
 
+    public static final String MOVIE_ID = "movieId";
+    public static final String USER_ID = "userId";
+    public static final String MOVIE_RATING_VALUE = "movieRatingValue";
+
     private Attribute(){}
 }

@@ -102,6 +102,15 @@
                 </c:forEach>
             </c:if>
 
+            <br/>
+            <c:forEach var="validationException" items="${sessionScope.validationErrors}">
+                <h4>${validationException}</h4>
+            </c:forEach>
+
+            <c:if test="${not empty sessionScope.errorMessage}">
+                <h4>${sessionScope.errorMessage}</h4>
+            </c:if>
+
             <c:set var="active" value="ACTIVE"/>
             <c:set var="userRate" value="${ctg:getUserRate(movie.ratingList, user.id)}"/>
             <c:if test="${not empty userRate}">
@@ -110,6 +119,7 @@
                     <input type="hidden" name="command" value="delete_movie_rating"/>
                     <input type="hidden" name="movieRatingId" value="${userRate.id}"/>
                     <input type="hidden" name="movieId" value="${movie.id}"/>
+                    <input type="hidden" name="userId" value="${user.id}"/>
                     <div class="btn">
                         <button class="delete-btn"><i class="fa fa-trash-o" aria-hidden="true"></i>
                         </button>
@@ -263,3 +273,5 @@
 </section>
 </body>
 </html>
+<c:remove var="validationErrors"/>
+<c:remove var="errorMessage"/>
