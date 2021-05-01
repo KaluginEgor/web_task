@@ -12,7 +12,7 @@
 <fmt:setBundle basename="property/pagecontent"/>
 <c:set var="page" value="/pages/common/mediaPerson.jsp" scope="session"/>
 <html>
-<jsp:useBean id="mediaPerson" scope="session" class="com.example.demo_web.model.entity.MediaPerson"/>
+<jsp:useBean id="mediaPerson" scope="session" class="com.epam.project.model.entity.MediaPerson"/>
 <head>
     <title>${mediaPerson.firstName} ${mediaPerson.secondName}</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/moviePage.css" />
@@ -21,7 +21,7 @@
 <jsp:include page="/pages/module/header.jsp"/>
 <body class="home">
 <%--<jsp:useBean id="user" class="com.example.demo_web.entity.User" scope="session"/>--%>
-<jsp:useBean id="user" class="com.example.demo_web.model.entity.User" scope="session"/>
+<jsp:useBean id="user" class="com.epam.project.model.entity.User" scope="session"/>
 <section class="section main">
 
     <div class="section-title">
@@ -94,3 +94,4 @@
 </section>
 </body>
 </html>
+<c:remove var="errorMessage"/>

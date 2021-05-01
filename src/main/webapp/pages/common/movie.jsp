@@ -13,7 +13,7 @@
 <fmt:setBundle basename="property/pagecontent"/>
 <c:set var="page" value="/pages/common/movie.jsp" scope="session"/>
 <html>
-<jsp:useBean id="movie" scope="session" class="com.example.demo_web.model.entity.Movie"/>
+<jsp:useBean id="movie" scope="session" class="com.epam.project.model.entity.Movie"/>
 <head>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/moviePage.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -22,8 +22,8 @@
 <jsp:include page="/pages/module/header.jsp"/>
 <body class="home">
 
-<jsp:useBean id="user" class="com.example.demo_web.model.entity.User" scope="session"/>
-<jsp:useBean id="reviewToUpdate" class="com.example.demo_web.model.entity.MovieReview" scope="session"/>
+<jsp:useBean id="user" class="com.epam.project.model.entity.User" scope="session"/>
+<jsp:useBean id="reviewToUpdate" class="com.epam.project.model.entity.MovieReview" scope="session"/>
 <section class="section main">
 
     <div class="section-title">

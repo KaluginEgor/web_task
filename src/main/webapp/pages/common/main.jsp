@@ -68,3 +68,5 @@
 </body>
 </html>
 <c:remove var="foundMovies"/>
+<c:remove var="validationErrors"/>
+<c:remove var="errorMessage"/>

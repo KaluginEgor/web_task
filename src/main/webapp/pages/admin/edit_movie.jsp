@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="ctg" uri="customtags" %>
 <%--
   Created by IntelliJ IDEA.
   User: egork
@@ -11,7 +12,7 @@
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="property/pagecontent"/>
 <c:set var="page" value="/pages/admin/edit_movie.jsp" scope="session"/>
-<jsp:useBean id="movie" class="com.example.demo_web.model.entity.Movie" scope="session"/>
+<jsp:useBean id="movie" class="com.epam.project.model.entity.Movie" scope="session"/>
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/editPage.css" />
@@ -23,6 +24,7 @@
 <body class="home">
 <div class="edit-page">
 
+    <div class="block">
     <br/>
     <c:forEach var="validationException" items="${sessionScope.validationErrors}">
         <h4>${validationException}</h4>
@@ -31,12 +33,15 @@
     <c:if test="${not empty sessionScope.errorMessage}">
         <h4>${sessionScope.errorMessage}</h4>
     </c:if>
+    </div>
 
+    <div class="block">
     <form action="<c:url value="/controller"/>" enctype="multipart/form-data" method="POST">
         <input type="hidden" name="command" value="upload_picture">
         <input type="file" accept="image/*" name="content" height="130">
-        <input type="submit" value="Upload File">
+        <input type="submit" value="<fmt:message key="label.file.upload"/>">
     </form>
+    </div>
 
     <form class="edit-form" action="<c:url value="/controller"/>" method="POST">
         <c:choose>
@@ -133,31 +138,31 @@
                 <c:forEach var="mediaPerson" items="${sessionScope.mediaPeople}">
                     <div class="block-div">
                         <c:choose>
-                            <c:when test="${not empty sessionScope.movieCrew and sessionScope.movieCrew.contains(mediaPerson.id)}">
-                                <input type="checkbox" id="${mediaPerson.id}" name="movieCrew" checked="checked"
-                                       value="${mediaPerson.id}"/>
+                            <c:when test="${not empty sessionScope.movieCrew and sessionScope.movieCrew.contains(mediaPerson.key)}">
+                                <input type="checkbox" id="${mediaPerson.key}" name="movieCrew" checked="checked"
+                                       value="${mediaPerson.key}"/>
                             </c:when>
                             <c:otherwise>
                                 <c:choose>
-                                    <c:when test="${not empty movie.crew and movie.crew.contains(mediaPerson)}">
-                                        <input type="checkbox" id="${mediaPerson.id}" name="movieCrew" checked="checked"
-                                               value="${mediaPerson.id}"/>
+                                    <c:when test="${not empty movie.crew and ctg:containsMediaPersonId(movie.crew, mediaPerson.key)}">
+                                        <input type="checkbox" id="${mediaPerson.key}" name="movieCrew" checked="checked"
+                                               value="${mediaPerson.key}"/>
                                     </c:when>
                                     <c:otherwise>
-                                        <input type="checkbox" id="${mediaPerson.id}" name="movieCrew"
-                                               value="${mediaPerson.id}"/>
+                                        <input type="checkbox" id="${mediaPerson.key}" name="movieCrew"
+                                               value="${mediaPerson.key}"/>
                                     </c:otherwise>
                                 </c:choose>
                             </c:otherwise>
                         </c:choose>
-                        <label for="${mediaPerson.id}">${mediaPerson.firstName} ${mediaPerson.secondName}</label>
+                        <label for="${mediaPerson.key}">${mediaPerson.value}</label>
                     </div>
                 </c:forEach>
             </div>
         </div>
 
         <div class="block">
-            <input type="submit" class="edit-btn" value="Edit">
+            <input type="submit" class="edit-btn" value="<fmt:message key="label.submit"/>">
         </div>
     </form>
     <c:if test="${movie.id != 0}">

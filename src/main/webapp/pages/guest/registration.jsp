@@ -19,26 +19,38 @@
 </head>
 <body>
     <jsp:include page="/pages/module/header.jsp"/>
+    <div class="block">
+        <br/>
+        <c:forEach var="validationException" items="${sessionScope.validationErrors}">
+            <h4>${validationException}</h4>
+        </c:forEach>
+
+        <c:if test="${not empty sessionScope.errorMessage}">
+            <h4>${sessionScope.errorMessage}</h4>
+        </c:if>
+    </div>
     <div class="user">
         <form class="form" name="registerForm" method="POST" action="<c:url value="/controller"/>">
             <input type="hidden" name="command" value="register"/>
             <div class="form__group">
-                <input type="text" class="form__input" name="login" placeholder=<fmt:message key="user.login"/> pattern="[A-Za-zА-Яа-яЁё0-9]{4,}" value=""/>
+                <input type="text" class="form__input" name="login" placeholder=<fmt:message key="user.login"/> pattern="[A-Za-zА-Яа-яЁё0-9]{4,}"
+                       value="${sessionScope.login}"
+                />
             </div>
             <div class="form__group">
-                <input type="email" class="form__input" name="email" value="" placeholder=<fmt:message key="user.email"/> pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
+                <input type="email" class="form__input" name="email" value="${sessionScope.email}" placeholder=<fmt:message key="user.email"/> pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/>
             </div>
             <div class="form__group">
-                <input type="text" class="form__input" name="firstName" value="" placeholder="<fmt:message key="user.name.first"/>" pattern="[A-Za-zА-Яа-яЁё]{4,}"/>
+                <input type="text" class="form__input" name="firstName" value="${sessionScope.firstName}" placeholder="<fmt:message key="user.name.first"/>" pattern="[A-Za-zА-Яа-яЁё]{4,}"/>
             </div>
             <div class="form__group">
-                <input type="text" class="form__input" name="secondName" value="" placeholder="<fmt:message key="user.name.second"/>" pattern="[A-Za-zА-Яа-яЁё]{4,}"/>
+                <input type="text" class="form__input" name="secondName" value="${sessionScope.secondName}" placeholder="<fmt:message key="user.name.second"/>" pattern="[A-Za-zА-Яа-яЁё]{4,}"/>
             </div>
             <div class="form__group">
-                <input type="password" class="form__input" name="password" placeholder=<fmt:message key="user.password"/> value="" pattern=".{8,}" title="Eight or more characters"/>
+                <input type="password" class="form__input" name="password" placeholder=<fmt:message key="user.password"/> pattern=".{8,}" title="Eight or more characters"/>
             </div>
             <div class="form__group">
-                <input type="password" class="form__input" name="passwordRepeat" placeholder=<fmt:message key="user.password"/> value="" pattern=".{8,}" title="Eight or more characters"/>
+                <input type="password" class="form__input" name="passwordRepeat" placeholder=<fmt:message key="user.password"/> pattern=".{8,}" title="Eight or more characters"/>
             </div>
             <input type="submit" class="btn" value=<fmt:message key="label.register"/>>
         </form>
@@ -47,3 +59,9 @@
     </div>
 </body>
 </html>
+<c:remove var="firstName"/>
+<c:remove var="secondName"/>
+<c:remove var="email"/>
+<c:remove var="login"/>
+<c:remove var="validationErrors"/>
+<c:remove var="errorMessage"/>

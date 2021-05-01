@@ -176,4 +176,7 @@ button.link {
 .poster img {
     width: auto;
     height: 720px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

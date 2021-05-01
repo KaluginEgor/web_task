@@ -9,8 +9,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:useBean id="user" class="com.example.demo_web.model.entity.User" scope="session"/>
-<jsp:useBean id="someUser" scope="session" class="com.example.demo_web.model.entity.User"/>
+<jsp:useBean id="user" class="com.epam.project.model.entity.User" scope="session"/>
+<jsp:useBean id="someUser" scope="session" class="com.epam.project.model.entity.User"/>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="property/pagecontent"/>
 <c:set var="page" value="/pages/common/user.jsp" scope="session"/>
@@ -21,7 +21,7 @@
 </head>
 <body class="home">
 <jsp:include page="/pages/module/header.jsp"/>
-<jsp:useBean id="reviewToUpdate" class="com.example.demo_web.model.entity.MovieReview" scope="session"/>
+<jsp:useBean id="reviewToUpdate" class="com.epam.project.model.entity.MovieReview" scope="session"/>
 <section class="section main">
     <div class="section-title">
         <h2>${someUser.login}</h2>
@@ -168,14 +168,16 @@
         </div>
         </c:if>
 
-        <br/>
-        <c:forEach var="validationException" items="${sessionScope.validationErrors}">
-            <h4>${validationException}</h4>
-        </c:forEach>
+        <div class="block">
+            <br/>
+            <c:forEach var="validationException" items="${sessionScope.validationErrors}">
+                <h4>${validationException}</h4>
+            </c:forEach>
 
-        <c:if test="${not empty sessionScope.errorMessage}">
-            <h4>${sessionScope.errorMessage}</h4>
-        </c:if>
+            <c:if test="${not empty sessionScope.errorMessage}">
+                <h4>${sessionScope.errorMessage}</h4>
+            </c:if>
+        </div>
 
         <c:set var="active" value="ACTIVE"/>
         <c:if test="${user.state == active and reviewToUpdate.id != 0 or not empty sessionScope.movieReviewTitle or not empty sessionScope.movieReviewBody}">

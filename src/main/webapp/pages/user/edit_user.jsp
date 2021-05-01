@@ -11,7 +11,7 @@
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="property/pagecontent"/>
 <c:set var="page" value="/pages/user/edit_user.jsp" scope="session"/>
-<jsp:useBean id="someUser" class="com.example.demo_web.model.entity.User" scope="session"/>
+<jsp:useBean id="someUser" class="com.epam.project.model.entity.User" scope="session"/>
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/editPage.css" />
@@ -22,27 +22,29 @@
 <body class="home">
 <jsp:include page="/pages/module/header.jsp"/>
 <div class="edit-page">
-    <div class="greeting">
-        <h2>Edit user</h2>
+
+    <div class="block">
+        <br/>
+        <c:forEach var="validationException" items="${sessionScope.validationErrors}">
+            <h4>${validationException}</h4>
+        </c:forEach>
+
+        <c:if test="${not empty sessionScope.errorMessage}">
+            <h4>${sessionScope.errorMessage}</h4>
+        </c:if>
     </div>
 
-    <c:forEach var="validationError" items="${requestScope.validationErrors}">
-        <h4>${validationError}</h4>
-    </c:forEach>
-
-    <form action="<c:url value="/controller"/>" enctype="multipart/form-data" method="POST">
-        <input type="hidden" name="command" value="upload_picture">
-        <input type="file" accept="image/*" name="content" height="130">
-        <input type="submit" value="Upload File">
-    </form>
+    <div class="block">
+        <form action="<c:url value="/controller"/>" enctype="multipart/form-data" method="POST">
+            <input type="hidden" name="command" value="upload_picture">
+            <input type="file" accept="image/*" name="content" height="130">
+            <input type="submit" value="<fmt:message key="label.file.upload"/>">
+        </form>
+    </div>
 
     <form class="edit-form" action="<c:url value="/controller"/>" method="POST">
         <input type="hidden" name="command" value="update_user"/>
         <input type="hidden" name="userId" value="${someUser.id}">
-        <input type="hidden" name="login" value="${someUser.login}">
-        <input type="hidden" name="userRole" value="${someUser.role}">
-        <input type="hidden" name="userState" value="${someUser.state}">
-        <input type="hidden" name="userRating" value="${someUser.rating}">
 
         <c:choose>
             <c:when test="${empty sessionScope.newPicture}">
@@ -60,22 +62,49 @@
         </c:choose>
 
         <div class="block">
-            <label for="first-name">First name</label><br/>
-            <input type="text" id="first-name" class="first-name" name="firstName" value="${someUser.firstName}"/>
+            <label for="first-name"><fmt:message key="user.name.first"/></label><br/>
+            <input type="text" id="first-name" class="first-name" name="firstName"
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.firstName}">
+                            value="${sessionScope.firstName}"
+                        </c:when>
+                        <c:when test="${not empty someUser.firstName}">
+                            value="${someUser.firstName}"
+                        </c:when>
+                    </c:choose>
+            />
         </div>
 
         <div class="block">
-            <label for="last-name">Last name</label><br/>
-            <input type="text" id="last-name" class="last-name" name="secondName" value="${someUser.secondName}"/>
+            <label for="last-name"><fmt:message key="user.name.second"/></label><br/>
+            <input type="text" id="last-name" class="last-name" name="secondName"
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.secondName}">
+                            value="${sessionScope.secondName}"
+                        </c:when>
+                        <c:when test="${not empty someUser.secondName}">
+                            value="${someUser.secondName}"
+                        </c:when>
+                    </c:choose>
+            />
         </div>
 
         <div class="block">
-            <label for="email">Email</label><br/>
-            <input type="email" id="email" class="email" name="email" value="${someUser.email}"/>
+            <label for="email"><fmt:message key="user.email"/></label><br/>
+            <input type="email" id="email" class="email" name="email"
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.email}">
+                            value="${sessionScope.email}"
+                        </c:when>
+                        <c:when test="${not empty someUser.email}">
+                            value="${someUser.email}"
+                        </c:when>
+                    </c:choose>
+            />
         </div>
 
         <div class="block">
-            <input type="submit" class="edit-btn" value="Edit">
+            <input type="submit" class="edit-btn" value="<fmt:message key="label.submit"/>">
         </div>
     </form>
     <div class="block">

@@ -143,8 +143,13 @@ th {
 }
 
 .movie a {
+    text-align: center;
     text-decoration: none;
     color: black;
+}
+
+.movie p {
+    text-align: center;
 }
 
 .movie a:hover {
@@ -154,6 +159,9 @@ th {
 .poster img {
     width: auto;
     height: 720px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .main-footer {

@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <fmt:setLocale value="${not empty sessionScope.lang ? sessionScope.lang : 'en_US'}" scope="session" />
 <fmt:setBundle basename="property/pagecontent"/>
-<jsp:useBean id="user" class="com.example.demo_web.model.entity.User" scope="session"/>
+<jsp:useBean id="user" class="com.epam.project.model.entity.User" scope="session"/>
 <html>
 <head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/demo.css"/>
