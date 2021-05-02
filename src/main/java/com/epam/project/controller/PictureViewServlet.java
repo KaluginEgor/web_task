@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * The type Picture view servlet.
+ */
 @WebServlet(urlPatterns = {"/picture"})
 public class PictureViewServlet extends HttpServlet {
     @Override

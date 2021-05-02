@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * The type Upload picture command.
+ */
 public class UploadPictureCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private static final String UPLOAD_PICTURE_DIRECTORY = "C:/Epam/pictures";

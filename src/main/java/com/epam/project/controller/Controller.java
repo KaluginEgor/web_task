@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * The type Controller.
+ */
 @WebServlet(name = "controller", urlPatterns = {"/controller"})
 @MultipartConfig(maxFileSize = 1024 * 1024 * 4, maxRequestSize = 1024 * 1024 * 8)
 public class Controller extends HttpServlet {

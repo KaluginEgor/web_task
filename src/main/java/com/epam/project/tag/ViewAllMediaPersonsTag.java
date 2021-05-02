@@ -15,7 +15,13 @@ import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The type View all media persons tag.
+ */
 public class ViewAllMediaPersonsTag extends TagSupport {
+    /**
+     * The constant MEDIA_PERSONS_PER_PAGE_NUMBER.
+     */
     public static final int MEDIA_PERSONS_PER_PAGE_NUMBER = 4;
     @Override
     public int doStartTag() throws JspException {

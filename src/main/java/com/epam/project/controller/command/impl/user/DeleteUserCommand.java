@@ -13,8 +13,14 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
+/**
+ * The type Delete user command.
+ */
 public class DeleteUserCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
+    /**
+     * The User service.
+     */
     UserService userService = UserServiceImpl.getInstance();
 
     @Override

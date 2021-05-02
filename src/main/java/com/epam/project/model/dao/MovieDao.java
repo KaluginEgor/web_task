@@ -18,6 +18,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Movie dao.
+ */
 public class MovieDao extends AbstractMovieDao {
     private static final Logger logger = LogManager.getLogger(MovieDao.class);
 
@@ -79,6 +82,11 @@ public class MovieDao extends AbstractMovieDao {
 
     private MovieDao(){}
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static AbstractMovieDao getInstance() {
         return instance;
     }

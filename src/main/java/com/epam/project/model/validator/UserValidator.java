@@ -7,6 +7,9 @@ import com.epam.project.model.entity.UserState;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * The type User validator.
+ */
 public class UserValidator {
     private static final String DIGIT_PATTERN = "[+-]?\\d+";
     private static final String LOGIN_PATTERN = "[\\wа-яЁё_.]{1,40}";
@@ -20,28 +23,74 @@ public class UserValidator {
 
     private UserValidator() {}
 
+    /**
+     * Is valid id boolean.
+     *
+     * @param id the id
+     * @return the boolean
+     */
     public static boolean isValidId(String id) {
         return id.matches(DIGIT_PATTERN);
     }
 
+    /**
+     * Is valid login boolean.
+     *
+     * @param login the login
+     * @return the boolean
+     */
     public static boolean isValidLogin(String login) {
         return login.matches(LOGIN_PATTERN);
     }
 
+    /**
+     * Is valid name boolean.
+     *
+     * @param name the name
+     * @return the boolean
+     */
     public static boolean isValidName(String name) { return name.matches(NAME_PATTERN);}
 
+    /**
+     * Is valid email boolean.
+     *
+     * @param email the email
+     * @return the boolean
+     */
     public static boolean isValidEmail(String email) {
         return email.matches(EMAIL_PATTERN);
     }
 
+    /**
+     * Is picture valid boolean.
+     *
+     * @param picture the picture
+     * @return the boolean
+     */
     public static boolean isPictureValid(String picture) {
         return picture.matches(PICTURE_PATTERN);
     }
 
+    /**
+     * Is valid password boolean.
+     *
+     * @param password the password
+     * @return the boolean
+     */
     public static boolean isValidPassword(String password) {
         return password.matches(PASSWORD_PATTERN);
     }
 
+    /**
+     * Validate registration data map.
+     *
+     * @param login      the login
+     * @param email      the email
+     * @param firstName  the first name
+     * @param secondName the second name
+     * @param password   the password
+     * @return the map
+     */
     public static Map<String, Boolean> validateRegistrationData(String login, String email, String firstName, String secondName, String password) {
         Map<String, Boolean> validations = new LinkedHashMap<>();
         validations.put(Attribute.LOGIN, isValidLogin(login));
@@ -52,6 +101,13 @@ public class UserValidator {
         return validations;
     }
 
+    /**
+     * Validate login data map.
+     *
+     * @param login    the login
+     * @param password the password
+     * @return the map
+     */
     public static Map<String, Boolean> validateLoginData(String login, String password) {
         Map<String, Boolean> validations = new LinkedHashMap<>();
         validations.put(Attribute.LOGIN, isValidLogin(login));
@@ -59,6 +115,15 @@ public class UserValidator {
         return validations;
     }
 
+    /**
+     * Validate update data map.
+     *
+     * @param email      the email
+     * @param firstName  the first name
+     * @param secondName the second name
+     * @param picture    the picture
+     * @return the map
+     */
     public static Map<String,Boolean> validateUpdateData(String email, String firstName, String secondName, String picture) {
         Map<String, Boolean> validations = new LinkedHashMap<>();
         validations.put(Attribute.EMAIL, isValidEmail(email));

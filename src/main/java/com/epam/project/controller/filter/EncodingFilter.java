@@ -5,6 +5,9 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 import java.io.IOException;
 
+/**
+ * The type Encoding filter.
+ */
 @WebFilter(filterName = "EncodingFilter",
         initParams = { @WebInitParam(name = "encoding", value = "UTF-8", description = "Encoding Param") })
 public class EncodingFilter implements Filter {

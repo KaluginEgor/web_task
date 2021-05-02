@@ -14,6 +14,9 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The type Update movie command.
+ */
 public class UpdateMovieCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private MovieService movieService = MovieServiceImpl.getInstance();

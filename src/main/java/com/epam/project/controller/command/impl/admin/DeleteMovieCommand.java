@@ -11,6 +11,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
+/**
+ * The type Delete movie command.
+ */
 public class DeleteMovieCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private MovieService movieService = MovieServiceImpl.getInstance();

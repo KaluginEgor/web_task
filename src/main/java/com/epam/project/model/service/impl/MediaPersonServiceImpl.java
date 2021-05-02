@@ -17,6 +17,9 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The type Media person service.
+ */
 public class MediaPersonServiceImpl implements MediaPersonService {
     private static final MediaPersonService instance = new MediaPersonServiceImpl();
     private static final Logger logger = LogManager.getLogger(MediaPersonServiceImpl.class);
@@ -25,6 +28,11 @@ public class MediaPersonServiceImpl implements MediaPersonService {
 
     private MediaPersonServiceImpl() {}
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static MediaPersonService getInstance() {
         return instance;
     }

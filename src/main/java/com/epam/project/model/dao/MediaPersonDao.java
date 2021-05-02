@@ -18,6 +18,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Media person dao.
+ */
 public class MediaPersonDao extends AbstractMediaPersonDao {
     private static final AbstractMediaPersonDao instance = new MediaPersonDao();
 
@@ -61,6 +64,11 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
 
     private MediaPersonDao(){}
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static AbstractMediaPersonDao getInstance() {
         return instance;
     }

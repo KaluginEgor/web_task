@@ -15,6 +15,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Open all movies page command.
+ */
 public class OpenAllMoviesPageCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private MovieService movieService = MovieServiceImpl.getInstance();

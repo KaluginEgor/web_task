@@ -19,6 +19,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Delete movie rating command.
+ */
 public class DeleteMovieRatingCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private MovieRatingService movieRatingService = MovieRatingServiceImpl.getInstance();

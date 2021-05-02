@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type Find movies by title command.
+ */
 public class FindMoviesByTitleCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private MovieService movieService = MovieServiceImpl.getInstance();

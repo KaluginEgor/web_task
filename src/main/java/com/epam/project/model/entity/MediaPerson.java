@@ -3,6 +3,9 @@ package com.epam.project.model.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * The type Media person.
+ */
 public class MediaPerson extends Entity {
     private int id;
     private String firstName;
@@ -13,68 +16,151 @@ public class MediaPerson extends Entity {
     private String picture;
     private List<Movie> movies;
 
+    /**
+     * Instantiates a new Media person.
+     */
     public MediaPerson() {}
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets first name.
+     *
+     * @return the first name
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * Sets first name.
+     *
+     * @param firstName the first name
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    /**
+     * Gets second name.
+     *
+     * @return the second name
+     */
     public String getSecondName() {
         return secondName;
     }
 
+    /**
+     * Sets second name.
+     *
+     * @param secondName the second name
+     */
     public void setSecondName(String secondName) {
         this.secondName = secondName;
     }
 
+    /**
+     * Gets occupation type.
+     *
+     * @return the occupation type
+     */
     public OccupationType getOccupationType() {
         return occupationType;
     }
 
+    /**
+     * Sets occupation type.
+     *
+     * @param occupationType the occupation type
+     */
     public void setOccupationType(OccupationType occupationType) {
         this.occupationType = occupationType;
     }
 
+    /**
+     * Gets bio.
+     *
+     * @return the bio
+     */
     public String getBio() {
         return bio;
     }
 
+    /**
+     * Sets bio.
+     *
+     * @param bio the bio
+     */
     public void setBio(String bio) {
         this.bio = bio;
     }
 
+    /**
+     * Gets birthday.
+     *
+     * @return the birthday
+     */
     public LocalDate getBirthday() {
         return birthday;
     }
 
+    /**
+     * Sets birthday.
+     *
+     * @param birthday the birthday
+     */
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 
+    /**
+     * Gets picture.
+     *
+     * @return the picture
+     */
     public String getPicture() {
         return picture;
     }
 
+    /**
+     * Sets picture.
+     *
+     * @param picture the picture
+     */
     public void setPicture(String picture) {
         this.picture = picture;
     }
 
+    /**
+     * Gets movies.
+     *
+     * @return the movies
+     */
     public List<Movie> getMovies() {
         return movies;
     }
 
+    /**
+     * Sets movies.
+     *
+     * @param movies the movies
+     */
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
     }

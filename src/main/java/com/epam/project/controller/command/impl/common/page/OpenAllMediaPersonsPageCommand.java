@@ -15,6 +15,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Open all media persons page command.
+ */
 public class OpenAllMediaPersonsPageCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private MediaPersonService mediaPersonService = MediaPersonServiceImpl.getInstance();

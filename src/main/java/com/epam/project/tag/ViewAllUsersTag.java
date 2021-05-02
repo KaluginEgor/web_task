@@ -18,7 +18,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * The type View all users tag.
+ */
 public class ViewAllUsersTag extends TagSupport {
+    /**
+     * The constant USERS_PER_PAGE_NUMBER.
+     */
     public static final int USERS_PER_PAGE_NUMBER = 4;
 
     private static final String USER_ID_BUNDLE = "user.id";

@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type Movie rating service.
+ */
 public class MovieRatingServiceImpl implements MovieRatingService {
     private static final MovieRatingService instance = new MovieRatingServiceImpl();
     private static final Logger logger = LogManager.getLogger(MovieRatingServiceImpl.class);
@@ -28,6 +31,11 @@ public class MovieRatingServiceImpl implements MovieRatingService {
 
     private MovieRatingServiceImpl() {};
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static MovieRatingService getInstance() {
         return instance;
     }

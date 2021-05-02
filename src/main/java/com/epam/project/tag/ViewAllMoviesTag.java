@@ -16,8 +16,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * The type View all movies tag.
+ */
 public class ViewAllMoviesTag extends TagSupport {
     private static final String RATING_BUNDLE = "movie.rating";
+    /**
+     * The constant MOVIES_PER_PAGE_NUMBER.
+     */
     public static final int MOVIES_PER_PAGE_NUMBER = 4;
 
     @Override

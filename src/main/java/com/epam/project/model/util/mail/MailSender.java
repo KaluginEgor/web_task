@@ -13,6 +13,9 @@ import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * The type Mail sender.
+ */
 public class MailSender {
     private MimeMessage message;
     private String sendToEmail;
@@ -22,6 +25,9 @@ public class MailSender {
     private static final String MAIL_PROPERTIES = "/property/mail.properties";
     private static final Logger logger = LogManager.getLogger(MailSender.class);
 
+    /**
+     * Instantiates a new Mail sender.
+     */
     public MailSender() {
         properties = new Properties();
         try {
@@ -31,6 +37,13 @@ public class MailSender {
         }
     }
 
+    /**
+     * Instantiates a new Mail sender.
+     *
+     * @param mailSubject the mail subject
+     * @param mailText    the mail text
+     * @param sendToEmail the send to email
+     */
     public MailSender(String mailSubject, String mailText, String sendToEmail) {
         this.sendToEmail = sendToEmail;
         this.mailSubject = mailSubject;
@@ -43,6 +56,9 @@ public class MailSender {
         }
     }
 
+    /**
+     * Send.
+     */
     public void send() {
         try {
             initMessage();

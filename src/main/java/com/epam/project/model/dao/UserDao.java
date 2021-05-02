@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * The type User dao.
+ */
 public class UserDao extends AbstractUserDao {
     private static final Logger logger = LogManager.getLogger(UserDao.class);
 
@@ -69,6 +72,11 @@ public class UserDao extends AbstractUserDao {
 
     private UserDao(){}
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static AbstractUserDao getInstance() {
         return instance;
     }

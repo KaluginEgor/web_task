@@ -8,6 +8,9 @@ import java.time.format.DateTimeParseException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * The type Movie validator.
+ */
 public class MovieValidator {
     private static final String DIGIT_PATTERN = "\\d+";
     private static final String RATING_PATTEN = "[1-9]|10";
@@ -17,18 +20,42 @@ public class MovieValidator {
 
     private MovieValidator() {}
 
+    /**
+     * Is valid id boolean.
+     *
+     * @param id the id
+     * @return the boolean
+     */
     public static boolean isValidId(String id) {
         return id.matches(DIGIT_PATTERN);
     }
 
+    /**
+     * Is title valid boolean.
+     *
+     * @param title the title
+     * @return the boolean
+     */
     public static boolean isTitleValid(String title) {
         return title.matches(TITLE_PATTERN);
     }
 
+    /**
+     * Is text body valid boolean.
+     *
+     * @param text the text
+     * @return the boolean
+     */
     public static boolean isTextBodyValid(String text) {
         return text.matches(TEXT_BODY_PATTERN);
     }
 
+    /**
+     * Is release date valid boolean.
+     *
+     * @param stringReleaseDate the string release date
+     * @return the boolean
+     */
     public static boolean isReleaseDateValid(String stringReleaseDate) {
         try {
             LocalDate birthday = LocalDate.parse(stringReleaseDate);
@@ -38,10 +65,22 @@ public class MovieValidator {
         }
     }
 
+    /**
+     * Is picture valid boolean.
+     *
+     * @param picture the picture
+     * @return the boolean
+     */
     public static boolean isPictureValid(String picture) {
         return picture.matches(PICTURE_PATTERN);
     }
 
+    /**
+     * Are genres valid boolean.
+     *
+     * @param genresId the genres id
+     * @return the boolean
+     */
     public static boolean areGenresValid(String[] genresId) {
         if (genresId != null) {
             for (String genreId : genresId) {
@@ -57,6 +96,12 @@ public class MovieValidator {
         return true;
     }
 
+    /**
+     * Are media persons id valid boolean.
+     *
+     * @param stringMediaPersonsId the string media persons id
+     * @return the boolean
+     */
     public static boolean areMediaPersonsIdValid(String[] stringMediaPersonsId) {
         if (stringMediaPersonsId != null) {
             for (String stringMediaPersonId : stringMediaPersonsId) {
@@ -68,10 +113,27 @@ public class MovieValidator {
         return true;
     }
 
+    /**
+     * Is rating value valid boolean.
+     *
+     * @param stringValue the string value
+     * @return the boolean
+     */
     public static boolean isRatingValueValid(String stringValue) {
         return stringValue.matches(RATING_PATTEN);
     }
 
+    /**
+     * Validate movie data map.
+     *
+     * @param title               the title
+     * @param description         the description
+     * @param stringReleaseDate   the string release date
+     * @param picture             the picture
+     * @param stringGenresId      the string genres id
+     * @param stringMediaPeopleId the string media people id
+     * @return the map
+     */
     public static Map<String, Boolean> validateMovieData(String title, String description, String stringReleaseDate, String picture,
                                                   String[] stringGenresId, String[] stringMediaPeopleId) {
         Map<String, Boolean> validations = new LinkedHashMap<>();
@@ -84,6 +146,14 @@ public class MovieValidator {
         return validations;
     }
 
+    /**
+     * Validate movie rating data map.
+     *
+     * @param stringMovieId the string movie id
+     * @param stringUserId  the string user id
+     * @param stringValue   the string value
+     * @return the map
+     */
     public static Map<String, Boolean> validateMovieRatingData(String stringMovieId, String stringUserId, String stringValue) {
         Map<String, Boolean> validations = new LinkedHashMap<>();
         validations.put(Attribute.MOVIE_ID, isValidId(stringMovieId));
@@ -92,6 +162,15 @@ public class MovieValidator {
         return validations;
     }
 
+    /**
+     * Validate movie review data map.
+     *
+     * @param title         the title
+     * @param body          the body
+     * @param stringMovieId the string movie id
+     * @param stringUserId  the string user id
+     * @return the map
+     */
     public static Map<String, Boolean> validateMovieReviewData(String title, String body, String stringMovieId, String stringUserId) {
         Map<String, Boolean> validations = new LinkedHashMap<>();
         validations.put(Attribute.MOVIE_REVIEW_TITLE, isTitleValid(title));

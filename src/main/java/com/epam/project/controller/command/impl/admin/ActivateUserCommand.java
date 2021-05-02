@@ -12,6 +12,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
+/**
+ * The type Activate user command.
+ */
 public class ActivateUserCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private UserService userService = UserServiceImpl.getInstance();

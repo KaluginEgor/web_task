@@ -14,6 +14,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Movie rating dao.
+ */
 public class MovieRatingDao extends AbstractMovieRatingDao {
     private static final Logger logger = LogManager.getLogger(MovieRatingDao.class);
 
@@ -48,6 +51,11 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
 
     private MovieRatingDao(){}
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static AbstractMovieRatingDao getInstance() {
         return instance;
     }

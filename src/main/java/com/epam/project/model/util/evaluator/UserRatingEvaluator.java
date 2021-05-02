@@ -1,8 +1,18 @@
 package com.epam.project.model.util.evaluator;
 
+/**
+ * The type User rating evaluator.
+ */
 public class UserRatingEvaluator {
     private UserRatingEvaluator() {}
 
+    /**
+     * Update rating int.
+     *
+     * @param userRating            the user rating
+     * @param movieRatingDifference the movie rating difference
+     * @return the int
+     */
     public static int updateRating(int userRating, float movieRatingDifference) {
         if (movieRatingDifference <= 1) {
             userRating += 5;

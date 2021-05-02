@@ -9,12 +9,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * The type Validation helper.
+ */
 public class ValidationHelper {
 
+    /**
+     * Define valid parameters list.
+     *
+     * @param map the map
+     * @return the list
+     */
     public static List<String> defineValidParameters(Map<String, Boolean> map) {
         return map.entrySet().stream().filter(entry -> Boolean.TRUE.equals(entry.getValue())).map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
+    /**
+     * Define validation error messages list.
+     *
+     * @param map the map
+     * @return the list
+     */
     public static List<String> defineValidationErrorMessages(Map<String, Boolean> map) {
         List<String> errorMessages = new ArrayList<>();
         map.entrySet().stream().filter(entry -> Boolean.FALSE.equals(entry.getValue())).forEach(entry ->
@@ -22,6 +37,12 @@ public class ValidationHelper {
         return errorMessages;
     }
 
+    /**
+     * Define error validation message string.
+     *
+     * @param entry the entry
+     * @return the string
+     */
     public static String defineErrorValidationMessage(Map.Entry<String, Boolean> entry) {
         String message = switch (entry.getKey()) {
             case RequestParameter.FIRST_NAME -> ErrorMessage.NOT_VALID_FIRST_NAME;

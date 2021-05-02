@@ -18,9 +18,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type Create movie review command.
+ */
 public class CreateMovieReviewCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
+    /**
+     * The Movie review service.
+     */
     MovieReviewService movieReviewService = MovieReviewServiceImpl.getInstance();
+    /**
+     * The Movie service.
+     */
     MovieService movieService = MovieServiceImpl.getInstance();
 
     @Override

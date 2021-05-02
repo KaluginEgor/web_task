@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type Register command.
+ */
 public class RegisterCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private UserService userService = UserServiceImpl.getInstance();

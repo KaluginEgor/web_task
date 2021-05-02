@@ -15,6 +15,9 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The type Movie service.
+ */
 public class MovieServiceImpl implements MovieService {
     private static final MovieService instance = new MovieServiceImpl();
     private static final Logger logger = LogManager.getLogger(MovieServiceImpl.class);
@@ -25,6 +28,11 @@ public class MovieServiceImpl implements MovieService {
 
     private MovieServiceImpl() {}
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static MovieService getInstance() {
         return instance;
     }

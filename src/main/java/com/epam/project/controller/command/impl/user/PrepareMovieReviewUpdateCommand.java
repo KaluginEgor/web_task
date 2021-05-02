@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type Prepare movie review update command.
+ */
 public class PrepareMovieReviewUpdateCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private MovieReviewService movieReviewService = MovieReviewServiceImpl.getInstance();

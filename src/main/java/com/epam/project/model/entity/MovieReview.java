@@ -2,6 +2,9 @@ package com.epam.project.model.entity;
 
 import java.time.LocalDate;
 
+/**
+ * The type Movie review.
+ */
 public class MovieReview extends Entity {
     private int id;
     private String title;
@@ -12,68 +15,151 @@ public class MovieReview extends Entity {
     private String userLogin;
     private String movieTitle;
 
+    /**
+     * Instantiates a new Movie review.
+     */
     public MovieReview() {}
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets title.
+     *
+     * @return the title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets title.
+     *
+     * @param title the title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Gets body.
+     *
+     * @return the body
+     */
     public String getBody() {
         return body;
     }
 
+    /**
+     * Sets body.
+     *
+     * @param body the body
+     */
     public void setBody(String body) {
         this.body = body;
     }
 
+    /**
+     * Gets creation date.
+     *
+     * @return the creation date
+     */
     public LocalDate getCreationDate() {
         return creationDate;
     }
 
+    /**
+     * Sets creation date.
+     *
+     * @param creationDate the creation date
+     */
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 
+    /**
+     * Gets movie id.
+     *
+     * @return the movie id
+     */
     public int getMovieId() {
         return movieId;
     }
 
+    /**
+     * Sets movie id.
+     *
+     * @param movieId the movie id
+     */
     public void setMovieId(int movieId) {
         this.movieId = movieId;
     }
 
+    /**
+     * Gets user id.
+     *
+     * @return the user id
+     */
     public int getUserId() {
         return userId;
     }
 
+    /**
+     * Sets user id.
+     *
+     * @param userId the user id
+     */
     public void setUserId(int userId) {
         this.userId = userId;
     }
 
+    /**
+     * Gets user login.
+     *
+     * @return the user login
+     */
     public String getUserLogin() {
         return userLogin;
     }
 
+    /**
+     * Sets user login.
+     *
+     * @param userLogin the user login
+     */
     public void setUserLogin(String userLogin) {
         this.userLogin = userLogin;
     }
 
+    /**
+     * Gets movie title.
+     *
+     * @return the movie title
+     */
     public String getMovieTitle() {
         return movieTitle;
     }
 
+    /**
+     * Sets movie title.
+     *
+     * @param movieTitle the movie title
+     */
     public void setMovieTitle(String movieTitle) {
         this.movieTitle = movieTitle;
     }

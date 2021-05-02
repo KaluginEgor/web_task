@@ -14,6 +14,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Open all users page command.
+ */
 public class OpenAllUsersPageCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private UserService userService = UserServiceImpl.getInstance();

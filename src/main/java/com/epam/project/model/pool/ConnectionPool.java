@@ -15,6 +15,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * The type Connection pool.
+ */
 public class ConnectionPool {
     private static final Logger logger = LogManager.getLogger(ConnectionPool.class.getName());
 
@@ -30,6 +33,9 @@ public class ConnectionPool {
     private static ConnectionPool instance;
     private BlockingQueue<ProxyConnection> availableConnections;
     private Queue<ProxyConnection> givenAwayConnections;
+    /**
+     * The constant isNull.
+     */
     public static final AtomicBoolean isNull = new AtomicBoolean(true);
     private static final Lock LOCK = new ReentrantLock();
     private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -56,6 +62,11 @@ public class ConnectionPool {
         executorService.scheduleAtFixedRate(cleaner, 0, CLEAR_PERIOD_IN_MINUTES, TimeUnit.MINUTES);
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static ConnectionPool getInstance() {
         if (isNull.get()) {
             try {
@@ -71,6 +82,12 @@ public class ConnectionPool {
         return instance;
     }
 
+    /**
+     * Gets connection.
+     *
+     * @return the connection
+     * @throws ConnectionException the connection exception
+     */
     public Connection getConnection() throws ConnectionException {
         ProxyConnection proxyConnection = null;
         if (!availableConnections.isEmpty() || detectPoolSize().get() == MAX_POOL_SIZE) {
@@ -91,6 +108,12 @@ public class ConnectionPool {
         return proxyConnection;
     }
 
+    /**
+     * Return connection.
+     *
+     * @param connection the connection
+     * @throws ConnectionException the connection exception
+     */
     public void returnConnection(ProxyConnection connection) throws ConnectionException {
         if (connection instanceof ProxyConnection) {
             if (givenAwayConnections.contains(connection)) {
@@ -107,6 +130,9 @@ public class ConnectionPool {
         return new AtomicInteger(availableConnections.size() + givenAwayConnections.size());
     }
 
+    /**
+     * Remove unnecessary connections.
+     */
     void removeUnnecessaryConnections() {
         int removedConnections = 0;
         if (givenPerPeriodConnections.get() < VALUE_TO_DECREASE_POOL_PER_PERIOD) {
@@ -139,6 +165,11 @@ public class ConnectionPool {
         });
     }
 
+    /**
+     * Destroy pool.
+     *
+     * @throws ConnectionException the connection exception
+     */
     public void destroyPool() throws ConnectionException {
         for (int i = 0; i < detectPoolSize().get(); i++) {
             try {

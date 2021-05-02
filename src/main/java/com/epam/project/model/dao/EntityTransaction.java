@@ -8,12 +8,23 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * The type Entity transaction.
+ */
 public class EntityTransaction {
     private Connection connection;
     private static Logger logger = LogManager.getLogger(EntityTransaction.class.getName());
 
+    /**
+     * Instantiates a new Entity transaction.
+     */
     public EntityTransaction(){}
 
+    /**
+     * Init transaction.
+     *
+     * @param daos the daos
+     */
     public void initTransaction(AbstractBaseDao ... daos) {
         try {
             if (connection == null) {
@@ -28,6 +39,9 @@ public class EntityTransaction {
         }
     }
 
+    /**
+     * End transaction.
+     */
     public void endTransaction() {
         try {
             if (connection != null) {
@@ -40,6 +54,9 @@ public class EntityTransaction {
         connection = null;
     }
 
+    /**
+     * Commit.
+     */
     public void commit() {
         try {
             connection.commit();
@@ -48,6 +65,9 @@ public class EntityTransaction {
         }
     }
 
+    /**
+     * Rollback.
+     */
     public void rollback() {
         try {
             connection.rollback();
@@ -56,6 +76,11 @@ public class EntityTransaction {
         }
     }
 
+    /**
+     * Init.
+     *
+     * @param dao the dao
+     */
     public void init(AbstractBaseDao dao) {
         if (connection == null) {
             try {
@@ -66,6 +91,10 @@ public class EntityTransaction {
         }
         dao.setConnection(connection);
     }
+
+    /**
+     * End.
+     */
     public void end() {
         if (connection != null) {
             try {

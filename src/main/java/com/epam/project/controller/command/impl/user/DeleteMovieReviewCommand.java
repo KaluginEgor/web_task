@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type Delete movie review command.
+ */
 public class DeleteMovieReviewCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private MovieReviewService movieReviewService = MovieReviewServiceImpl.getInstance();

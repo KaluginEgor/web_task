@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * The type Command access filter.
+ */
 @WebFilter(filterName = "CommandAccessFilter")
 public class CommandAccessFilter implements Filter {
     @Override

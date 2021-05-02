@@ -1,5 +1,8 @@
 package com.epam.project.model.entity;
 
+/**
+ * The type Movie rating.
+ */
 public class MovieRating extends Entity {
     private int id;
     private int value;
@@ -7,44 +10,97 @@ public class MovieRating extends Entity {
     private int userId;
     private String movieTitle;
 
+    /**
+     * Instantiates a new Movie rating.
+     */
     public MovieRating() {}
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets value.
+     *
+     * @return the value
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     * Sets value.
+     *
+     * @param value the value
+     */
     public void setValue(int value) {
         this.value = value;
     }
 
+    /**
+     * Gets movie id.
+     *
+     * @return the movie id
+     */
     public int getMovieId() {
         return movieId;
     }
 
+    /**
+     * Sets movie id.
+     *
+     * @param movieId the movie id
+     */
     public void setMovieId(int movieId) {
         this.movieId = movieId;
     }
 
+    /**
+     * Gets user id.
+     *
+     * @return the user id
+     */
     public int getUserId() {
         return userId;
     }
 
+    /**
+     * Sets user id.
+     *
+     * @param userId the user id
+     */
     public void setUserId(int userId) {
         this.userId = userId;
     }
 
+    /**
+     * Gets movie title.
+     *
+     * @return the movie title
+     */
     public String getMovieTitle() {
         return movieTitle;
     }
 
+    /**
+     * Sets movie title.
+     *
+     * @param movieTitle the movie title
+     */
     public void setMovieTitle(String movieTitle) {
         this.movieTitle = movieTitle;
     }

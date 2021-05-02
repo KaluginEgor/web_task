@@ -12,6 +12,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
+/**
+ * The type Confirm registration command.
+ */
 public class ConfirmRegistrationCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private final UserService userService = UserServiceImpl.getInstance();

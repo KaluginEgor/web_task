@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type Login command.
+ */
 public class LoginCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private final UserService userService = UserServiceImpl.getInstance();

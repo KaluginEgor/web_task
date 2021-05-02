@@ -13,6 +13,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type Open user page command.
+ */
 public class OpenUserPageCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private UserService userService = UserServiceImpl.getInstance();

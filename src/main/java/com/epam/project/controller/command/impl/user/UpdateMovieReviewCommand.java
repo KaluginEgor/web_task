@@ -21,10 +21,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type Update movie review command.
+ */
 public class UpdateMovieReviewCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
+    /**
+     * The Movie review service.
+     */
     MovieReviewService movieReviewService = MovieReviewServiceImpl.getInstance();
     private UserService userService = UserServiceImpl.getInstance();
+    /**
+     * The Movie service.
+     */
     MovieService movieService = MovieServiceImpl.getInstance();
 
     @Override

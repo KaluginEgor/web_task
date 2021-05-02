@@ -16,6 +16,9 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The type Update media person command.
+ */
 public class UpdateMediaPersonCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private MediaPersonService mediaPersonService = MediaPersonServiceImpl.getInstance();

@@ -15,6 +15,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Movie review dao.
+ */
 public class MovieReviewDao extends AbstractMovieReviewDao {
     private static final Logger logger = LogManager.getLogger(MovieReview.class);
 
@@ -46,6 +49,11 @@ public class MovieReviewDao extends AbstractMovieReviewDao {
 
     private MovieReviewDao(){}
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static AbstractMovieReviewDao getInstance() {
         return instance;
     }
@@ -189,6 +197,13 @@ public class MovieReviewDao extends AbstractMovieReviewDao {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Build movie review movie review.
+     *
+     * @param resultSet the result set
+     * @return the movie review
+     * @throws SQLException the sql exception
+     */
     public MovieReview buildMovieReview(ResultSet resultSet) throws SQLException {
         if (resultSet.wasNull()) {
             return null;

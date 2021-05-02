@@ -5,6 +5,9 @@ import com.epam.project.model.entity.User;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * The type Mail builder.
+ */
 public class MailBuilder {
     private static final String EMAIL_SUBJECT = "email.subject";
     private static final String EMAIL_BODY = "email.body";
@@ -27,11 +30,24 @@ public class MailBuilder {
         return resourceBundle.getString(key);
     }
 
+    /**
+     * Build email subject string.
+     *
+     * @param locale the locale
+     * @return the string
+     */
     public static String buildEmailSubject(String locale) {
         String emailSubject = getLocalizedMessageFromResources(locale, EMAIL_SUBJECT);
         return emailSubject;
     }
 
+    /**
+     * Build email body string.
+     *
+     * @param user   the user
+     * @param locale the locale
+     * @return the string
+     */
     public static String buildEmailBody(User user, String locale) {
         String emailBody = String.format(getLocalizedMessageFromResources(locale, EMAIL_BODY),
                 user.getFirstName(), LINK_FOR_CONFIRMATION + user.getId());

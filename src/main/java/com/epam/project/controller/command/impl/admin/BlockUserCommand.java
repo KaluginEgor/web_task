@@ -12,6 +12,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
+/**
+ * The type Block user command.
+ */
 public class BlockUserCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger();
     private UserService userService = UserServiceImpl.getInstance();

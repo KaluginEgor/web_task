@@ -11,6 +11,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * The type Connection factory.
+ */
 class ConnectionFactory {
     private static Logger logger = LogManager.getLogger(ConnectionFactory.class.getName());
     private static final String PROPERTIES_PATH = "/property/database.properties";
@@ -18,6 +21,9 @@ class ConnectionFactory {
     private static final Properties properties = new Properties();
     private final String urlValue;
 
+    /**
+     * Instantiates a new Connection factory.
+     */
     ConnectionFactory() {
         try (InputStream input = ConnectionFactory.class.getResourceAsStream(PROPERTIES_PATH)) {
             properties.load(input);
@@ -29,6 +35,12 @@ class ConnectionFactory {
         }
     }
 
+    /**
+     * Create connection connection.
+     *
+     * @return the connection
+     * @throws ConnectionException the connection exception
+     */
     Connection createConnection() throws ConnectionException {
         Connection connection;
         try {

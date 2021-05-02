@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type User service.
+ */
 public class UserServiceImpl implements UserService {
     private static final UserService instance = new UserServiceImpl();
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
@@ -32,6 +35,11 @@ public class UserServiceImpl implements UserService {
 
     private UserServiceImpl() {}
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static UserService getInstance() {
         return instance;
     }

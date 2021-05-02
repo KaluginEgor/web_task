@@ -15,6 +15,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The type Jsp access filter.
+ */
 @WebFilter(filterName = "JspAccessFilter")
 public class JspAccessFilter implements Filter {
     @Override

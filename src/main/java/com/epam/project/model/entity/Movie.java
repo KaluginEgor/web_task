@@ -3,6 +3,9 @@ package com.epam.project.model.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * The type Movie.
+ */
 public class Movie extends Entity {
     private int id;
     private String title;
@@ -16,92 +19,205 @@ public class Movie extends Entity {
     private List<MediaPerson> crew;
     private List<Integer> reviewersIds;
 
+    /**
+     * Instantiates a new Movie.
+     */
     public Movie() {}
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Gets title.
+     *
+     * @return the title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets title.
+     *
+     * @param title the title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Gets description.
+     *
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets description.
+     *
+     * @param description the description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Gets average rating.
+     *
+     * @return the average rating
+     */
     public float getAverageRating() {
         return averageRating;
     }
 
+    /**
+     * Sets average rating.
+     *
+     * @param averageRating the average rating
+     */
     public void setAverageRating(float averageRating) {
         this.averageRating = averageRating;
     }
 
+    /**
+     * Gets release date.
+     *
+     * @return the release date
+     */
     public LocalDate getReleaseDate() {
         return releaseDate;
     }
 
+    /**
+     * Sets release date.
+     *
+     * @param releaseDate the release date
+     */
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
 
+    /**
+     * Gets picture.
+     *
+     * @return the picture
+     */
     public String getPicture() {
         return picture;
     }
 
+    /**
+     * Sets picture.
+     *
+     * @param picture the picture
+     */
     public void setPicture(String picture) {
         this.picture = picture;
     }
 
+    /**
+     * Gets genres.
+     *
+     * @return the genres
+     */
     public List<GenreType> getGenres() {
         return genres;
     }
 
+    /**
+     * Sets genres.
+     *
+     * @param genres the genres
+     */
     public void setGenres(List<GenreType> genres) {
         this.genres = genres;
     }
 
+    /**
+     * Gets reviews.
+     *
+     * @return the reviews
+     */
     public List<MovieReview> getReviews() {
         return reviews;
     }
 
+    /**
+     * Sets reviews.
+     *
+     * @param reviews the reviews
+     */
     public void setReviews(List<MovieReview> reviews) {
         this.reviews = reviews;
     }
 
+    /**
+     * Gets reviewers ids.
+     *
+     * @return the reviewers ids
+     */
     public List<Integer> getReviewersIds() {
         return reviewersIds;
     }
 
+    /**
+     * Sets reviewers ids.
+     *
+     * @param reviewersIds the reviewers ids
+     */
     public void setReviewersIds(List<Integer> reviewersIds) {
         this.reviewersIds = reviewersIds;
     }
 
+    /**
+     * Gets rating list.
+     *
+     * @return the rating list
+     */
     public List<MovieRating> getRatingList() {
         return ratingList;
     }
 
+    /**
+     * Sets rating list.
+     *
+     * @param ratingList the rating list
+     */
     public void setRatingList(List<MovieRating> ratingList) {
         this.ratingList = ratingList;
     }
 
+    /**
+     * Gets crew.
+     *
+     * @return the crew
+     */
     public List<MediaPerson> getCrew() {
         return crew;
     }
 
+    /**
+     * Sets crew.
+     *
+     * @param crew the crew
+     */
     public void setCrew(List<MediaPerson> crew) {
         this.crew = crew;
     }
