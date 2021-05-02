@@ -28,15 +28,18 @@ public class CreateMediaPersonCommand implements ActionCommand {
         String secondName = sessionRequestContent.getRequestParameter(RequestParameter.SECOND_NAME);
         String bio = sessionRequestContent.getRequestParameter(RequestParameter.BIO);
         String stringOccupationTypeId = sessionRequestContent.getRequestParameter(RequestParameter.MEDIA_PERSON_OCCUPATION_TYPE);
+        if (stringOccupationTypeId == null) {
+            stringOccupationTypeId = "";
+        }
         String stringBirthday = sessionRequestContent.getRequestParameter(RequestParameter.MEDIA_PERSON_BIRTHDAY);
         String picture = sessionRequestContent.getRequestParameter(RequestParameter.PICTURE);
         if (picture == null || picture.isEmpty()) {
             picture = DEFAULT_MEDIA_PERSON_PICTURE;
         }
         String[] stringMoviesId = sessionRequestContent.getRequestParameters(RequestParameter.MEDIA_PERSON_MOVIES);
-        if (firstName == null || secondName == null || bio == null || stringOccupationTypeId == null || stringBirthday == null) {
+        if (firstName == null || secondName == null || bio == null || stringBirthday == null) {
             sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_CREATE_MEDIA_PERSON_PARAMETERS);
-            commandResult.setPage(PagePath.EDIT_MEDIA_PERSON);
+            commandResult.setPage(PagePath.MAIN);
         } else {
             Map.Entry<List<String>,List<String>> validationResult = mediaPersonService.validateData(
                     firstName, secondName, bio, stringOccupationTypeId, stringBirthday, picture, stringMoviesId);
@@ -50,9 +53,10 @@ public class CreateMediaPersonCommand implements ActionCommand {
                         Attribute.SECOND_NAME, secondName);
                 if (validParameters.contains(RequestParameter.BIO)) sessionRequestContent.setSessionAttribute(
                         Attribute.BIO, bio);
-                int occupationId = Integer.valueOf(stringOccupationTypeId);
-                if (validParameters.contains(RequestParameter.MEDIA_PERSON_OCCUPATION_TYPE)) sessionRequestContent.setSessionAttribute(
-                        Attribute.MEDIA_PERSON_OCCUPATION_TYPE, OccupationType.values()[occupationId]);
+                if (validParameters.contains(RequestParameter.MEDIA_PERSON_OCCUPATION_TYPE)) {
+                    int occupationId = Integer.valueOf(stringOccupationTypeId);
+                    sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PERSON_OCCUPATION_TYPE, OccupationType.values()[occupationId]);
+                }
                 if (validParameters.contains(RequestParameter.MEDIA_PERSON_BIRTHDAY)) sessionRequestContent.setSessionAttribute(
                         Attribute.MEDIA_PERSON_BIRTHDAY, LocalDate.parse(stringBirthday));
                 if (validParameters.contains(RequestParameter.PICTURE)) sessionRequestContent.setSessionAttribute(

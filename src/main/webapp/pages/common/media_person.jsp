@@ -18,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/moviePage.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<jsp:include page="/pages/module/header.jsp"/>
+<c:import url="/pages/module/header.jsp"/>
 <body class="home">
 <%--<jsp:useBean id="user" class="com.example.demo_web.entity.User" scope="session"/>--%>
 <jsp:useBean id="user" class="com.epam.project.model.entity.User" scope="session"/>
@@ -88,10 +88,12 @@
                     </div>
                 </c:forEach>
             </c:if>
-
+            <c:import url="/pages/module/messages.jsp"/>
         </div>
     </section>
 </section>
 </body>
 </html>
 <c:remove var="errorMessage"/>
+<c:remove var="confirmMessage"/>
+<c:remove var="validationErrors"/>

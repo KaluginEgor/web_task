@@ -3,10 +3,6 @@ package com.epam.project.model.service.impl;
 import com.epam.project.exception.DaoException;
 import com.epam.project.exception.ServiceException;
 import com.epam.project.model.dao.*;
-import com.epam.project.model.dao.impl.MediaPersonDao;
-import com.epam.project.model.dao.impl.MovieDao;
-import com.epam.project.model.dao.impl.MovieRatingDao;
-import com.epam.project.model.dao.impl.MovieReviewDao;
 import com.epam.project.model.entity.*;
 import com.epam.project.model.service.MovieService;
 import com.epam.project.model.util.message.ErrorMessage;
@@ -66,6 +62,20 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public boolean idExists(int id) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        try {
+            transaction.init(movieDao);
+            return movieDao.idExists(id);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        } finally {
+            transaction.end();
+        }
+    }
+
+    @Override
     public Map.Entry<Optional<Movie>, Optional<String>> findById(String stringMovieId) throws ServiceException {
         EntityTransaction transaction = new EntityTransaction();
         Optional<Movie> movie = Optional.empty();
@@ -91,6 +101,7 @@ public class MovieServiceImpl implements MovieService {
                 }
                 transaction.commit();
             } catch (DaoException e) {
+                logger.error(e);
                 transaction.rollback();
                 throw new ServiceException(e);
             } finally {
@@ -110,6 +121,7 @@ public class MovieServiceImpl implements MovieService {
             movieTitles = movieDao.findAllTitles();
             return movieTitles;
         } catch (DaoException e) {
+            logger.error(e);
             throw new ServiceException(e);
         } finally {
             transaction.end();
@@ -134,10 +146,10 @@ public class MovieServiceImpl implements MovieService {
         } else {
             Movie movieToCreate = convertToMovie(title, description, stringReleaseDate, picture, stringGenres);
             try {
+                transaction.initTransaction(movieDao, reviewDao, ratingDao);
                 if (!movieDao.isUnique(title, movieToCreate.getReleaseDate())) {
                     errorMessage = Optional.of(ErrorMessage.MOVIE_IS_NOT_UNIQUE);
                 } else {
-                    transaction.initTransaction(movieDao, reviewDao, ratingDao);
                     movie = Optional.of(movieDao.create(movieToCreate));
                     List<MediaPerson> movieCrew = new ArrayList<>();
                     for (Integer mediaPersonId : mediaPersonsId) {
@@ -159,6 +171,7 @@ public class MovieServiceImpl implements MovieService {
                 }
                 transaction.commit();
             } catch (DaoException e) {
+                logger.error(e);
                 transaction.rollback();
                 throw new ServiceException(e);
             } finally {
@@ -215,6 +228,7 @@ public class MovieServiceImpl implements MovieService {
                         transaction.commit();
                     }
                 } catch (DaoException e) {
+                    logger.error(e);
                     transaction.rollback();
                     throw new ServiceException(e);
                 } finally {
@@ -243,6 +257,7 @@ public class MovieServiceImpl implements MovieService {
                     errorMessage = Optional.of(ErrorMessage.TRY_DELETE_NOT_EXISTING_MOVIE);
                 }
             } catch (DaoException e) {
+                logger.error(e);
                 throw new ServiceException(e);
             } finally {
                 transaction.end();
@@ -257,12 +272,13 @@ public class MovieServiceImpl implements MovieService {
         List<Movie> movies = new ArrayList<>();
         Optional<String> errorMessage = Optional.empty();
         if (!MovieValidator.isTitleValid(title)) {
-            errorMessage = Optional.of(ErrorMessage.INCORRECT_MOVIE_ID_PARAMETER);
+            errorMessage = Optional.of(ErrorMessage.INCORRECT_FIND_TITLE_PARAMETER);
         } else {
             try {
                 transaction.init(movieDao);
                 movies = movieDao.findByTitlePart(title);
             } catch (DaoException e) {
+                logger.error(e);
                 throw new ServiceException(e);
             } finally {
                 transaction.end();

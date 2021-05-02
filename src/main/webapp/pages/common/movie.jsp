@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>${movie.title}</title>
 </head>
-<jsp:include page="/pages/module/header.jsp"/>
+<c:import url="/pages/module/header.jsp"/>
 <body class="home">
 
 <jsp:useBean id="user" class="com.epam.project.model.entity.User" scope="session"/>
@@ -102,14 +102,7 @@
                 </c:forEach>
             </c:if>
 
-            <br/>
-            <c:forEach var="validationException" items="${sessionScope.validationErrors}">
-                <h4>${validationException}</h4>
-            </c:forEach>
-
-            <c:if test="${not empty sessionScope.errorMessage}">
-                <h4>${sessionScope.errorMessage}</h4>
-            </c:if>
+            <c:import url="/pages/module/messages.jsp"/>
 
             <c:set var="active" value="ACTIVE"/>
             <c:set var="userRate" value="${ctg:getUserRate(movie.ratingList, user.id)}"/>
@@ -208,7 +201,7 @@
                                         <input type="hidden" name="command" value="prepare_movie_review_update"/>
                                         <input type="hidden" name="movieReviewId" value="${review.id}"/>
                                         <input type="hidden" name="movieId" value="${movie.id}"/>
-                                        <input type="hidden" name="userId" value="${user.id}"/>
+                                        <input type="hidden" name="userId" value="${review.userId}"/>
                                         <div class="btn">
                                             <button class="edit-btn" id="${review.id}">
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
@@ -219,7 +212,7 @@
                                         <input type="hidden" name="command" value="delete_movie_review"/>
                                         <input type="hidden" name="movieReviewId" value="${review.id}"/>
                                         <input type="hidden" name="movieId" value="${movie.id}"/>
-                                        <input type="hidden" name="userId" value="${user.id}"/>
+                                        <input type="hidden" name="userId" value="${review.userId}"/>
                                         <div class="btn">
                                             <button class="delete-btn"><i class="fa fa-trash-o" aria-hidden="true"></i>
                                             </button>
@@ -265,7 +258,16 @@
                             <input type="hidden" name="command" value="update_movie_review"/>
                         </c:otherwise>
                     </c:choose>
-                    <input type="hidden" name="userId" value="${user.id}"/>
+                    <input type="hidden" name="userId"
+                            <c:choose>
+                                <c:when test="${not empty sessionScope.userId}">
+                                    value="${sessionScope.userId}"
+                                </c:when>
+                                <c:when test="${not empty reviewToUpdate.userId}">
+                                    value="${reviewToUpdate.userId}"
+                                </c:when>
+                            </c:choose>
+                    />
                     <input type="hidden" name="movieId" value="${movie.id}"/>
                     <input type="text" required name="movieReviewTitle" class="review-title-input" placeholder="<fmt:message key="review.title"/>"
                             <c:choose>
@@ -293,3 +295,6 @@
 <c:remove var="movieReviewTitle"/>
 <c:remove var="movieReviewBody"/>
 <c:remove var="movieReviewId"/>
+<c:remove var="movieId"/>
+<c:remove var="userIf"/>
+<c:remove var="confirmMessage"/>

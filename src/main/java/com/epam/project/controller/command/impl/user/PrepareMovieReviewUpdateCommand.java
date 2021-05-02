@@ -38,7 +38,7 @@ public class PrepareMovieReviewUpdateCommand implements ActionCommand {
         String stringUserId = sessionRequestContent.getRequestParameter(RequestParameter.USER_ID);
         if (stringMovieReviewId == null || stringMovieId == null || stringUserId == null) {
             sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_PREPARE_MOVIE_REVIEW_PARAMETERS);
-            commandResult.setPage(PagePath.MOVIE);
+            commandResult.setPage(PagePath.MAIN);
         } else {
             Map.Entry<List<String>,List<String>> validationResult = movieReviewService.validateData(TITLE, BODY, stringMovieId, stringUserId);
             List<String> errorMessages = validationResult.getValue();
@@ -64,7 +64,8 @@ public class PrepareMovieReviewUpdateCommand implements ActionCommand {
                             }
                         }
                     } catch (ServiceException e) {
-                        commandResult.setPage(PagePath.ERROR_404);
+                        logger.error(e);
+                        throw new CommandException(e);
                     }
                 } else {
                     sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.ERROR_ACCESS);

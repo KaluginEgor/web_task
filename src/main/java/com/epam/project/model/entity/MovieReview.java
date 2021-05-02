@@ -12,6 +12,8 @@ public class MovieReview extends Entity {
     private String userLogin;
     private String movieTitle;
 
+    public MovieReview() {}
+
     public int getId() {
         return id;
     }
@@ -74,6 +76,32 @@ public class MovieReview extends Entity {
 
     public void setMovieTitle(String movieTitle) {
         this.movieTitle = movieTitle;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MovieReview that = (MovieReview) o;
+
+        if (id != that.id) return false;
+        if (movieId != that.movieId) return false;
+        if (userId != that.userId) return false;
+        if (!title.equals(that.title)) return false;
+        if (!body.equals(that.body)) return false;
+        return creationDate.equals(that.creationDate);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + title.hashCode();
+        result = 31 * result + body.hashCode();
+        result = 31 * result + creationDate.hashCode();
+        result = 31 * result + movieId;
+        result = 31 * result + userId;
+        return result;
     }
 
     @Override

@@ -1,11 +1,13 @@
-package com.epam.project.model.dao.impl;
+package com.epam.project.model.dao;
 
 import com.epam.project.exception.DaoException;
-import com.epam.project.model.dao.AbstractUserDao;
 import com.epam.project.model.dao.column.UsersColumn;
 import com.epam.project.model.entity.User;
 import com.epam.project.model.entity.UserRole;
 import com.epam.project.model.entity.UserState;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.intellij.lang.annotations.Language;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,34 +18,51 @@ import java.util.List;
 import java.util.Locale;
 
 public class UserDao extends AbstractUserDao {
-    private static final String SQL_INSERT_USER = "INSERT INTO users (user_login, user_email, user_password, user_first_name, user_second_name,  user_role_id, user_state_id, user_rating, user_picture) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    private static final Logger logger = LogManager.getLogger(UserDao.class);
 
+    @Language("SQL")
+    private static final String SQL_INSERT_USER = "INSERT INTO users (user_login, user_email, user_password, user_first_name, user_second_name,  user_role_id, user_state_id, user_rating, user_picture) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+    @Language("SQL")
     private static final String SQL_SELECT_USER_BY_LOGIN = "SELECT U.user_id, U.user_login, U.user_email, U.user_first_name, U.user_second_name, U.user_picture, UR.user_role_name, US.user_state_name FROM users U INNER JOIN user_roles UR ON U.user_role_id = UR.user_role_id INNER JOIN user_states US ON U.user_state_id = US.user_state_id WHERE U.user_login = ?;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_USER_BY_ID = "SELECT U.user_id, U.user_login, U.user_email, U.user_first_name, U.user_second_name, U.user_picture, UR.user_role_name, US.user_state_name FROM users U INNER JOIN user_roles UR ON U.user_role_id = UR.user_role_id INNER JOIN user_states US ON U.user_state_id = US.user_state_id WHERE U.user_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_PASSWORD_BY_LOGIN = "SELECT user_password FROM users WHERE user_login = ?;";
 
+    @Language("SQL")
     private static final String SQL_LOGIN_EXISTS = "SELECT EXISTS(SELECT user_login FROM users WHERE user_login = ?) AS user_existence;";
 
+    @Language("SQL")
     private static final String SQL_ACTIVATE_USER = "UPDATE users SET user_state_id = 0 WHERE user_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_UPDATE_USER_RATING = "UPDATE users SET user_rating = ? WHERE user_id = ?";
 
+    @Language("SQL")
     private static final String SQL_UPDATE_USER = "UPDATE users U SET U.user_login = ?, U.user_email = ?, U.user_first_name = ?, U.user_second_name = ?, U.user_picture = ?, U.user_role_id = ?, U.user_state_id = ?, U.user_rating = ? WHERE U.user_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_DELETE_USER = "DELETE FROM users U WHERE U.user_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_COUNT_USERS = "SELECT COUNT(*) AS users_count FROM users;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_ALL_USERS_WITH_LIMIT = "SELECT U.user_id, U.user_login, U.user_email, U.user_first_name, U.user_second_name, U.user_picture, UR.user_role_name, US.user_state_name FROM users U INNER JOIN user_roles UR ON U.user_role_id = UR.user_role_id INNER JOIN user_states US ON U.user_state_id = US.user_state_id LIMIT ?,?;";
 
+    @Language("SQL")
     private static final String SQL_BLOCK_USER = "UPDATE users SET user_state_id = 2 WHERE user_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_USER_STATUS_BY_ID = "SELECT US.user_state_name FROM users U INNER JOIN user_states US ON U.user_state_id = US.user_state_id WHERE U.user_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_ROLE_BY_ID = "SELECT UR.user_role_name FROM users U INNER JOIN user_roles UR ON U.user_role_id = UR.user_role_id WHERE U.user_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_EXISTS_ID = "SELECT EXISTS (SELECT user_id FROM users WHERE user_id = ?) AS user_existence;";
 
     private static final AbstractUserDao instance = new UserDao();
@@ -63,6 +82,7 @@ public class UserDao extends AbstractUserDao {
                 return buildUser(resultSet);
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -82,6 +102,7 @@ public class UserDao extends AbstractUserDao {
             }
             return userList;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -96,6 +117,7 @@ public class UserDao extends AbstractUserDao {
                 }
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
         return usersCount;
@@ -108,6 +130,7 @@ public class UserDao extends AbstractUserDao {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -120,14 +143,15 @@ public class UserDao extends AbstractUserDao {
             preparedStatement.setString(3, encryptedPassword);
             preparedStatement.setString(4, user.getFirstName());
             preparedStatement.setString(5, user.getSecondName());
-            preparedStatement.setInt(6, user.getState().ordinal());
-            preparedStatement.setInt(7, user.getRole().ordinal());
+            preparedStatement.setInt(6, user.getRole().ordinal());
+            preparedStatement.setInt(7, user.getState().ordinal());
             preparedStatement.setInt(8, user.getRating());
             preparedStatement.setString(9, user.getPicture());
             int id = executeUpdateAndGetGeneratedId(preparedStatement);
             user.setId(id);
             return user;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -147,6 +171,7 @@ public class UserDao extends AbstractUserDao {
             preparedStatement.executeUpdate();
             return user;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -161,7 +186,7 @@ public class UserDao extends AbstractUserDao {
                 userState = UserState.valueOf(resultSet.getString(UsersColumn.STATE_ID));
             }
         } catch (SQLException e) {
-            //logger.error(e);
+            logger.error(e);
             throw new DaoException(e);
         }
         return userState;
@@ -176,6 +201,7 @@ public class UserDao extends AbstractUserDao {
                 return buildUser(resultSet);
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -189,6 +215,7 @@ public class UserDao extends AbstractUserDao {
                 return resultSet.getString(1);
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -204,6 +231,7 @@ public class UserDao extends AbstractUserDao {
                 }
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
         return result;
@@ -215,6 +243,7 @@ public class UserDao extends AbstractUserDao {
             preparedStatement.setInt(1, id);
             return (preparedStatement.executeUpdate() == 1);
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -225,6 +254,7 @@ public class UserDao extends AbstractUserDao {
             preparedStatement.setInt(1, id);
             return (preparedStatement.executeUpdate() == 1);
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -241,6 +271,7 @@ public class UserDao extends AbstractUserDao {
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -254,6 +285,7 @@ public class UserDao extends AbstractUserDao {
                 return resultSet.getString(1);
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }

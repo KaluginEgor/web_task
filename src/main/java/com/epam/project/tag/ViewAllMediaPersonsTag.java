@@ -3,7 +3,10 @@ package com.epam.project.tag;
 import com.epam.project.controller.command.Attribute;
 import com.epam.project.controller.command.CommandName;
 import com.epam.project.controller.command.SessionRequestContent;
+import com.epam.project.exception.ServiceException;
 import com.epam.project.model.entity.MediaPerson;
+import com.epam.project.model.service.MediaPersonService;
+import com.epam.project.model.service.impl.MediaPersonServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -35,6 +38,7 @@ public class ViewAllMediaPersonsTag extends TagSupport {
 
     private void createMediaPersons(JspWriter writer, SessionRequestContent sessionRequestContext) throws JspException {
         List<MediaPerson> allMediaPeople = (List<MediaPerson>) sessionRequestContext.getSessionAttribute(Attribute.ALL_MEDIA_PERSONS_LIST);
+        MediaPersonService mediaPersonService = MediaPersonServiceImpl.getInstance();
         if (allMediaPeople != null) {
             int size = allMediaPeople.size();
             int createdActorsCount = 0;
@@ -45,25 +49,27 @@ public class ViewAllMediaPersonsTag extends TagSupport {
                 for (int i = 0; i < MEDIA_PERSONS_PER_PAGE_NUMBER; i++) {
                     if (size > createdActorsCount) {
                         mediaPerson = allMediaPeople.get(createdActorsCount);
-                        writer.write("<li>");
-                        writer.write(" <div class=\"movie\">");
-                        writer.write("<a href=\"" + contextPath + "/controller?command=open_media_person_page&mediaPersonId=" + mediaPerson.getId() + "\">");
-                        writer.write("<h4 class=\"title\">" + mediaPerson.getFirstName() + " " + mediaPerson.getSecondName() + "</h4>");
-                        writer.write("</a>");
-                        writer.write("<div class=\"poster\">");
-                        writer.write("<a href=\"" + contextPath + "/controller?command=open_media_person_page&mediaPersonId=" + mediaPerson.getId() + "\">");
-                        writer.write("<img src=\"" + contextPath + "//picture?currentPicture=" + mediaPerson.getPicture() + "\" alt=\"" + mediaPerson.getFirstName() + " " + mediaPerson.getSecondName() + "\"/>");
-                        writer.write("</a>");
-                        writer.write("</div>");
-                        writer.write("<p class=\"description\">" + mediaPerson.getOccupationType() + "</p>");
-                        writer.write("</div>");
-                        writer.write("</li>");
-                        createdActorsCount++;
+                        if (mediaPersonService.idExists(mediaPerson.getId())) {
+                            writer.write("<li>");
+                            writer.write(" <div class=\"movie\">");
+                            writer.write("<a href=\"" + contextPath + "/controller?command=open_media_person_page&mediaPersonId=" + mediaPerson.getId() + "\">");
+                            writer.write("<h4 class=\"title\">" + mediaPerson.getFirstName() + " " + mediaPerson.getSecondName() + "</h4>");
+                            writer.write("</a>");
+                            writer.write("<div class=\"poster\">");
+                            writer.write("<a href=\"" + contextPath + "/controller?command=open_media_person_page&mediaPersonId=" + mediaPerson.getId() + "\">");
+                            writer.write("<img src=\"" + contextPath + "//picture?currentPicture=" + mediaPerson.getPicture() + "\" alt=\"" + mediaPerson.getFirstName() + " " + mediaPerson.getSecondName() + "\"/>");
+                            writer.write("</a>");
+                            writer.write("</div>");
+                            writer.write("<p class=\"description\">" + mediaPerson.getOccupationType() + "</p>");
+                            writer.write("</div>");
+                            writer.write("</li>");
+                            createdActorsCount++;
+                        }
                     }
                 }
                 writer.write("</ul>");
-            } catch (IOException e) {
-                //e.printStackTrace();
+            } catch (IOException | ServiceException e) {
+                throw new JspException(e);
             }
         }
     }

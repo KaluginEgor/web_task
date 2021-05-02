@@ -16,12 +16,12 @@ import java.util.List;
 public enum CommandName {
     LOGIN(new LoginCommand()) {
         {
-            setAllowedUserRoles(UserRole.values());
+            setAllowedUserRoles(UserRole.GUEST);
         }
     },
     LOGOUT(new LogoutCommand()) {
         {
-            setAllowedUserRoles(UserRole.values());
+            setAllowedUserRoles(UserRole.ADMIN, UserRole.USER);
         }
     },
     REGISTER(new RegisterCommand()) {

@@ -2,18 +2,14 @@ package com.epam.project.model.service.impl;
 
 import com.epam.project.exception.DaoException;
 import com.epam.project.exception.ServiceException;
-import com.epam.project.model.dao.AbstractMovieDao;
-import com.epam.project.model.dao.AbstractMovieReviewDao;
-import com.epam.project.model.dao.AbstractUserDao;
-import com.epam.project.model.dao.EntityTransaction;
-import com.epam.project.model.dao.impl.MovieDao;
-import com.epam.project.model.dao.impl.MovieReviewDao;
-import com.epam.project.model.dao.impl.UserDao;
+import com.epam.project.model.dao.*;
 import com.epam.project.model.entity.MovieReview;
 import com.epam.project.model.service.MovieReviewService;
 import com.epam.project.model.util.message.ErrorMessage;
 import com.epam.project.model.validator.MovieValidator;
 import com.epam.project.model.validator.ValidationHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +18,7 @@ import java.util.Optional;
 
 public class MovieReviewServiceImpl implements MovieReviewService {
     private static final MovieReviewService instance = new MovieReviewServiceImpl();
+    private static final Logger logger = LogManager.getLogger(MovieReviewServiceImpl.class);
     private AbstractMovieReviewDao movieReviewDao = MovieReviewDao.getInstance();
     private AbstractUserDao userDao = UserDao.getInstance();
     private AbstractMovieDao movieDao = MovieDao.getInstance();
@@ -52,6 +49,7 @@ public class MovieReviewServiceImpl implements MovieReviewService {
             }
             transaction.commit();
         } catch (DaoException e) {
+            logger.error(e);
             transaction.rollback();
             throw new ServiceException(e);
         } finally {
@@ -85,6 +83,7 @@ public class MovieReviewServiceImpl implements MovieReviewService {
                 }
                 transaction.commit();
             } catch (DaoException e) {
+                logger.error(e);
                 transaction.rollback();
                 throw new ServiceException(e);
             } finally {
@@ -112,6 +111,7 @@ public class MovieReviewServiceImpl implements MovieReviewService {
                     errorMessage = Optional.of(ErrorMessage.TRY_DELETE_NOT_EXISTING_MOVIE_REVIEW);
                 }
             } catch (DaoException e) {
+                logger.error(e);
                 throw new ServiceException(e);
             } finally {
                 transaction.end();
@@ -139,6 +139,7 @@ public class MovieReviewServiceImpl implements MovieReviewService {
                     errorMessage = Optional.of(ErrorMessage.TRY_FIND_NOT_EXISTING_MOVIE_REVIEW);
                 }
             } catch (DaoException e) {
+                logger.error(e);
                 throw new ServiceException(e);
             } finally {
                 transaction.end();

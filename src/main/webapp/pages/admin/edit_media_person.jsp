@@ -20,21 +20,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title><fmt:message key="label.edit.media.person"/></title>
 </head>
-<jsp:include page="/pages/module/header.jsp"/>
+<c:import url="/pages/module/header.jsp"/>
 <body class="home">
 <div class="edit-page">
-
-    <div class="block">
-        <br/>
-        <c:forEach var="validationException" items="${sessionScope.validationErrors}">
-            <h4>${validationException}</h4>
-        </c:forEach>
-
-        <c:if test="${not empty sessionScope.errorMessage}">
-            <h4>${sessionScope.errorMessage}</h4>
-        </c:if>
-    </div>
-
 
     <div class="block">
         <form action="<c:url value="/controller"/>" enctype="multipart/form-data" method="POST">
@@ -154,13 +142,13 @@
                 <c:forEach var="movie" items="${sessionScope.movieTitles}">
                     <div class="block-div">
                         <c:choose>
-                            <c:when test="${sessionScope.mediaPersonMovies.contains(movie.key)}">
+                            <c:when test="${not empty sessionScope.mediaPersonMovies and sessionScope.mediaPersonMovies.contains(movie.key)}">
                                 <input type="checkbox" id="${movie.key}" name="mediaPersonMovies" checked="checked"
                                        value="${movie.key}"/>
                             </c:when>
                             <c:otherwise>
                                 <c:choose>
-                                    <c:when test="${ctg:containsMovieId(mediaPerson.movies, movie.key)}">
+                                    <c:when test="${not empty mediaPerson.movies and ctg:containsMovieId(mediaPerson.movies, movie.key)}">
                                         <input type="checkbox" id="${movie.key}" name="mediaPersonMovies" checked="checked"
                                                value="${movie.key}"/>
                                     </c:when>
@@ -176,6 +164,7 @@
                 </c:forEach>
             </div>
         </div>
+        <c:import url="/pages/module/messages.jsp"/>
 
         <div class="block">
             <input type="submit" class="edit-btn" value="<fmt:message key="label.submit"/>">
@@ -203,6 +192,7 @@
 <c:remove var="mediaPersonMovies"/>
 <c:remove var="validationErrors"/>
 <c:remove var="errorMessage"/>
+<c:remove var="confirmMessage"/>
 
 
 

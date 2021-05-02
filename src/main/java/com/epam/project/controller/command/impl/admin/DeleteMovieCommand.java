@@ -21,14 +21,12 @@ public class DeleteMovieCommand implements ActionCommand {
         String stringMovieId = sessionRequestContent.getRequestParameter(RequestParameter.MOVIE_ID);
         if (stringMovieId == null) {
             sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_DELETE_MOVIE_PARAMETERS);
-            commandResult.setPage(PagePath.MOVIE);
         } else {
             Optional<String> errorMessage;
             try {
                 errorMessage = movieService.delete(stringMovieId);
                 if (errorMessage.isPresent()) {
                     sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, errorMessage.get());
-                    commandResult.setPage(PagePath.MOVIE);
                 }
             } catch (ServiceException e) {
                 logger.error(e);

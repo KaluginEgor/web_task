@@ -1,10 +1,12 @@
-package com.epam.project.model.dao.impl;
+package com.epam.project.model.dao;
 
 import com.epam.project.exception.DaoException;
-import com.epam.project.model.dao.AbstractMovieDao;
 import com.epam.project.model.dao.column.MoviesColumn;
 import com.epam.project.model.entity.GenreType;
 import com.epam.project.model.entity.Movie;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.intellij.lang.annotations.Language;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,40 +19,60 @@ import java.util.List;
 import java.util.Map;
 
 public class MovieDao extends AbstractMovieDao {
+    private static final Logger logger = LogManager.getLogger(MovieDao.class);
+
+    @Language("SQL")
     private static final String SQL_SELECT_ALL_MOVIE_TITLES = "SELECT M.movie_id, M.movie_title FROM movies M ORDER BY M.movie_title;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_ALL_MOVIES_WITH_LIMIT = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M ORDER BY M.movie_title LIMIT ?, ?;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_MOVIE_BY_ID = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M WHERE M.movie_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_COUNT_MOVIES = "SELECT COUNT(*) AS movies_count FROM movies;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_GENRE_TYPES_BY_MOVIE_ID = "SELECT MG.movie_genre_name FROM movie_genre MG INNER JOIN genres_movies GM on MG.movie_genre_id = GM.movie_genre_id INNER JOIN movies M on GM.movie_id = M.movie_id WHERE M.movie_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_MOVIES_BY_ACTOR_ID = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M INNER JOIN media_persons_movies MPM on M.movie_id = MPM.movie_id INNER JOIN media_persons MP on MPM.media_person_id = MP.media_person_id WHERE MP.media_person_id = ? ORDER BY M.movie_title;";
 
+    @Language("SQL")
     private static final String SQL_INSERT_MOVIE_GENRE = "INSERT INTO genres_movies (movie_id, movie_genre_id) VALUES (?, ?);";
 
+    @Language("SQL")
     private static final String SQL_INSERT_MOVIE_MEDIA_PERSON = "INSERT INTO media_persons_movies (movie_id, media_person_id) VALUES (?, ?);";
 
+    @Language("SQL")
     private static final String SQL_DELETE_MOVIE_CREW = "DELETE FROM media_persons_movies MPM WHERE MPM.movie_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_DELETE_MOVIE_GENRES = "DELETE FROM genres_movies GM WHERE GM.movie_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_INSERT_MOVIE = "INSERT INTO movies (movie_title, movie_description, movie_rating, movie_release_date, movie_picture) VALUES (?, ?, 0, ?, ?);";
 
+    @Language("SQL")
     private static final String SQL_UPDATE_MOVIE = "UPDATE movies M SET M.movie_title = ?, M.movie_description = ?, M.movie_release_date = ?, M.movie_picture = ? WHERE M.movie_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_DELETE_MOVIE = "DELETE FROM movies M WHERE M.movie_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_MOVIES_BY_TITLE_PART = "SELECT M.movie_id, M.movie_title, M.movie_description, M.movie_rating, M.movie_release_date, M.movie_picture FROM movies M WHERE UPPER(M.movie_title) LIKE ?;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_RATING_BY_ID = "SELECT M.movie_rating FROM movies M WHERE M.movie_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_UPDATE_RATING_BY_ID = "UPDATE movies M SET M.movie_rating = ? WHERE M.movie_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_EXISTS_ID = "SELECT EXISTS (SELECT movie_id FROM movies WHERE movie_id = ?) AS movie_existence;";
 
+    @Language("SQL")
     private static final String SQL_MOVIE_IS_UNIQUE = "SELECT EXISTS (SELECT movie_id FROM movies WHERE movie_title = ? AND movie_release_date = ?) AS movie_existence;";
 
     private static final AbstractMovieDao instance = new MovieDao();
@@ -81,6 +103,7 @@ public class MovieDao extends AbstractMovieDao {
             }
             return allTitles;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -97,6 +120,7 @@ public class MovieDao extends AbstractMovieDao {
             }
             return movie;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -108,6 +132,7 @@ public class MovieDao extends AbstractMovieDao {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -123,6 +148,7 @@ public class MovieDao extends AbstractMovieDao {
             movie.setId(id);
             return movie;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -138,6 +164,7 @@ public class MovieDao extends AbstractMovieDao {
             preparedStatement.executeUpdate();
             return movie;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -157,6 +184,7 @@ public class MovieDao extends AbstractMovieDao {
             }
             return movieList;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -175,6 +203,7 @@ public class MovieDao extends AbstractMovieDao {
             }
             return genreTypes;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -189,6 +218,7 @@ public class MovieDao extends AbstractMovieDao {
                 }
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
         return moviesCount;
@@ -208,6 +238,7 @@ public class MovieDao extends AbstractMovieDao {
             }
             return movieList;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -219,6 +250,7 @@ public class MovieDao extends AbstractMovieDao {
             preparedStatement.setInt(2, genreId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
         return true;
@@ -243,6 +275,7 @@ public class MovieDao extends AbstractMovieDao {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -254,6 +287,7 @@ public class MovieDao extends AbstractMovieDao {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -271,6 +305,7 @@ public class MovieDao extends AbstractMovieDao {
             }
             return movieList;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -287,6 +322,7 @@ public class MovieDao extends AbstractMovieDao {
             }
             return rating;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -299,6 +335,7 @@ public class MovieDao extends AbstractMovieDao {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -314,6 +351,7 @@ public class MovieDao extends AbstractMovieDao {
                 result = resultSet.getInt(1) == 0;
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
         return result;

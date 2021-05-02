@@ -23,6 +23,7 @@ public class UpdateUserCommand implements ActionCommand {
     @Override
     public CommandResult execute(SessionRequestContent sessionRequestContent) throws CommandException {
         CommandResult commandResult = new CommandResult(PagePath.USER, TransitionType.REDIRECT);
+        User userToUpdate = (User) sessionRequestContent.getSessionAttribute(Attribute.SOME_USER);
         String stringUserId = sessionRequestContent.getRequestParameter(RequestParameter.USER_ID);
         String firstName = sessionRequestContent.getRequestParameter(RequestParameter.FIRST_NAME);
         String secondName = sessionRequestContent.getRequestParameter(RequestParameter.SECOND_NAME);
@@ -31,7 +32,7 @@ public class UpdateUserCommand implements ActionCommand {
         if (picture == null || picture.isEmpty()) {
             picture = DEFAULT_USER_PICTURE;
         }
-        if (stringUserId == null || firstName == null || secondName == null || email == null) {
+        if (userToUpdate == null || stringUserId == null || firstName == null || secondName == null || email == null) {
             sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_UPDATE_USER_PARAMETERS);
             commandResult.setPage(PagePath.MAIN);
         } else {
@@ -51,8 +52,6 @@ public class UpdateUserCommand implements ActionCommand {
                 commandResult.setPage(PagePath.EDIT_USER);
             } else {
                 User currentUser = (User) sessionRequestContent.getSessionAttribute(Attribute.USER);
-                User userToUpdate = (User) sessionRequestContent.getSessionAttribute(Attribute.SOME_USER);
-                if (userToUpdate == null) userToUpdate = new User();
                 if (Integer.valueOf(stringUserId).equals(currentUser.getId()) ||
                         (UserRole.ADMIN.equals(currentUser.getRole()) && !UserRole.ADMIN.equals(userToUpdate.getRole()))) {
                     Optional<String> errorMessage;
@@ -64,7 +63,7 @@ public class UpdateUserCommand implements ActionCommand {
                         errorMessage = findResult.getValue();
                         if (errorMessage.isPresent()) {
                             sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, errorMessage.get());
-                            commandResult.setPage(PagePath.EDIT_USER);
+                            commandResult.setPage(PagePath.MAIN);
                         } else {
                             if (user.isPresent()) {
                                 sessionRequestContent.setSessionAttribute(Attribute.SOME_USER, user.get());

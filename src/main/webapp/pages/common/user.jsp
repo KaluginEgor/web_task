@@ -20,7 +20,7 @@
     <title>${user.login}</title>
 </head>
 <body class="home">
-<jsp:include page="/pages/module/header.jsp"/>
+<c:import url="/pages/module/header.jsp"/>
 <jsp:useBean id="reviewToUpdate" class="com.epam.project.model.entity.MovieReview" scope="session"/>
 <section class="section main">
     <div class="section-title">
@@ -99,12 +99,12 @@
                             </form>
 
                             <div class="btn-row">
-                                <c:if test="${(user.id == review.userId or user.role == admin)}">
+                                <c:if test="${user.id == someUser.id or (user.role == admin and someUser.role != admin)}">
                                     <form action="<c:url value="/controller"/>" method="POST" >
                                         <input type="hidden" name="command" value="prepare_movie_review_update"/>
                                         <input type="hidden" name="movieReviewId" value="${review.id}"/>
-                                        <input type="hidden" name="movieId" value="${movie.id}"/>
-                                        <input type="hidden" name="userId" value="${user.id}"/>
+                                        <input type="hidden" name="movieId" value="${review.movieId}"/>
+                                        <input type="hidden" name="userId" value="${review.userId}"/>
                                         <div class="btn">
                                             <button class="edit-btn" id="${review.id}">
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
@@ -114,8 +114,8 @@
                                     <form action="<c:url value="/controller"/>" method="POST" class="delete-review-form">
                                         <input type="hidden" name="command" value="delete_movie_review"/>
                                         <input type="hidden" name="movieReviewId" value="${review.id}"/>
-                                        <input type="hidden" name="movieId" value="${movie.id}"/>
-                                        <input type="hidden" name="userId" value="${user.id}"/>
+                                        <input type="hidden" name="movieId" value="${review.movieId}"/>
+                                        <input type="hidden" name="userId" value="${review.userId}"/>
                                         <div class="btn">
                                             <button class="delete-btn"><i class="fa fa-trash-o" aria-hidden="true"></i>
                                             </button>
@@ -143,12 +143,12 @@
             <c:if test="${not empty someUser.movieRatings}">
             <p><strong><fmt:message key="label.ratings"/>: </strong></p>
             <c:forEach var="rating" items="${someUser.movieRatings}">
-                <c:if test="${sessionScope.user.id == someUser.id}">
+                <c:if test="${user.id == someUser.id or (user.role == admin and someUser.role != admin)}">
                     <form action="<c:url value="/controller"/>" method="POST" class="delete-rating-form">
                         <input type="hidden" name="command" value="delete_movie_rating"/>
                         <input type="hidden" name="movieRatingId" value="${rating.id}"/>
                         <input type="hidden" name="movieId" value="${rating.movieId}"/>
-                        <input type="hidden" name="userId" value="${someUser.id}">
+                        <input type="hidden" name="userId" value="${rating.userId}">
                         <div class="btn">
                             <button class="delete-rating-btn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                         </div>
@@ -168,16 +168,7 @@
         </div>
         </c:if>
 
-        <div class="block">
-            <br/>
-            <c:forEach var="validationException" items="${sessionScope.validationErrors}">
-                <h4>${validationException}</h4>
-            </c:forEach>
-
-            <c:if test="${not empty sessionScope.errorMessage}">
-                <h4>${sessionScope.errorMessage}</h4>
-            </c:if>
-        </div>
+        <c:import url="/pages/module/messages.jsp"/>
 
         <c:set var="active" value="ACTIVE"/>
         <c:if test="${user.state == active and reviewToUpdate.id != 0 or not empty sessionScope.movieReviewTitle or not empty sessionScope.movieReviewBody}">
@@ -200,8 +191,17 @@
                         <input type="hidden" name="command" value="update_movie_review"/>
                     </c:otherwise>
                 </c:choose>
-                <input type="hidden" name="userId" value="${user.id}"/>
-                <input type="hidden" name="movieId" value="${movie.id}"/>
+                <input type="hidden" name="userId" value="${someUser.id}"/>
+                <input type="hidden" name="movieId"
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.movieId}">
+                                value="${sessionScope.movieId}"
+                            </c:when>
+                            <c:when test="${not empty reviewToUpdate.movieId}">
+                                value="${reviewToUpdate.movieId}"
+                            </c:when>
+                        </c:choose>
+                />
                 <input type="text" required name="movieReviewTitle" class="review-title-input" placeholder="<fmt:message key="review.title"/>"
                         <c:choose>
                             <c:when test="${not empty sessionScope.movieReviewTitle}">
@@ -227,3 +227,6 @@
 <c:remove var="movieReviewTitle"/>
 <c:remove var="movieReviewBody"/>
 <c:remove var="movieReviewId"/>
+<c:remove var="movieId"/>
+<c:remove var="userIf"/>
+<c:remove var="confirmMessage"/>

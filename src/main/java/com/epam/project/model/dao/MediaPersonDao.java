@@ -1,10 +1,12 @@
-package com.epam.project.model.dao.impl;
+package com.epam.project.model.dao;
 
 import com.epam.project.exception.DaoException;
-import com.epam.project.model.dao.AbstractMediaPersonDao;
 import com.epam.project.model.dao.column.MediaPersonsColumn;
 import com.epam.project.model.entity.MediaPerson;
 import com.epam.project.model.entity.OccupationType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.intellij.lang.annotations.Language;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,28 +21,42 @@ import java.util.Map;
 public class MediaPersonDao extends AbstractMediaPersonDao {
     private static final AbstractMediaPersonDao instance = new MediaPersonDao();
 
+    private static final Logger logger = LogManager.getLogger(MediaPersonDao.class);
+
+    @Language("SQL")
     private static final String SQL_SELECT_ALL_MEDIA_PERSONS_WITH_LIMIT = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id ORDER BY MP.media_person_second_name LIMIT ?, ?;";
 
+    @Language("SQL")
     private static final String SQL_COUNT_MEDIA_PERSONS = "SELECT COUNT(*) AS media_person_count FROM media_persons;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_MEDIA_PERSONS_BY_MOVIE_ID = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id INNER JOIN media_persons_movies MPM on MP.media_person_id = MPM.media_person_id INNER JOIN movies M on MPM.movie_id = M.movie_id WHERE M.movie_id = ? ORDER BY MP.media_person_second_name;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_MEDIA_PERSON_BY_ID = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name, MPO.media_person_occupation_name, MP.media_person_bio, MP.media_person_birthday, MP.media_person_picture FROM media_persons MP INNER JOIN media_person_occupation MPO on MP.media_person_occupation_id = MPO.media_person_occupation_id WHERE MP.media_person_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_UPDATE_MEDIA_PERSON = "UPDATE media_persons MP SET MP.media_person_first_name = ?, MP.media_person_second_name = ?, MP.media_person_occupation_id = ?, MP.media_person_bio = ?, MP.media_person_birthday = ?, MP.media_person_picture = ? WHERE MP.media_person_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_INSERT_MEDIA_PERSON = "INSERT INTO media_persons (media_person_first_name, media_person_second_name, media_person_occupation_id, media_person_bio, media_person_birthday, media_person_picture) VALUES (?, ?, ?, ?, ?, ?);";
 
+    @Language("SQL")
     private static final String SQL_DELETE_MEDIA_PERSON_MOVIES = "DELETE FROM media_persons_movies MPM WHERE MPM.media_person_id = ?";
 
+    @Language("SQL")
     private static final String SQL_INSERT_MEDIA_PERSON_MOVIE = "INSERT INTO media_persons_movies (media_person_id, movie_id) VALUES (?, ?);";
 
+    @Language("SQL")
     private static final String SQL_SELECT_ALL_MEDIA_PERSON_NAMES = "SELECT MP.media_person_id, MP.media_person_first_name, MP.media_person_second_name FROM media_persons MP ORDER BY MP.media_person_second_name;";
 
+    @Language("SQL")
     private static final String SQL_DELETE_MEDIA_PERSON = "DELETE FROM media_persons MP WHERE MP.media_person_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_EXISTS_ID = "SELECT EXISTS (SELECT media_person_id FROM media_persons WHERE media_person_id = ?) AS media_person_existence;";
 
+    @Language("SQL")
     private static final String SQL_MEDIA_PERSON_IS_UNIQUE = "SELECT EXISTS (SELECT media_person_id FROM media_persons WHERE media_person_first_name = ? AND media_person_second_name = ? AND media_person_birthday = ?) AS media_person_existence;";
 
     private MediaPersonDao(){}
@@ -64,6 +80,7 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
             }
             return mediaPersonList;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -85,6 +102,7 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
             }
             return allTitles;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -104,6 +122,7 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
                 }
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
         return mediaPersonsCount;
@@ -123,6 +142,7 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
             }
             return crew;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -139,6 +159,7 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
             }
             return mediaPerson;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -150,6 +171,7 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -167,6 +189,7 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
             mediaPerson.setId(id);
             return mediaPerson;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -184,6 +207,7 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
             preparedStatement.executeUpdate();
             return mediaPerson;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -195,6 +219,7 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -207,6 +232,7 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -223,6 +249,7 @@ public class MediaPersonDao extends AbstractMediaPersonDao {
                 result = resultSet.getInt(1) == 0;
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
         return result;

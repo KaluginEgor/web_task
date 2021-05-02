@@ -16,6 +16,8 @@ public interface MovieService {
 
     Map<Integer, String> findAllTitles() throws ServiceException;
 
+    boolean idExists(int id) throws ServiceException;
+
     Map.Entry<Optional<Movie>, Optional<String>> create(String title, String description, String stringReleaseDate,
                                                         String picture, String[] stringGenres,
                                                         String[] stringMediaPersonsId) throws ServiceException;

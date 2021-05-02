@@ -18,7 +18,8 @@
     <title><fmt:message key="label.all.movies"/></title>
 </head>
 
-<jsp:include page="/pages/module/header.jsp"/>
+<c:import url="/pages/module/header.jsp"/>
+<c:import url="/pages/module/messages.jsp"/>
 <body class="home">
 <section class="section main">
     <section class="section-movies">
@@ -27,3 +28,6 @@
 </section>
 </body>
 </html>
+<c:remove var="errorMessage"/>
+<c:remove var="validationErrors"/>
+<c:remove var="confirmMessage"/>

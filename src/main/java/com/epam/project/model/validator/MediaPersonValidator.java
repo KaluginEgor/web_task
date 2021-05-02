@@ -12,7 +12,6 @@ public class MediaPersonValidator {
     private static final String DIGIT_PATTERN = "\\d+";
     private static final String NAME_PATTERN = "[A-Za-zА-Яа-яЁё]{1,40}";
     private static final String BIO_PATTERN = "[A-Za-zА-Яа-яЁё0-9\\s()\"':?!.,-]{1,10000}";
-    private static final String OCCUPATION_ID_PATTERN = "[0-" + (OccupationType.values().length - 1) + "]";
     private static final String PICTURE_PATTERN = "[^\\s]+(.*?)\\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$";
 
     private MediaPersonValidator() {}
@@ -26,7 +25,11 @@ public class MediaPersonValidator {
     public static boolean isValidBio(String bio) { return bio.matches(BIO_PATTERN);}
 
     public static boolean isOccupationIdValid(String stringOccupationId) {
-        return stringOccupationId.matches(OCCUPATION_ID_PATTERN);
+        if (stringOccupationId.matches(DIGIT_PATTERN)) {
+            return (Integer.parseInt(stringOccupationId) >= 0 && Integer.parseInt(stringOccupationId) < OccupationType.values().length);
+        } else {
+            return false;
+        }
     }
 
     public static boolean isBirthdayValid(String stringBirthday) {

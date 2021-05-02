@@ -11,7 +11,7 @@ public class MailBuilder {
     private static final String RESOURCE_NAME = "property/pagecontent";
     private static final Locale DEFAULT_LOCALE = new Locale("en_US");
 
-    private static final String LINK_FOR_CONFIRMATION = "http://localhost:8080/demo_web_war_exploded" +
+    private static final String LINK_FOR_CONFIRMATION = "http://localhost:8080/web_project_war_exploded" +
             "/controller?command=confirm_registration&id=";
 
     private MailBuilder() {}

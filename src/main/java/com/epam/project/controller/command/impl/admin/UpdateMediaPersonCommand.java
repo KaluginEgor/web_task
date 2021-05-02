@@ -51,9 +51,10 @@ public class UpdateMediaPersonCommand implements ActionCommand {
                         Attribute.SECOND_NAME, secondName);
                 if (validParameters.contains(RequestParameter.BIO)) sessionRequestContent.setSessionAttribute(
                         Attribute.BIO, bio);
-                int occupationId = Integer.valueOf(stringOccupationTypeId);
-                if (validParameters.contains(RequestParameter.MEDIA_PERSON_OCCUPATION_TYPE)) sessionRequestContent.setSessionAttribute(
-                            Attribute.MEDIA_PERSON_OCCUPATION_TYPE, OccupationType.values()[occupationId]);
+                if (validParameters.contains(RequestParameter.MEDIA_PERSON_OCCUPATION_TYPE)) {
+                    int occupationId = Integer.parseInt(stringOccupationTypeId);
+                    sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PERSON_OCCUPATION_TYPE, OccupationType.values()[occupationId]);
+                }
                 if (validParameters.contains(RequestParameter.MEDIA_PERSON_BIRTHDAY))
                     sessionRequestContent.setSessionAttribute(
                             Attribute.MEDIA_PERSON_BIRTHDAY, LocalDate.parse(stringBirthday));
@@ -79,7 +80,7 @@ public class UpdateMediaPersonCommand implements ActionCommand {
                     errorMessage = findResult.getValue();
                     if (errorMessage.isPresent()) {
                         sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, errorMessage.get());
-                        commandResult.setPage(PagePath.EDIT_MEDIA_PERSON);
+                        commandResult.setPage(PagePath.MAIN);
                     } else {
                         if (mediaPerson.isPresent()) {
                             sessionRequestContent.setSessionAttribute(Attribute.MEDIA_PERSON, mediaPerson.get());

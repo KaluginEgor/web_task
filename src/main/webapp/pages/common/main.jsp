@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title><fmt:message key="label.found.movies"/></title>
 </head>
-<jsp:include page="/pages/module/header.jsp"/>
+<c:import url="/pages/module/header.jsp"/>
 <body class="home">
 <section class="section main">
     <div class="section-title">
@@ -32,14 +32,7 @@
             </c:choose>
         </h2>
     </div>
-    <br/>
-    <c:forEach var="validationException" items="${sessionScope.validationErrors}">
-        <h4>${validationException}</h4>
-    </c:forEach>
-
-    <c:if test="${not empty sessionScope.errorMessage}">
-        <h4>${sessionScope.errorMessage}</h4>
-    </c:if>
+    <c:import url="/pages/module/messages.jsp"/>
     <c:if test="${not empty sessionScope.foundMovies}">
         <section class="section-movies">
             <c:forEach var="movie" items="${sessionScope.foundMovies}">
@@ -70,3 +63,5 @@
 <c:remove var="foundMovies"/>
 <c:remove var="validationErrors"/>
 <c:remove var="errorMessage"/>
+<c:remove var="queryName"/>
+<c:remove var="confirmMessage"/>

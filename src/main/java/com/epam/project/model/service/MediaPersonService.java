@@ -11,6 +11,7 @@ public interface MediaPersonService {
     List<MediaPerson> findAllBetween(int begin, int end) throws ServiceException;
     Map<Integer, String> finaAllNames() throws ServiceException;
     int countMediaPersons() throws ServiceException;
+    boolean idExists(int id) throws ServiceException;
     Map.Entry<Optional<MediaPerson>, Optional<String>> findById(String stringMediaPersonId) throws ServiceException;
     Map.Entry<Optional<MediaPerson>, Optional<String>> update(String stringId, String firstName, String secondName,
                                                               String bio, String stringOccupationId, String stringBirthday,

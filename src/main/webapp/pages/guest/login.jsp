@@ -18,25 +18,16 @@
     <title><fmt:message key="label.login" /></title>
 </head>
 <body>
-<jsp:include page="/pages/module/header.jsp"/>
-<div class="block">
-    <br/>
-    <c:forEach var="validationException" items="${sessionScope.validationErrors}">
-        <h4>${validationException}</h4>
-    </c:forEach>
-
-    <c:if test="${not empty sessionScope.errorMessage}">
-        <h4>${sessionScope.errorMessage}</h4>
-    </c:if>
-</div>
+<c:import url="/pages/module/header.jsp"/>
+<c:import url="/pages/module/messages.jsp"/>
 <div class="user">
     <form class="form" name="loginForm" method="POST" action="<c:url value="/controller"/>">
         <input type="hidden" name="command" value="login" />
         <div class="form__group">
-            <input type="text" class="form__input" name="login" value="${sessionScope.login}" placeholder=<fmt:message key="label.login"/> pattern="[A-Za-zА-Яа-яЁё0-9]{4,}" value=""/>
+            <input type="text" class="form__input" name="login" value="${sessionScope.login}" placeholder=<fmt:message key="label.login"/> pattern="[\wА-Яа-яЁё0-9_.]{1,40}" value=""/>
         </div>
         <div class="form__group">
-            <input type="password" class="form__input" name="password" placeholder=<fmt:message key="user.password"/> pattern=".{8,}" title="Eight or more characters"/>
+            <input type="password" class="form__input" name="password" placeholder=<fmt:message key="user.password"/> pattern="\w{8,100}" title="Eight or more characters"/>
         </div>
         <input type="submit" class="btn" value=<fmt:message key="label.login"/>>
     </form>
@@ -47,3 +38,4 @@
 <c:remove var="login"/>
 <c:remove var="validationErrors"/>
 <c:remove var="errorMessage"/>
+<c:remove var="confirmMessage"/>

@@ -67,11 +67,11 @@ public class RegisterCommand implements ActionCommand {
                                 sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, errorMessage.get());
                                 sessionRequestContent.setSessionAttribute(Attribute.EMAIL, email);
                                 sessionRequestContent.setSessionAttribute(Attribute.FIRST_NAME, firstName);
-                                sessionRequestContent.setSessionAttribute(Attribute.SOME_USER, secondName);
+                                sessionRequestContent.setSessionAttribute(Attribute.SECOND_NAME, secondName);
                                 commandResult.setPage(PagePath.REGISTRATION);
                             } else {
                                 if (user.isPresent()) {
-                                    sessionRequestContent.setSessionAttribute(Attribute.ACTIVATION_USER_ID, user.get().getId());
+                                    sessionRequestContent.setSessionAttribute(Attribute.ACTIVATION_USER_ID, Integer.toString(user.get().getId()));
                                     String lang = sessionRequestContent.extractLocale();
                                     userService.constructAndSendConfirmEmail(lang, user.get());
                                     sessionRequestContent.setRequestAttribute(Attribute.CONFIRM_MESSAGE, FriendlyMessage.CONFIRM_MESSAGE_SENT);

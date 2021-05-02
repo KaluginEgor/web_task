@@ -2,14 +2,9 @@ package com.epam.project.model.service.impl;
 
 import com.epam.project.exception.DaoException;
 import com.epam.project.exception.ServiceException;
-import com.epam.project.model.dao.AbstractMovieRatingDao;
-import com.epam.project.model.dao.AbstractMovieReviewDao;
-import com.epam.project.model.dao.AbstractUserDao;
-import com.epam.project.model.dao.EntityTransaction;
-import com.epam.project.model.dao.impl.MovieRatingDao;
-import com.epam.project.model.dao.impl.MovieReviewDao;
-import com.epam.project.model.dao.impl.UserDao;
+import com.epam.project.model.dao.*;
 import com.epam.project.model.entity.*;
+import com.epam.project.model.service.MovieRatingService;
 import com.epam.project.model.service.UserService;
 import com.epam.project.model.util.mail.MailBuilder;
 import com.epam.project.model.util.mail.MailSender;
@@ -33,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final AbstractMovieRatingDao ratingDao = MovieRatingDao.getInstance();
     private final AbstractMovieReviewDao reviewDao = MovieReviewDao.getInstance();
     private final AbstractUserDao userDao = UserDao.getInstance();
+    private final MovieRatingService ratingService = MovieRatingServiceImpl.getInstance();
 
     private UserServiceImpl() {}
 
@@ -53,7 +49,7 @@ public class UserServiceImpl implements UserService {
                 String encryptedPassword = DigestUtils.md5Hex(password);
                 String passwordFromDB = userDao.findPasswordByLogin(login);
                 if (!encryptedPassword.equals(passwordFromDB)) {
-                    errorMessage = Optional.of(ErrorMessage.INCORRECT_PASSWORD);
+                    errorMessage = Optional.of(ErrorMessage.ENTERED_PASSWORD_INCORRECT_ERROR_MESSAGE);
                 } else {
                     User foundUser = userDao.findUserByLogin(login);
                     if (!UserState.ACTIVE.equals(foundUser.getState())) {
@@ -74,8 +70,9 @@ public class UserServiceImpl implements UserService {
             }
             transaction.commit();
         } catch (DaoException e) {
+            logger.error(e);
             transaction.rollback();
-            throw new ServiceException(e.getMessage(), e);
+            throw new ServiceException(e);
         } finally {
             transaction.endTransaction();
         }
@@ -87,7 +84,11 @@ public class UserServiceImpl implements UserService {
         EntityTransaction transaction = new EntityTransaction();
         Optional<User> registeredUser = Optional.empty();
         Optional<String> errorMessage = Optional.empty();
-        User userToRegister = new User(login, email, firstName, secondName);
+        User userToRegister = new User();
+        userToRegister.setLogin(login);
+        userToRegister.setEmail(email);
+        userToRegister.setFirstName(firstName);
+        userToRegister.setSecondName(secondName);
         try {
             transaction.init(userDao);
             if (userDao.loginExists(login)) {
@@ -98,7 +99,8 @@ public class UserServiceImpl implements UserService {
                 registeredUser = Optional.of(userDao.create(userToRegister, encryptedPassword));
             }
         } catch (DaoException e) {
-            throw new ServiceException(e.getMessage(), e);
+            logger.error(e);
+            throw new ServiceException(e);
         } finally {
             transaction.end();
         }
@@ -121,6 +123,7 @@ public class UserServiceImpl implements UserService {
                     errorMessage = Optional.of(ErrorMessage.TRY_ACTIVATE_NOT_EXISTING_USER);
                 }
             } catch (DaoException e) {
+                logger.error(e);
                 throw new ServiceException(e);
             } finally {
                 transaction.end();
@@ -143,6 +146,20 @@ public class UserServiceImpl implements UserService {
             transaction.end();
         }
         return userState;
+    }
+
+    @Override
+    public boolean idExists(int id) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        try {
+            transaction.init(userDao);
+            return userDao.idExists(id);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        } finally {
+            transaction.end();
+        }
     }
 
     @Override
@@ -174,6 +191,7 @@ public class UserServiceImpl implements UserService {
                 }
                 transaction.commit();
             } catch (DaoException e) {
+                logger.error(e);
                 transaction.rollback();
                 throw new ServiceException(e);
             } finally {
@@ -191,6 +209,7 @@ public class UserServiceImpl implements UserService {
         try {
             allUsersBetween = userDao.findAllBetween(begin, end);
         } catch (DaoException e) {
+            logger.error(e);
             throw new ServiceException(e);
         } finally {
             transaction.end();
@@ -219,6 +238,7 @@ public class UserServiceImpl implements UserService {
                     errorMessage = Optional.of(ErrorMessage.TRY_BLOCK_NOT_EXISTING_USER);
                 }
             } catch (DaoException e) {
+                logger.error(e);
                 throw new ServiceException(e);
             } finally {
                 transaction.end();
@@ -265,6 +285,7 @@ public class UserServiceImpl implements UserService {
                 }
                 transaction.commit();
             } catch (DaoException e) {
+                logger.error(e);
                 transaction.rollback();
                 throw new ServiceException(e);
             } finally {
@@ -282,11 +303,15 @@ public class UserServiceImpl implements UserService {
             errorMessage = Optional.of(ErrorMessage.INCORRECT_DELETE_USER_ID_PARAMETER);
         } else {
             try {
-                transaction.init(userDao);
+                transaction.initTransaction(userDao, ratingDao);
                 int id = Integer.parseInt(stringId);
                 if (userDao.idExists(id)) {
                     String stringRole = userDao.findRoleById(id);
                     if (!UserRole.ADMIN.equals(UserRole.valueOf(stringRole))) {
+                        for (MovieRating rating : ratingDao.findByUserId(id)) {
+                            ratingService.delete(Integer.toString(rating.getId()), Integer.toString(rating.getMovieId()),
+                                    Integer.toString(rating.getUserId()));
+                        }
                         userDao.delete(id);
                     } else {
                         errorMessage = Optional.of(ErrorMessage.TRY_DELETE_ADMIN);
@@ -294,10 +319,13 @@ public class UserServiceImpl implements UserService {
                 } else {
                     errorMessage = Optional.of(ErrorMessage.TRY_DELETE_NOT_EXISTING_USER);
                 }
+                transaction.commit();
             } catch (DaoException e) {
+                logger.error(e);
+                transaction.rollback();
                 throw new ServiceException(e);
             } finally {
-                transaction.end();
+                transaction.endTransaction();
             }
         }
         return errorMessage;

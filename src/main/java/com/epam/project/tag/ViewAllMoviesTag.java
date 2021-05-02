@@ -3,7 +3,10 @@ package com.epam.project.tag;
 import com.epam.project.controller.command.Attribute;
 import com.epam.project.controller.command.CommandName;
 import com.epam.project.controller.command.SessionRequestContent;
+import com.epam.project.exception.ServiceException;
 import com.epam.project.model.entity.Movie;
+import com.epam.project.model.service.MovieService;
+import com.epam.project.model.service.impl.MovieServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -40,6 +43,7 @@ public class ViewAllMoviesTag extends TagSupport {
         List<Movie> allMovies = (List<Movie>) sessionRequestContent.getSessionAttribute(Attribute.ALL_MOVIES_LIST);
         String lang = sessionRequestContent.extractLocale();
         ResourceBundle resourceBundle = TagHelper.getLocalizeText(lang);
+        MovieService movieService = MovieServiceImpl.getInstance();
         if (allMovies != null) {
             int size = allMovies.size();
             int createdMoviesCount = 0;
@@ -50,25 +54,27 @@ public class ViewAllMoviesTag extends TagSupport {
                 for (int i = 0; i < MOVIES_PER_PAGE_NUMBER; i++) {
                     if (size > createdMoviesCount) {
                         movie = allMovies.get(createdMoviesCount);
-                        writer.write("<li>");
-                        writer.write(" <div class=\"movie\">");
-                        writer.write("<a href=\"" + contextPath +"/controller?command=open_movie_page&movieId=" + movie.getId() + "\">");
-                        writer.write("<h4 class=\"title\">" + movie.getTitle() + "</h4>");
-                        writer.write("</a>");
-                        writer.write("<div class=\"poster\">");
-                        writer.write("<a href=\"" + contextPath +"/controller?command=open_movie_page&movieId=" + movie.getId() + "\">");
-                        writer.write("<img src=\"" + contextPath + "/picture?currentPicture=" + movie.getPicture() + "\" alt=\"" + movie.getTitle() + "\"/>");
-                        writer.write("</a>");
-                        writer.write("</div>");
-                        writer.write("<p class=\"description\">" + resourceBundle.getString(RATING_BUNDLE) + " "  + movie.getAverageRating() + "</p>");
-                        writer.write("</div>");
-                        writer.write("</li>");
-                        createdMoviesCount++;
+                        if (movieService.idExists(movie.getId())) {
+                            writer.write("<li>");
+                            writer.write(" <div class=\"movie\">");
+                            writer.write("<a href=\"" + contextPath + "/controller?command=open_movie_page&movieId=" + movie.getId() + "\">");
+                            writer.write("<h4 class=\"title\">" + movie.getTitle() + "</h4>");
+                            writer.write("</a>");
+                            writer.write("<div class=\"poster\">");
+                            writer.write("<a href=\"" + contextPath + "/controller?command=open_movie_page&movieId=" + movie.getId() + "\">");
+                            writer.write("<img src=\"" + contextPath + "/picture?currentPicture=" + movie.getPicture() + "\" alt=\"" + movie.getTitle() + "\"/>");
+                            writer.write("</a>");
+                            writer.write("</div>");
+                            writer.write("<p class=\"description\">" + resourceBundle.getString(RATING_BUNDLE) + " " + movie.getAverageRating() + "</p>");
+                            writer.write("</div>");
+                            writer.write("</li>");
+                            createdMoviesCount++;
+                        }
                     }
                 }
                 writer.write("</ul>");
-            } catch (IOException e) {
-                //e.printStackTrace();
+            } catch (IOException | ServiceException e) {
+                throw new JspException(e);
             }
         }
     }

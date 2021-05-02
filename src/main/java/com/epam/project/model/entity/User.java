@@ -17,23 +17,6 @@ public class User extends Entity {
 
     public User() {}
 
-    public User(String login, String email, String firstName, String secondName) {
-        this.login = login;
-        this.email = email;
-        this.firstName = firstName;
-        this.secondName = secondName;
-    }
-
-    public User(int id, String login, String email, String firstName, String secondName, UserRole role, UserState state) {
-        this.id = id;
-        this.login = login;
-        this.email = email;
-        this.firstName = firstName;
-        this.secondName = secondName;
-        this.role = role;
-        this.state = state;
-    }
-
     public int getId() {
         return id;
     }
@@ -120,6 +103,36 @@ public class User extends Entity {
 
     public void setMovieReviews(List<MovieReview> movieReviews) {
         this.movieReviews = movieReviews;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (id != user.id) return false;
+        if (!login.equals(user.login)) return false;
+        if (!email.equals(user.email)) return false;
+        if (!firstName.equals(user.firstName)) return false;
+        if (!secondName.equals(user.secondName)) return false;
+        if (role != user.role) return false;
+        if (state != user.state) return false;
+        return picture.equals(user.picture);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + login.hashCode();
+        result = 31 * result + email.hashCode();
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + secondName.hashCode();
+        result = 31 * result + role.hashCode();
+        result = 31 * result + state.hashCode();
+        result = 31 * result + picture.hashCode();
+        return result;
     }
 
     @Override

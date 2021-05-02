@@ -14,7 +14,6 @@ public class MovieValidator {
     private static final String TITLE_PATTERN = "[A-Za-zА-Яа-яЁё0-9\\s()\"':?!.,-]{1,1000}";
     private static final String TEXT_BODY_PATTERN = "[A-Za-zА-Яа-яЁё0-9\\s()\"':?!.,-]{1,10000}";
     private static final String PICTURE_PATTERN = "[^\\s]+(.*?)\\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$";
-    private static final String GENRE_PATTERN = "[0-" + (GenreType.values().length - 1) + "]";
 
     private MovieValidator() {}
 
@@ -46,7 +45,11 @@ public class MovieValidator {
     public static boolean areGenresValid(String[] genresId) {
         if (genresId != null) {
             for (String genreId : genresId) {
-                if (!genreId.matches(GENRE_PATTERN)) {
+                if (genreId.matches(DIGIT_PATTERN)) {
+                    if (Integer.parseInt(genreId) < 0 || Integer.parseInt(genreId) >= GenreType.values().length) {
+                        return false;
+                    }
+                } else {
                     return false;
                 }
             }

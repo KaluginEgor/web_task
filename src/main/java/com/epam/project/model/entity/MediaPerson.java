@@ -13,6 +13,8 @@ public class MediaPerson extends Entity {
     private String picture;
     private List<Movie> movies;
 
+    public MediaPerson() {}
+
     public int getId() {
         return id;
     }
@@ -84,16 +86,37 @@ public class MediaPerson extends Entity {
 
         MediaPerson that = (MediaPerson) o;
 
+        if (id != that.id) return false;
         if (!firstName.equals(that.firstName)) return false;
         if (!secondName.equals(that.secondName)) return false;
-        return birthday.equals(that.birthday);
+        if (occupationType != that.occupationType) return false;
+        if (!birthday.equals(that.birthday)) return false;
+        return picture.equals(that.picture);
     }
 
     @Override
     public int hashCode() {
-        int result = firstName.hashCode();
+        int result = id;
+        result = 31 * result + firstName.hashCode();
         result = 31 * result + secondName.hashCode();
+        result = 31 * result + occupationType.hashCode();
         result = 31 * result + birthday.hashCode();
+        result = 31 * result + picture.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("MediaPerson{");
+        sb.append("id=").append(id);
+        sb.append(", firstName='").append(firstName).append('\'');
+        sb.append(", secondName='").append(secondName).append('\'');
+        sb.append(", occupationType=").append(occupationType);
+        sb.append(", bio='").append(bio).append('\'');
+        sb.append(", birthday=").append(birthday);
+        sb.append(", picture='").append(picture).append('\'');
+        sb.append(", movies=").append(movies);
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -2,11 +2,7 @@ package com.epam.project.model.service.impl;
 
 import com.epam.project.exception.DaoException;
 import com.epam.project.exception.ServiceException;
-import com.epam.project.model.dao.AbstractMediaPersonDao;
-import com.epam.project.model.dao.AbstractMovieDao;
-import com.epam.project.model.dao.EntityTransaction;
-import com.epam.project.model.dao.impl.MediaPersonDao;
-import com.epam.project.model.dao.impl.MovieDao;
+import com.epam.project.model.dao.*;
 import com.epam.project.model.entity.MediaPerson;
 import com.epam.project.model.entity.Movie;
 import com.epam.project.model.entity.OccupationType;
@@ -41,6 +37,7 @@ public class MediaPersonServiceImpl implements MediaPersonService {
         try {
             allMediaPeopleBetween = mediaPersonDao.findAllBetween(begin, end);
         } catch (DaoException e) {
+            logger.error(e);
             throw new ServiceException(e);
         } finally {
             transaction.end();
@@ -57,6 +54,21 @@ public class MediaPersonServiceImpl implements MediaPersonService {
             mediaPersonNames = mediaPersonDao.findAllNames();
             return mediaPersonNames;
         } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        } finally {
+            transaction.end();
+        }
+    }
+
+    @Override
+    public boolean idExists(int id) throws ServiceException {
+        EntityTransaction transaction = new EntityTransaction();
+        try {
+            transaction.init(mediaPersonDao);
+            return mediaPersonDao.idExists(id);
+        } catch (DaoException e) {
+            logger.error(e);
             throw new ServiceException(e);
         } finally {
             transaction.end();
@@ -99,6 +111,7 @@ public class MediaPersonServiceImpl implements MediaPersonService {
                 }
                 transaction.commit();
             } catch (DaoException e) {
+                logger.error(e);
                 transaction.rollback();
                 throw new ServiceException(e);
             } finally {
@@ -148,6 +161,7 @@ public class MediaPersonServiceImpl implements MediaPersonService {
                     }
                     transaction.commit();
                 } catch (DaoException e) {
+                    logger.error(e);
                     transaction.rollback();
                     throw new ServiceException(e);
                 } finally {
@@ -178,10 +192,10 @@ public class MediaPersonServiceImpl implements MediaPersonService {
         } else {
             MediaPerson mediaPersonToCreate = convertToMediaPerson(firstName, secondName, bio, stringOccupationId, stringBirthday, picture);
             try {
+                transaction.initTransaction(mediaPersonDao, movieDao);
                 if (!mediaPersonDao.isUnique(firstName, secondName, mediaPersonToCreate.getBirthday())) {
                     errorMessage = Optional.of(ErrorMessage.MEDIA_PERSON_IS_NOT_UNIQUE);
                 } else {
-                    transaction.initTransaction(mediaPersonDao, movieDao);
                     mediaPerson = Optional.of(mediaPersonDao.create(mediaPersonToCreate));
                     List<Movie> movies = new ArrayList<>();
                     for (Integer movieId : moviesId) {
@@ -195,6 +209,7 @@ public class MediaPersonServiceImpl implements MediaPersonService {
                 }
                 transaction.commit();
             } catch (DaoException e) {
+                logger.error(e);
                 transaction.rollback();
                 throw new ServiceException(e);
             } finally {
@@ -220,6 +235,7 @@ public class MediaPersonServiceImpl implements MediaPersonService {
                     errorMessage = Optional.of(ErrorMessage.TRY_DELETE_NOT_EXISTING_MEDIA_PERSON);
                 }
             } catch (DaoException e) {
+                logger.error(e);
                 throw new ServiceException(e);
             } finally {
                 transaction.end();

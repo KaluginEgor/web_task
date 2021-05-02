@@ -3,6 +3,7 @@ package com.epam.project.controller.command;
 public class Attribute {
     public static final String ACTIVATION_USER_ID = "activationUserId";
     public static final String LANG = "lang";
+    public static final String PASSWORD = "password";
     public static final String ALL_MOVIES_CURRENT_PAGE = "movies_current_page";
     public static final String ALL_MOVIES_LIST = "allMoviesList";
     public static final String MOVIES_COUNT = "moviesCount";
@@ -33,9 +34,6 @@ public class Attribute {
     public static final String EMAIL = "email";
     public static final String FIRST_NAME = "firstName";
     public static final String SECOND_NAME = "secondName";
-    public static final String USER_ROLE = "userRole";
-    public static final String USER_STATE = "userState";
-    public static final String USER_RATING = "userRating";
     public static final String BIO = "bio";
     public static final String MEDIA_PERSON_OCCUPATION_TYPE = "occupationType";
     public static final String MEDIA_PERSON_BIRTHDAY = "birthday";

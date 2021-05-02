@@ -7,6 +7,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isErrorPage="true" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <fmt:setLocale value="${sessionScope.lang}" scope="session" />
 <fmt:setBundle basename="property/pagecontent"/>
@@ -24,13 +25,6 @@
     <i class="far fa-question-circle fa-spin"></i>
     <div class="err2">4</div>
     <div class="msg">
-        Request from ${pageContext.errorData.requestURI} is failed
-        <br/>
-        Servlet name or type: ${pageContext.errorData.servletName}
-        <br/>
-        Status code: ${pageContext.errorData.statusCode}
-        <br/>
-        Exception: ${pageContext.errorData.throwable}
         <br/>
         <c:if test="${not empty sessionScope.errorMessage}">
             <h4>${sessionScope.errorMessage}</h4>
@@ -41,3 +35,6 @@
 </div>
 </body>
 </html>
+<c:remove var="validationErrors"/>
+<c:remove var="confirmMessage"/>
+<c:remove var="errorMessage"/>

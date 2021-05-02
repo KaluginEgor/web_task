@@ -35,7 +35,7 @@ public class UpdateMovieCommand implements ActionCommand {
 
         if (title == null || description == null || stringReleaseDate == null) {
             sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_UPDATE_MOVIE_PARAMETERS);
-            commandResult.setPage(PagePath.EDIT_MOVIE);
+            commandResult.setPage(PagePath.MAIN);
         } else {
             Map.Entry<List<String>,List<String>> validationResult = movieService.validateData(
                     title, description, stringReleaseDate, picture, stringGenresId, stringMediaPersonsId);
@@ -78,7 +78,7 @@ public class UpdateMovieCommand implements ActionCommand {
                     errorMessage = findResult.getValue();
                     if (errorMessage.isPresent()) {
                         sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, errorMessage.get());
-                        commandResult.setPage(PagePath.EDIT_MOVIE);
+                        commandResult.setPage(PagePath.MAIN);
                     } else {
                         if (movie.isPresent()) {
                             sessionRequestContent.setSessionAttribute(Attribute.MOVIE, movie.get());

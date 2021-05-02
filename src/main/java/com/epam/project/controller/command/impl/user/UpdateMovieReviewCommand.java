@@ -52,6 +52,8 @@ public class UpdateMovieReviewCommand implements ActionCommand {
                             Attribute.MOVIE_REVIEW_TITLE, reviewTitle);
                     if (validParameters.contains(Attribute.MOVIE_REVIEW_BODY)) sessionRequestContent.setSessionAttribute(
                             Attribute.MOVIE_REVIEW_BODY, reviewBody);
+                    sessionRequestContent.setSessionAttribute(Attribute.MOVIE_ID, stringMovieId);
+                    sessionRequestContent.setSessionAttribute(Attribute.USER_ID, stringUserId);
                     page = definePage(sessionRequestContent);
                     if (MovieValidator.isValidId(stringMovieId)) {
                         sessionRequestContent.setSessionAttribute(Attribute.MOVIE_REVIEW_ID, Integer.parseInt(stringMovieReviewId));

@@ -20,20 +20,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title><fmt:message key="label.edit.movie"/></title>
 </head>
-<jsp:include page="/pages/module/header.jsp"/>
+<c:import url="/pages/module/header.jsp"/>
 <body class="home">
 <div class="edit-page">
 
-    <div class="block">
-    <br/>
-    <c:forEach var="validationException" items="${sessionScope.validationErrors}">
-        <h4>${validationException}</h4>
-    </c:forEach>
-
-    <c:if test="${not empty sessionScope.errorMessage}">
-        <h4>${sessionScope.errorMessage}</h4>
-    </c:if>
-    </div>
 
     <div class="block">
     <form action="<c:url value="/controller"/>" enctype="multipart/form-data" method="POST">
@@ -160,6 +150,7 @@
                 </c:forEach>
             </div>
         </div>
+        <c:import url="/pages/module/messages.jsp"/>
 
         <div class="block">
             <input type="submit" class="edit-btn" value="<fmt:message key="label.submit"/>">
@@ -186,3 +177,4 @@
 <c:remove var="movieGenre"/>
 <c:remove var="validationErrors"/>
 <c:remove var="errorMessage"/>
+<c:remove var="confirmMessage"/>

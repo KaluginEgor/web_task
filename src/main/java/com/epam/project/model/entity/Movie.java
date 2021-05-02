@@ -16,6 +16,8 @@ public class Movie extends Entity {
     private List<MediaPerson> crew;
     private List<Integer> reviewersIds;
 
+    public Movie() {}
+
     public int getId() {
         return id;
     }
@@ -111,14 +113,22 @@ public class Movie extends Entity {
 
         Movie movie = (Movie) o;
 
+        if (id != movie.id) return false;
+        if (Float.compare(movie.averageRating, averageRating) != 0) return false;
         if (!title.equals(movie.title)) return false;
-        return releaseDate.equals(movie.releaseDate);
+        if (!description.equals(movie.description)) return false;
+        if (!releaseDate.equals(movie.releaseDate)) return false;
+        return picture.equals(movie.picture);
     }
 
     @Override
     public int hashCode() {
-        int result = title.hashCode();
+        int result = id;
+        result = 31 * result + title.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + (averageRating != +0.0f ? Float.floatToIntBits(averageRating) : 0);
         result = 31 * result + releaseDate.hashCode();
+        result = 31 * result + picture.hashCode();
         return result;
     }
 
@@ -127,6 +137,15 @@ public class Movie extends Entity {
         final StringBuilder sb = new StringBuilder("Movie{");
         sb.append("id=").append(id);
         sb.append(", title='").append(title).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", averageRating=").append(averageRating);
+        sb.append(", releaseDate=").append(releaseDate);
+        sb.append(", picture='").append(picture).append('\'');
+        sb.append(", genres=").append(genres);
+        sb.append(", reviews=").append(reviews);
+        sb.append(", ratingList=").append(ratingList);
+        sb.append(", crew=").append(crew);
+        sb.append(", reviewersIds=").append(reviewersIds);
         sb.append('}');
         return sb.toString();
     }

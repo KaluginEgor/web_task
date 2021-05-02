@@ -43,6 +43,7 @@ public class ValidationHelper {
             case Attribute.MOVIE_REVIEW_BODY -> ErrorMessage.NOT_VALID_MOVIE_REVIEW_BODY;
             case Attribute.EMAIL -> ErrorMessage.NOT_VALID_EMAIL;
             case Attribute.LOGIN -> ErrorMessage.NOT_VALID_LOGIN;
+            case Attribute.PASSWORD -> ErrorMessage.INCORRECT_PASSWORD;
             default -> null;
         };
         return message;

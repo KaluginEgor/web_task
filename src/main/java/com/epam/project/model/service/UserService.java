@@ -29,6 +29,8 @@ public interface UserService {
 
     UserState detectStateById(int id) throws ServiceException;
 
+    boolean idExists(int id) throws ServiceException;
+
     void constructAndSendConfirmEmail(String locale, User user);
 
     Map.Entry<List<String>, List<String>> validateUpdateData(String email, String firstName, String secondName, String picture);

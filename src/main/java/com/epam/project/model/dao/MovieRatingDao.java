@@ -1,9 +1,11 @@
-package com.epam.project.model.dao.impl;
+package com.epam.project.model.dao;
 
 import com.epam.project.exception.DaoException;
-import com.epam.project.model.dao.AbstractMovieRatingDao;
 import com.epam.project.model.dao.column.MovieRatingsColumn;
 import com.epam.project.model.entity.MovieRating;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.intellij.lang.annotations.Language;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,22 +15,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieRatingDao extends AbstractMovieRatingDao {
+    private static final Logger logger = LogManager.getLogger(MovieRatingDao.class);
+
+    @Language("SQL")
     private static final String SQL_SELECT_MOVIE_RATINGS_BY_MOVIE_ID = "SELECT MR.rating_id, MR.rating_value, MR.movie_id, MR.user_id, M.movie_title FROM movie_ratings MR INNER JOIN movies M on MR.movie_id = M.movie_id WHERE M.movie_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_MOVIE_RATINGS_BY_USER_ID = "SELECT MR.rating_id, MR.rating_value, MR.movie_id, MR.user_id, M.movie_title FROM movie_ratings MR INNER JOIN movies M on MR.movie_id = M.movie_id INNER JOIN users U on MR.user_id = U.user_id WHERE U.user_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_INSERT_MOVIE_RATING = "INSERT INTO movie_ratings (rating_value, movie_id, user_id) VALUES (?, ?, ?);";
 
+    @Language("SQL")
     private static final String SQL_UPDATE_MOVIE_RATING = "UPDATE movie_ratings SET movie_ratings.rating_value = ? WHERE movie_ratings.rating_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_DELETE_MOVIE_RATING = "DELETE FROM movie_ratings MR WHERE MR.rating_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_COUNT_RATING_BY_MOVIE_ID = "SELECT COUNT(*) AS movie_ratings_count FROM movie_ratings WHERE movie_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_SELECT_MOVIE_RATINGS_BY_ID = "SELECT MR.rating_id, MR.rating_value, MR.movie_id, MR.user_id, M.movie_title FROM movie_ratings MR INNER JOIN movies M on MR.movie_id = M.movie_id WHERE MR.rating_id = ?;";
 
+    @Language("SQL")
     private static final String SQL_EXISTS = "SELECT EXISTS (SELECT rating_id FROM movie_ratings WHERE rating_id = ? AND movie_id = ? AND user_id = ?) AS movie_rating_existence;";
 
+    @Language("SQL")
     private static final String SQL_MOVIE_RATING_IS_UNIQUE = "SELECT EXISTS (SELECT rating_id FROM movie_ratings WHERE movie_id = ? AND user_id = ?) AS movie_rating_existence;";
 
     private static final AbstractMovieRatingDao instance = new MovieRatingDao();
@@ -46,6 +59,7 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -60,6 +74,7 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
             movieRating.setId(id);
             return movieRating;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -72,6 +87,7 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
             preparedStatement.executeUpdate();
             return movieRating;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -90,6 +106,7 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
             }
             return movieRatings;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -108,6 +125,7 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
             }
             return movieRatings;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -123,6 +141,7 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
                 }
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
         return ratingsCount;
@@ -140,6 +159,7 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
             }
             return movieRating;
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
     }
@@ -156,6 +176,7 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
                 result = resultSet.getInt(1) == 1;
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
         return result;
@@ -172,6 +193,7 @@ public class MovieRatingDao extends AbstractMovieRatingDao {
                 result = resultSet.getInt(1) == 0;
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new DaoException(e);
         }
         return result;

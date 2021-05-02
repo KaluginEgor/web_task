@@ -20,19 +20,8 @@
     <title><fmt:message key="label.edit.user"/></title>
 </head>
 <body class="home">
-<jsp:include page="/pages/module/header.jsp"/>
+<c:import url="/pages/module/header.jsp"/>
 <div class="edit-page">
-
-    <div class="block">
-        <br/>
-        <c:forEach var="validationException" items="${sessionScope.validationErrors}">
-            <h4>${validationException}</h4>
-        </c:forEach>
-
-        <c:if test="${not empty sessionScope.errorMessage}">
-            <h4>${sessionScope.errorMessage}</h4>
-        </c:if>
-    </div>
 
     <div class="block">
         <form action="<c:url value="/controller"/>" enctype="multipart/form-data" method="POST">
@@ -63,7 +52,7 @@
 
         <div class="block">
             <label for="first-name"><fmt:message key="user.name.first"/></label><br/>
-            <input type="text" id="first-name" class="first-name" name="firstName"
+            <input type="text" id="first-name" class="first-name" name="firstName" pattern="[A-Za-zА-Яа-яЁё]{1,40}" placeholder="<fmt:message key="user.name.first"/>"
                     <c:choose>
                         <c:when test="${not empty sessionScope.firstName}">
                             value="${sessionScope.firstName}"
@@ -77,7 +66,7 @@
 
         <div class="block">
             <label for="last-name"><fmt:message key="user.name.second"/></label><br/>
-            <input type="text" id="last-name" class="last-name" name="secondName"
+            <input type="text" id="last-name" class="last-name" name="secondName" pattern="[A-Za-zА-Яа-яЁё]{1,40}" placeholder="<fmt:message key="user.name.second"/>"
                     <c:choose>
                         <c:when test="${not empty sessionScope.secondName}">
                             value="${sessionScope.secondName}"
@@ -92,6 +81,7 @@
         <div class="block">
             <label for="email"><fmt:message key="user.email"/></label><br/>
             <input type="email" id="email" class="email" name="email"
+                   pattern="(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"
                     <c:choose>
                         <c:when test="${not empty sessionScope.email}">
                             value="${sessionScope.email}"
@@ -107,6 +97,7 @@
             <input type="submit" class="edit-btn" value="<fmt:message key="label.submit"/>">
         </div>
     </form>
+    <c:import url="/pages/module/messages.jsp"/>
     <div class="block">
         <form action="<c:url value="/controller"/>" method="POST">
             <input type="hidden" name="command" value="open_user_page"/>
@@ -118,4 +109,10 @@
 </div>
 </body>
 </html>
+<c:remove var="firstName"/>
+<c:remove var="secondName"/>
+<c:remove var="email"/>
 <c:remove var="newPicture"/>
+<c:remove var="errorMessage"/>
+<c:remove var="validationErrors"/>
+<c:remove var="confirmMessage"/>

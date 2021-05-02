@@ -34,15 +34,12 @@ public class UploadPictureCommand implements ActionCommand {
             logger.error(e);
         }
         if (fileName == null) {
-            commandResult.setPage(page);
             sessionRequestContent.setRequestAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_UPLOAD_FILE_PARAMETERS);
         } else {
             if (!fileName.isEmpty()) {
                 sessionRequestContent.setSessionAttribute(Attribute.NEW_PICTURE, fileName);
-                commandResult.setPage(page);
             } else {
                 sessionRequestContent.setRequestAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.ERROR_WITH_UPLOAD);
-                commandResult.setPage(page);
             }
         }
         return commandResult;

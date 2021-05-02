@@ -21,14 +21,12 @@ public class DeleteMediaPersonCommand implements ActionCommand {
         String stringMediaPersonId = sessionRequestContent.getRequestParameter(RequestParameter.MEDIA_PERSON_ID);
         if (stringMediaPersonId == null) {
             sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_DELETE_MEDIA_PERSON_PARAMETERS);
-            commandResult.setPage(PagePath.MEDIA_PERSON);
         } else {
             Optional<String> errorMessage;
             try {
                 errorMessage = mediaPersonService.delete(stringMediaPersonId);
                 if (errorMessage.isPresent()) {
                     sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, errorMessage.get());
-                    commandResult.setPage(PagePath.MEDIA_PERSON);
                 }
             } catch (ServiceException e) {
                 logger.error(e);

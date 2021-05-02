@@ -107,25 +107,27 @@ public class ViewAllUsersTag extends TagSupport {
                     int lineNumber = USERS_PER_PAGE_NUMBER * (currentPage - 1) + i + 1;
                     if (size > i) {
                         User user = allUsers.get(i);
-                        UserState userState = userService.detectStateById(user.getId());
-                        writer.write("<tr><th>" + lineNumber + "</th>");
-                        writer.write("<td>" + user.getId() + "</td>");
-                        writer.write("<td>" + user.getLogin() + "</td>");
-                        writer.write("<td>" + user.getFirstName() + "</td>");
-                        writer.write("<td>" + user.getSecondName() + "</td>");
-                        writer.write("<td>" + user.getEmail() + "</td>");
-                        writer.write("<td>" + user.getRole() + "</td>");
-                        writer.write("<td>" + userState + "</td>");
-                        writer.write("<td>");
-                        if ((userState == UserState.ACTIVE) && (user.getRole() != UserRole.ADMIN)) {
-                            TagHelper.createUserButton(writer, CommandName.BLOCK_USER.name(), pageContext, user.getId(), resourceBundle.getString(USER_BLOCK_BUTTON_BUNDLE));
-                        } else if (userState == UserState.BLOCKED) {
-                            TagHelper.createUserButton(writer, CommandName.ACTIVATE_USER.name(), pageContext, user.getId(), resourceBundle.getString(USER_ACTIVATE_BUTTON_BUNDLE));
+                        if (userService.idExists(user.getId())) {
+                            UserState userState = userService.detectStateById(user.getId());
+                            writer.write("<tr><th>" + lineNumber + "</th>");
+                            writer.write("<td>" + user.getId() + "</td>");
+                            writer.write("<td>" + user.getLogin() + "</td>");
+                            writer.write("<td>" + user.getFirstName() + "</td>");
+                            writer.write("<td>" + user.getSecondName() + "</td>");
+                            writer.write("<td>" + user.getEmail() + "</td>");
+                            writer.write("<td>" + user.getRole() + "</td>");
+                            writer.write("<td>" + userState + "</td>");
+                            writer.write("<td>");
+                            if ((userState == UserState.ACTIVE) && (user.getRole() != UserRole.ADMIN)) {
+                                TagHelper.createUserButton(writer, CommandName.BLOCK_USER.name(), pageContext, user.getId(), resourceBundle.getString(USER_BLOCK_BUTTON_BUNDLE));
+                            } else if (userState == UserState.BLOCKED) {
+                                TagHelper.createUserButton(writer, CommandName.ACTIVATE_USER.name(), pageContext, user.getId(), resourceBundle.getString(USER_ACTIVATE_BUTTON_BUNDLE));
+                            }
+                            writer.write("</td>");
+                            writer.write("<td>");
+                            TagHelper.createUserButton(writer, CommandName.OPEN_USER_PAGE.name(), pageContext, user.getId(), resourceBundle.getString(OPEN_PROFILE_BUNDLE));
+                            writer.write("</td>");
                         }
-                        writer.write("</td>");
-                        writer.write("<td>");
-                        TagHelper.createUserButton(writer, CommandName.OPEN_USER_PAGE.name(), pageContext, user.getId(), resourceBundle.getString(OPEN_PROFILE_BUNDLE));
-                        writer.write("</td>");
                     }
                     writer.write("</tr>");
                 }

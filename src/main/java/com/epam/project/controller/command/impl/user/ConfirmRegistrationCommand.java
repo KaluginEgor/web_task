@@ -37,7 +37,8 @@ public class ConfirmRegistrationCommand implements ActionCommand {
                         sessionRequestContent.removeSessionAttribute(Attribute.ACTIVATION_USER_ID);
                     }
                 } else {
-                    commandResult.setPage(PagePath.ERROR_404);
+                    sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.INCORRECT_ACTIVATE_USER_PARAMETERS);
+                    commandResult.setPage(PagePath.MAIN);
                 }
             } catch (ServiceException e) {
                 logger.error(e);

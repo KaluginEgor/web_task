@@ -1,19 +1,13 @@
 package com.epam.project.model.util.message;
 
 public class ErrorMessage {
-    public static final String LOGIN_INCORRECT_ERROR_MESSAGE = "login is not valid";
-    public static final String FIRST_NAME_INCORRECT_ERROR_MESSAGE = "first name is not valid";
-    public static final String SECOND_NAME_INCORRECT_ERROR_MESSAGE = "second name is not valid";
-    public static final String EMAIL_INCORRECT_ERROR_MESSAGE = "email is not valid";
     public static final String INCORRECT_PASSWORD = "password is not valid";
     public static final String LOGIN_IS_NOT_UNIQUE = "login is already taken";
     public static final String REPEAT_PASSWORD_INCORRECT = "enter correct repeat password";
     public static final String ENTERED_PASSWORD_INCORRECT_ERROR_MESSAGE = "wrong password";
     public static final String LOGIN_NOT_EXIST = "no user with such login";
-    public static final String USER_INACTIVE_ERROR_MESSAGE = "user has not activated account";
-    public static final String USER_BLOCKED_ERROR_MESSAGE = "user is blocked";
-    public static final String USER_DELETED_ERROR_MESSAGE = "user is deleted";
 
+    public static final String INCORRECT_FIND_TITLE_PARAMETER = "incorrect find title parameter";
     public static final String INCORRECT_ACTIVATE_USER_PARAMETERS = "incorrect activate user parameters";
     public static final String TRY_ACTIVATE_NOT_EXISTING_USER = "try activate not existing user";
     public static final String INCORRECT_BLOCK_USER_PARAMETERS = "incorrect block user parameters";

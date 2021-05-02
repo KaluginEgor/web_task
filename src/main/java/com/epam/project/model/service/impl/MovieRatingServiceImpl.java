@@ -2,13 +2,7 @@ package com.epam.project.model.service.impl;
 
 import com.epam.project.exception.DaoException;
 import com.epam.project.exception.ServiceException;
-import com.epam.project.model.dao.AbstractMovieDao;
-import com.epam.project.model.dao.AbstractMovieRatingDao;
-import com.epam.project.model.dao.AbstractUserDao;
-import com.epam.project.model.dao.EntityTransaction;
-import com.epam.project.model.dao.impl.MovieDao;
-import com.epam.project.model.dao.impl.MovieRatingDao;
-import com.epam.project.model.dao.impl.UserDao;
+import com.epam.project.model.dao.*;
 import com.epam.project.model.entity.Movie;
 import com.epam.project.model.entity.MovieRating;
 import com.epam.project.model.entity.User;
@@ -17,6 +11,8 @@ import com.epam.project.model.util.evaluator.UserRatingEvaluator;
 import com.epam.project.model.util.message.ErrorMessage;
 import com.epam.project.model.validator.MovieValidator;
 import com.epam.project.model.validator.ValidationHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +21,7 @@ import java.util.Optional;
 
 public class MovieRatingServiceImpl implements MovieRatingService {
     private static final MovieRatingService instance = new MovieRatingServiceImpl();
+    private static final Logger logger = LogManager.getLogger(MovieRatingServiceImpl.class);
     private AbstractMovieRatingDao movieRatingDao = MovieRatingDao.getInstance();
     private AbstractUserDao userDao = UserDao.getInstance();
     private AbstractMovieDao movieDao = MovieDao.getInstance();
@@ -54,11 +51,12 @@ public class MovieRatingServiceImpl implements MovieRatingService {
                     updateUserRating(movieRating);
                     int movieId = movieRating.getMovieId();
                     int difference = movieRating.getValue();
-                    updateMovieRating(movieId, difference);
+                    updateMovieRating(movieId, difference, -1);
                 }
             }
             transaction.commit();
         } catch (DaoException e) {
+            logger.error(e);
             transaction.rollback();
             throw new ServiceException(e);
         } finally {
@@ -90,11 +88,12 @@ public class MovieRatingServiceImpl implements MovieRatingService {
                         movieRatingDao.update(movieRating);
                         int movieId = movieRating.getMovieId();
                         float difference = movieRating.getValue() - oldMovieRating.getValue();
-                        updateMovieRating(movieId, difference);
+                        updateMovieRating(movieId, difference, 0);
                     }
                 }
                 transaction.commit();
             } catch (DaoException e) {
+                logger.error(e);
                 transaction.rollback();
                 throw new ServiceException(e);
             } finally {
@@ -120,11 +119,12 @@ public class MovieRatingServiceImpl implements MovieRatingService {
                     MovieRating movieRating = movieRatingDao.findEntityById(ratingId);
                     movieRatingDao.delete(ratingId);
                     float difference = -movieRating.getValue();
-                    updateMovieRating(movieId, difference);
+                    updateMovieRating(movieId, difference, +1);
                 } else {
                     errorMessage = Optional.of(ErrorMessage.TRY_DELETE_NOT_EXISTING_MOVIE_RATING);
                 }
             } catch (DaoException e) {
+                logger.error(e);
                 throw new ServiceException(e);
             } finally {
                 transaction.end();
@@ -144,10 +144,10 @@ public class MovieRatingServiceImpl implements MovieRatingService {
 
 
 
-    private void updateMovieRating(int movieId, float difference) throws DaoException {
+    private void updateMovieRating(int movieId, float difference, int flag) throws DaoException {
         float averageRating = movieDao.findRatingById(movieId);
         int movieRatingsCount = movieRatingDao.countRatingsByMovieId(movieId);
-        int ratingPoints = Math.round(averageRating * movieRatingsCount);
+        int ratingPoints = Math.round(averageRating * (movieRatingsCount + flag));
         ratingPoints += difference;
         if (movieRatingsCount != 0) {
             averageRating = ratingPoints / movieRatingsCount;

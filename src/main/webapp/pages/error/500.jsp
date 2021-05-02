@@ -21,8 +21,11 @@
         <c:if test="${not empty sessionScope.errorMessage}">
             <p>${sessionScope.errorMessage}</p>
         </c:if>
-        <p><a href="/">Let me try again!</a></p>
+        <p><a href="${pageContext.request.contextPath}/pages/common/main.jsp">Let me try again!</a></p>
     </div>
 </div>
 </body>
 </html>
+<c:remove var="validationErrors"/>
+<c:remove var="errorMessage"/>
+<c:remove var="confirmMessage"/>

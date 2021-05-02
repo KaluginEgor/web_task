@@ -33,7 +33,7 @@ public class CreateMovieCommand implements ActionCommand {
         String[] stringMediaPersonsId = sessionRequestContent.getRequestParameters(RequestParameter.MOVIE_CREW);
         if (title == null || description == null || stringReleaseDate == null) {
             sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_CREATE_MOVIE_PARAMETERS);
-            commandResult.setPage(PagePath.EDIT_MOVIE);
+            commandResult.setPage(PagePath.MAIN);
         } else {
             Map.Entry<List<String>,List<String>> validationResult = movieService.validateData(
                     title, description, stringReleaseDate, picture, stringGenresId, stringMediaPersonsId);

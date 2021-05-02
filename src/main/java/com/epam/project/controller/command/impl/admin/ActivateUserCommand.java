@@ -22,6 +22,7 @@ public class ActivateUserCommand implements ActionCommand {
         String stringUserId = sessionRequestContent.getRequestParameter(RequestParameter.USER_ID);
         if (stringUserId == null) {
             sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, ErrorMessage.EMPTY_ACTIVATE_PARAMETERS);
+            commandResult.setPage(PagePath.MAIN);
         } else {
             Optional<String> errorMessage;
             try {
@@ -30,6 +31,7 @@ public class ActivateUserCommand implements ActionCommand {
                     sessionRequestContent.setSessionAttribute(Attribute.CONFIRM_MESSAGE, FriendlyMessage.ACTIVATE_USER_CORRECT);
                 } else {
                     sessionRequestContent.setSessionAttribute(Attribute.ERROR_MESSAGE, errorMessage.get());
+                    commandResult.setPage(PagePath.MAIN);
                 }
             } catch (ServiceException e) {
                 logger.error(e);
